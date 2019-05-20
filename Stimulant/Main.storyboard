@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="197" translatesAutoresizingMaskIntoConstraints="NO" insetsLayoutMarginsFromSafeArea="NO">
+                                <rect key="frame" x="19" y="144" width="337.5" height="278.5"/>
+                                <color key="backgroundColor" colorSpace="custom" customColorSpace="sRGB" red="1" green="0.88354895417477" blue="0.0885196948154587" alpha="0.98"/>
+                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="60"/>
+                                <size key="titleShadowOffset" width="0" height="0"/>
+                                <state key="normal" title="Start">
+                                    <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute keyPath="layer.cornerRadius" type="number">
+                                        <real key="value" value="100"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="StartButton_TouchUpInside:" destination="BYZ-38-t0r" id="2913" eventType="touchUpInside"/>
+                                </connections>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES"/>
+                                </accessibility>
+                            </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="64" minValue="0.0" maxValue="128" id="198" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="17" y="505.5" width="341.5" height="35"/>
+                                <constraints>
+                                    <constraint id="2633" firstAttribute="height" constant="34"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="RateSliderChange:" destination="BYZ-38-t0r" id="10025" eventType="valueChanged"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="199" translatesAutoresizingMaskIntoConstraints="NO" text="Rate Display">
+                                <rect key="frame" x="19" y="462.5" width="337.5" height="38"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint id="2630" firstAttribute="height" constant="38"/>
+                                </constraints>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="202">
+                                <rect key="frame" x="19" y="737.5" width="337.5" height="35"/>
+                                <segments>
+                                    <segment title="Setup"/>
+                                    <segment title="Midi Clock"/>
+                                    <segment title="Time Clock"/>
+                                </segments>
+                                <constraints>
+                                    <constraint id="2635" firstAttribute="height" constant="34" ibExternalInspectedSegment="3"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="ModeNumChanged:" destination="BYZ-38-t0r" id="10765" eventType="valueChanged"/>
+                                </connections>
+                                <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
+                            </segmentedControl>
+                            <control opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" customClass="RangeSlider" translatesAutoresizingMaskIntoConstraints="NO" id="1407">
+                                <rect key="frame" x="19" y="40" width="337.5" height="69"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="MinimumRange">
+                                        <real key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="MaximumValue">
+                                        <real key="value" value="127"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="LowerValue">
+                                        <real key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="StepValueContinuously" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="StepValue">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="UpperValue">
+                                        <real key="value" value="127"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="ShowTextAboveThumbs" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="MinimumValue">
+                                        <real key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="TextSize">
+                                        <real key="value" value="21.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <constraints>
+                                    <constraint id="2629" firstAttribute="height" constant="69"/>
+                                </constraints>
+                            </control>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1617">
+                                <rect key="frame" x="19" y="636.5" width="337.5" height="35"/>
+                                <segments>
+                                    <segment title="1"/>
+                                    <segment title="2"/>
+                                    <segment title="3"/>
+                                    <segment title="4"/>
+                                    <segment title="5"/>
+                                    <segment title="6"/>
+                                    <segment title="7"/>
+                                    <segment title="8"/>
+                                </segments>
+                                <constraints>
+                                    <constraint id="2632" firstAttribute="height" constant="34" ibExternalInspectedSegment="8"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="pnumChange:" destination="BYZ-38-t0r" id="8305" eventType="valueChanged"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Program Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1626" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="19" y="593.5" width="337.5" height="38"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint id="2631" firstAttribute="height" constant="38"/>
+                                </constraints>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint id="2073" firstItem="1407" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" multiplier="2"/>
+                            <constraint id="2074" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.95" firstItem="1407"/>
+                            <constraint id="2080" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="199" multiplier="0.95"/>
+                            <constraint id="2081" firstItem="199" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2082" firstItem="198" firstAttribute="top" secondItem="199" secondAttribute="bottom" constant="5"/>
+                            <constraint id="2083" firstItem="198" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2084" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="198" multiplier="0.95"/>
+                            <constraint id="2085" firstItem="1626" firstAttribute="top" secondItem="198" secondAttribute="bottom" multiplier="1.1"/>
+                            <constraint id="2086" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="1626" multiplier="0.95"/>
+                            <constraint id="2087" firstItem="1626" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2089" firstItem="1617" firstAttribute="top" secondItem="1626" secondAttribute="bottom" constant="5"/>
+                            <constraint id="2090" firstItem="1617" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2091" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="1617" multiplier="0.95"/>
+                            <constraint id="2092" firstItem="202" firstAttribute="top" secondItem="1617" secondAttribute="bottom" multiplier="1.1"/>
+                            <constraint id="2093" firstItem="202" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" multiplier="0.95"/>
+                            <constraint id="2094" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.95" firstItem="202"/>
+                            <constraint id="2095" firstItem="202" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2096" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="197" multiplier="0.95"/>
+                            <constraint id="2097" firstItem="197" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" multiplier="0.05"/>
+                            <constraint id="2098" firstItem="199" firstAttribute="top" secondItem="197" secondAttribute="bottom" constant="40"/>
+                            <constraint id="2099" firstItem="197" firstAttribute="top" secondItem="1407" secondAttribute="bottom" constant="35"/>
+                            <constraint id="12227" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="trailing" firstItem="1407" multiplier="0.05"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="startButton" destination="197" id="name-outlet-197"/>
+                        <outlet property="rateLabel" destination="199" id="name-outlet-199"/>
+                        <outlet property="ccRangeSlider" destination="1407" id="name-outlet-1407"/>
+                        <outlet property="pnumSegmentedControl" destination="1617" id="name-outlet-1617"/>
+                        <outlet property="programLabel" destination="1626" id="name-outlet-1626"/>
+                        <outlet property="modeSegmentedControl" destination="202" id="name-outlet-202"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+    </scenes>
+</document>
