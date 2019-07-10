@@ -25,6 +25,8 @@
         <MtouchArch>x86_64</MtouchArch>
         <MtouchLink>None</MtouchLink>
         <MtouchDebug>true</MtouchDebug>
+<CodesignKey>iPhone Developer: mattpfeiffer54@gmail.com (878A9CLYQP)</CodesignKey>
+<CodesignProvision>iOS Team Provisioning Profile: com.Xamarin.Stimulant</CodesignProvision>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
         <DebugType>none</DebugType>
@@ -47,8 +49,9 @@
         <ConsolePause>false</ConsolePause>
         <MtouchArch>ARM64</MtouchArch>
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-        <CodesignKey>iPhone Developer</CodesignKey>
+        <CodesignKey>iPhone Developer: mattpfeiffer54@gmail.com (878A9CLYQP)</CodesignKey>
         <MtouchDebug>true</MtouchDebug>
+        <CodesignProvision>iOS Team Provisioning Profile: com.Xamarin.Stimulant</CodesignProvision>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
         <DebugType>none</DebugType>
@@ -80,52 +83,49 @@
         <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
             <Visible>false</Visible>
         </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon1024.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon167.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon120.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon152.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon180.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon29.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon40.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon58.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon76.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon80.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon87.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
-            <Visible>false</Visible>
-        </ImageAsset>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon60.png">
-            <Visible>false</Visible>
-        </ImageAsset>
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\40.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\60-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\58.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\87-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\80-2.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\120-2.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\120.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\20-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\40-3.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\29-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\58-2.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\40-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\80.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\76-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\152-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\167-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\1024-1.png" />
+        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\180.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\320x480.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\640x960.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\640x1136.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\768x1004.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1536x2008.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\768x1024.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1536x2048.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\768x1024-1.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1536x2048-1.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\640x960-1.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\640x1136-1.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\2048x2732.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1242x2208.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\750x1334.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1125x2436.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\1242x2688.png" />
+        <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\828x1792.png" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Resources\" />
     </ItemGroup>
     <ItemGroup>
-        <InterfaceDefinition Include="LaunchScreen.storyboard" />
         <InterfaceDefinition Include="Main.storyboard" />
+        <InterfaceDefinition Include="LaunchScreen.storyboard" />
     </ItemGroup>
     <ItemGroup>
         <None Include="Info.plist" />
@@ -139,18 +139,177 @@
             <DependentUpon>ViewController.cs</DependentUpon>
         </Compile>
         <Compile Include="MidiModulation.cs" />
+        <Compile Include="CircularProgressBar.cs" />
+        <Compile Include="UIDisplayLogic.cs" />
+        <Compile Include="HighResolutionTimer.cs" />
     </ItemGroup>
     <ItemGroup>
-      <BundleResource Include="Resources\slider-default7-handle-disabled.png" />
-      <BundleResource Include="Resources\slider-default7-handle-disabled%402x.png" />
       <BundleResource Include="Resources\slider-default7-handle.png" />
       <BundleResource Include="Resources\slider-default7-handle%402x.png" />
+      <BundleResource Include="Resources\slider-default7-handle-disabled.png" />
+      <BundleResource Include="Resources\slider-default7-handle-disabled%402x.png" />
       <BundleResource Include="Resources\slider-default7-track.png" />
       <BundleResource Include="Resources\slider-default7-track%402x.png" />
       <BundleResource Include="Resources\slider-default7-trackBackground.png" />
       <BundleResource Include="Resources\slider-default7-trackBackground%402x.png" />
       <BundleResource Include="Resources\slider-default7-trackCrossedOver.png" />
       <BundleResource Include="Resources\slider-default7-trackCrossedOver%402x.png" />
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\Back8Plus.png">
+        <Link>Resources\Back8Plus.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackXS.png">
+        <Link>Resources\BackXS.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackXSMax.png">
+        <Link>Resources\BackXSMax.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\Over8Plus.png">
+        <Link>Resources\Over8Plus.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OverXS.png">
+        <Link>Resources\OverXS.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OverXSMax.png">
+        <Link>Resources\OverXSMax.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\Back8.png">
+        <Link>Resources\Back8.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\Over8.png">
+        <Link>Resources\Over8.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPad.png">
+        <Link>Resources\BackiPad.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadNext.png">
+        <Link>Resources\BackiPadNext.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadPro.png">
+        <Link>Resources\BackiPadPro.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPad.png">
+        <Link>Resources\OveriPad.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPadNext.png">
+        <Link>Resources\OveriPadNext.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPadPro.png">
+        <Link>Resources\OveriPadPro.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicAutoButtonOff.png">
+        <Link>Resources\graphicAutoButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicAutoButtonOn.png">
+        <Link>Resources\graphicAutoButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicCCButtonOff.png">
+        <Link>Resources\graphicCCButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicCCButtonOn.png">
+        <Link>Resources\graphicCCButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicInfoButtonOff.png">
+        <Link>Resources\graphicInfoButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicInfoButtonOn.png">
+        <Link>Resources\graphicInfoButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMidiButtonOff.png">
+        <Link>Resources\graphicMidiButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMidiButtonOn.png">
+        <Link>Resources\graphicMidiButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPowerButtonOff.png">
+        <Link>Resources\graphicPowerButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPowerButtonOn.png">
+        <Link>Resources\graphicPowerButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicRandomButtonOff.png">
+        <Link>Resources\graphicRandomButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicRandomButtonOn.png">
+        <Link>Resources\graphicRandomButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicReverseButtonOff.png">
+        <Link>Resources\graphicReverseButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicReverseButtonOn.png">
+        <Link>Resources\graphicReverseButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTimeButtonOff.png">
+        <Link>Resources\graphicTimeButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTimeButtonOn.png">
+        <Link>Resources\graphicTimeButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicSettingsButtonOff.png">
+        <Link>Resources\graphicSettingsButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicSettingsButtonOn.png">
+        <Link>Resources\graphicSettingsButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicARButtonOff.png">
+        <Link>Resources\graphicARButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicARButtonOn.png">
+        <Link>Resources\graphicARButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadPro11.png">
+        <Link>Resources\BackiPadPro11.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPadPro11.png">
+        <Link>Resources\OveriPadPro11.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMinus1ButtonOff.png">
+        <Link>Resources\graphicMinus1ButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMinus1ButtonOn.png">
+        <Link>Resources\graphicMinus1ButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMinus10ButtonOff.png">
+        <Link>Resources\graphicMinus10ButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicMinus10ButtonOn.png">
+        <Link>Resources\graphicMinus10ButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPlus1ButtonOff.png">
+        <Link>Resources\graphicPlus1ButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPlus1ButtonOn.png">
+        <Link>Resources\graphicPlus1ButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPlus10ButtonOff.png">
+        <Link>Resources\graphicPlus10ButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicPlus10ButtonOn.png">
+        <Link>Resources\graphicPlus10ButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTapButtonOff.png">
+        <Link>Resources\graphicTapButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTapButtonOn.png">
+        <Link>Resources\graphicTapButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTriggerButtonOff.png">
+        <Link>Resources\graphicTriggerButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicTriggerButtonOn.png">
+        <Link>Resources\graphicTriggerButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicBPMButtonOff.png">
+        <Link>Resources\graphicBPMButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicBPMButtonOn.png">
+        <Link>Resources\graphicBPMButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicClockButtonOff.png">
+        <Link>Resources\graphicClockButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicClockButtonOn.png">
+        <Link>Resources\graphicClockButtonOn.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
