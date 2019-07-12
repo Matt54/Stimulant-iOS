@@ -56,7 +56,10 @@ namespace Stimulant
             timerHighRes.Elapsed += (s, e) =>
             {
                 InvokeOnMainThread(() => {
-                    myMidiModulation.ClockCounter();
+                    if (myMidiModulation.IsRunning)
+                    {
+                        myMidiModulation.FireModulation = true;
+                    }
                 });
             };
             timerHighRes.Start();
@@ -157,7 +160,7 @@ namespace Stimulant
                                 buttonPlus10.Hidden = false;
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
-                                labelRate.Text = "Current Channel: CC" + myMidiModulation.ChannelCC;
+                                labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
                             else
                             {
@@ -172,11 +175,11 @@ namespace Stimulant
                             break;
                         }
 
-                    case "ChannelCC":
+                    case "CCNumber":
                         {
                             if (myMidiModulation.CCOn)
                             {
-                                labelRate.Text = "Current Channel: CC" + myMidiModulation.ChannelCC;
+                                labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
                             break;
                         }
@@ -267,22 +270,14 @@ namespace Stimulant
                         }
 
                     case "FireModulation":
-
                         InvokeOnMainThread(() => {
                             if (myMidiModulation.FireModulation)
                             {
                                 myMidiModulation.UpdateValue();
-                                SendMIDI(0xB0, (byte)myMidiModulation.ChannelCC, (byte)myMidiModulation.CurrentCC);
+                                SendMIDI(0xB0, (byte)myMidiModulation.CCNumber, (byte)myMidiModulation.CurrentCC);
                                 myMidiModulation.ClockCount = 0;
 
                                 var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-
-                                //Declare rectangle object (Instantiating the CGRect class)
-                                //CGRect _progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
-
-
-                                //Declare color object (Instantiating the UIColor class)
-                                //UIColor _barColor = UIColor.FromRGB(0, 255, 0);
 
                                 //Momentarily remove from superview so that it can be on top of progress bar
                                 myCircularProgressBar.RemoveFromSuperview();
@@ -301,7 +296,7 @@ namespace Stimulant
                 }
             };
 
-            
+
         }
 
         protected void HandleRateSliderChange(object sender, System.EventArgs e)
@@ -312,22 +307,22 @@ namespace Stimulant
 
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.IncrementCC(1);
+            myMidiModulation.UpdateCCNumber(1);
         }
 
         private void HandlePlus10TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.IncrementCC(10);
+            myMidiModulation.UpdateCCNumber(10);
         }
 
         private void HandleMinus1TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.IncrementCC(-1);
+            myMidiModulation.UpdateCCNumber(-1);
         }
 
         private void HandleMinus10TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.IncrementCC(-10);
+            myMidiModulation.UpdateCCNumber(-10);
         }
 
         partial void RateSliderChange(UISlider sender) { }
@@ -614,7 +609,7 @@ namespace Stimulant
                 outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { type, channel, value }) });
 
 
-                //outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { 0xB0, (byte)(myMidiModulation.ChannelCC), ccByte }) });
+                //outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { 0xB0, (byte)(myMidiModulation.CCNumber), ccByte }) });
 
                 //var ccVal = (byte)(rand.Next () % 127);
                 // play ccVal then turn off after 300 miliseconds

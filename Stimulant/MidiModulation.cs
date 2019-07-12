@@ -6,29 +6,10 @@ namespace Stimulant
 {
     public class MidiModulation : INotifyPropertyChanged
     {
-
-        private Random random = new Random();
-
+        //flag that allows modulation to occur if true
         public bool IsRunning { get; set; }
-        public bool IsRandomRoll { get; set; }
 
-        private bool _IsAuto;
-        public bool IsAuto
-        {
-            get { return _IsAuto; }
-            set { _IsAuto = value; OnPropertyChanged("IsAuto"); }
-        }
-
-        private bool _IsAR;
-        public bool IsAR
-        {
-            get { return _IsAR; }
-            set { _IsAR = value; OnPropertyChanged("IsAR"); }
-        }
-
-        public int AutoCounter { get; set; }
-        public int AutoCutoff { get; set; }
-
+        //trigger for the modulation to take a step
         private bool _FireModulation;
         public bool FireModulation
         {
@@ -36,40 +17,7 @@ namespace Stimulant
             set { _FireModulation = value; OnPropertyChanged("FireModulation"); }
         }
 
-        private bool _Opposite;
-        public bool Opposite
-        {
-            get { return _Opposite; }
-            set { _Opposite = value; OnPropertyChanged("Opposite"); }
-        }
-
-        private bool _CCOn;
-        public bool CCOn
-        {
-            get { return _CCOn; }
-            set { _CCOn = value; OnPropertyChanged("CCOn"); }
-        }
-
-        private bool _SettingsOn;
-        public bool SettingsOn
-        {
-            get { return _SettingsOn; }
-            set { _SettingsOn = value; OnPropertyChanged("SettingsOn"); }
-        }
-
-        public bool OppositeHelper { get; set; }
-        public bool EveryOther { get; set; }
-        public int LastCC { get; set; }
-
-        public int CurrentCC { get; set; }
-
-        private int _ChannelCC;
-        public int ChannelCC
-        {
-            get { return _ChannelCC; }
-            set { _ChannelCC = value; OnPropertyChanged("ChannelCC"); }
-        }
-
+        //controls the step's direction and amount (or simply just selects the next cc value)
         private int _PatternNumber;
         public int PatternNumber
         {
@@ -77,13 +25,7 @@ namespace Stimulant
             set { _PatternNumber = value; OnPropertyChanged("PatternNumber"); }
         }
 
-        private int _ModeNumber;
-        public int ModeNumber
-        {
-            get { return _ModeNumber; }
-            set { _ModeNumber = value; OnPropertyChanged("ModeNumber"); }
-        }
-
+        //description of the pattern for the UI to readout
         private string _PatternString;
         public string PatternString
         {
@@ -91,14 +33,99 @@ namespace Stimulant
             set { _PatternString = value; OnPropertyChanged("PatternString"); }
         }
 
-        public int StepSize { get; set; }
-        public int StepComma { get; set; }
+        //cc value sent in the MIDI continuous controller message (0-127)
+        public int CurrentCC { get; set; }
+
+        //cc number used in the MIDI continuous controller message (it can be changed - see CCon)
+        private int _CCNumber;
+        public int CCNumber
+        {
+            get { return _CCNumber; }
+            set { _CCNumber = value; OnPropertyChanged("CCNumber"); }
+        }
+
+        //flag to allow the cc number to be adjusted (CCNumber)
+        private bool _CCOn;
+        public bool CCOn
+        {
+            get { return _CCOn; }
+            set { _CCOn = value; OnPropertyChanged("CCOn"); }
+        }
+
+        //values control how large the value range of the MIDI cc message is (default: min 0 - max 127)
         public int Minimum { get; set; }
         public int Maximum { get; set; }
+
+        //sets the stepsize and stepcomma based on the rate of the modulation
+        public int RateCatch { get; set; }
+
+        //values control influences how large of a step to take
+        public int StepSize { get; set; }
+        public int StepComma { get; set; }
+
+        //values influence how often steps are taken
         public int ClockCount { get; set; }
         public int ClockCutoff { get; set; }
-        public int RateCatch { get; set; }
+
+        //Is this unused?
         public int RateRemember { get; set; }
+
+        //previous value and other bool helpers for pattern purposes
+        public int LastCC { get; set; }
+        public bool EveryOther { get; set; }
+        public bool OppositeHelper { get; set; }
+
+        //flag to reverse pattern direction
+        private bool _Opposite;
+        public bool Opposite
+        {
+            get { return _Opposite; }
+            set { _Opposite = value; OnPropertyChanged("Opposite"); }
+        }
+
+        //random number (if created each time a random number is required it results in less "random" of numbers)
+        private Random random = new Random();
+
+        //Currently there are only 2 modes (1 = MIDI mode, 2 = time/frequency mode)
+        //MIDI mode uses the external MIDI clock for its pattern movements, time mode uses a built-in clock
+        private int _ModeNumber;
+        public int ModeNumber
+        {
+            get { return _ModeNumber; }
+            set { _ModeNumber = value; OnPropertyChanged("ModeNumber"); }
+        }
+
+        //flag for the "auto mode" which just randomizes the modulation settings at a certain frequency/# of MIDI clock pulses
+        private bool _IsAuto;
+        public bool IsAuto
+        {
+            get { return _IsAuto; }
+            set { _IsAuto = value; OnPropertyChanged("IsAuto"); }
+        }
+
+        //vales control the frequency of the modulation randomization
+        public int AutoCounter { get; set; }
+        public int AutoCutoff { get; set; }
+
+        //trigger for the modulation to randomize its settings
+        public bool IsRandomRoll { get; set; }
+
+        //flag to allow the "auto mode" to have its frequency or # of MIDI clock pulses required before randomization to be adjusted
+        private bool _SettingsOn;
+        public bool SettingsOn
+        {
+            get { return _SettingsOn; }
+            set { _SettingsOn = value; OnPropertyChanged("SettingsOn"); }
+        }
+
+        //(AR = auto range) flag to allow the minimum and maximum values to be set in auto mode
+        private bool _IsAR;
+        public bool IsAR
+        {
+            get { return _IsAR; }
+            set { _IsAR = value; OnPropertyChanged("IsAR"); }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
@@ -109,6 +136,7 @@ namespace Stimulant
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
+
 
         //Class Constructor
         public MidiModulation()
@@ -126,7 +154,7 @@ namespace Stimulant
             StepSize = 2;
             Maximum = 127;
             Minimum = 0;
-            ChannelCC = 0;
+            CCNumber = 0;
             Opposite = false;
             OppositeHelper = false;
             IsRandomRoll = false;
@@ -135,6 +163,8 @@ namespace Stimulant
             IsAR = false;
         }
 
+
+        //takes in a value from a segmented control  to set the pattern number and relays back a description of the pattern
         public string UpdatePattern(nint patternIndex)
         {
             string labelText;
@@ -179,54 +209,57 @@ namespace Stimulant
             return labelText;
         }
 
+
+        //used in MIDI clock mode to limit the rate of the modulation
         public void ClockCounter()
         {
             if (IsRunning)
             {
-                //ClockCount = ClockCount + 1;
-                ClockCount++;
 
-                //Time Mode should be the only place where ClockCutoff is changed in this method
-                if ((ModeNumber == 0) || (ModeNumber == 2))
+                //ClockCount++;
+
+                //auto mode flag during midi mode - random modulation settings occur at some clock rate
+                if (IsAuto)
                 {
-                    ClockCutoff = 1;
-                }
-                else
-                {
-                    //This is our auto catch during midi mode - random modulation settings occur at some clock rate
-                    if (IsAuto)
+                    //AutoCutoff can be adjusted with settings button on and the rate slider
+                    //RandomRoll is disabled when settings are on
+                    if (!SettingsOn)
                     {
-                        //AutoCutoff can be adjusted with settings button on and the rate slider
-                        //RandomRoll is disabled when settings are on
-                        if (!SettingsOn)
+                        AutoCounter++;
+                        if (AutoCounter > AutoCutoff)
                         {
-                            AutoCounter++;
-                            if (AutoCounter > AutoCutoff)
-                            {
-                                AutoCounter = 0;
-                                PatternString = RandomRoll();
-                            }
-
+                            AutoCounter = 0;
+                            PatternString = RandomRoll();
                         }
-                    }
 
+                    }
                 }
+
+                //when the rate changes the ClockCutoff is sometimes adjusted. We need to reset the ClockCount if this condition occurs.
                 if (ClockCount > ClockCutoff)
                 {
-                    ClockCount = 1;
+                    ClockCount = 0;
                 }
+
+                ClockCount++;
+
+                //tell modulation to take a step if clock count is at the cutoff
                 if (ClockCount == ClockCutoff)
                 {
                     FireModulation = true;
                 }
+
             }
         }
 
+
         //UpdateValue stores the different available patterns
-        //Calling this program steps the CC value to the next appropriate value based on the pattern number
+        //it steps the CC value to the next appropriate value based on the pattern number
+        //lots of arithmetic here - only a short summary will be provided for each pattern
         public void UpdateValue()
         {
             // =========================================Program #1===========================================
+            //"Pattern 1: Up && Down" - steps up until maximum then step down until minimum
             if (PatternNumber == 1)
             {
                 if (Opposite == false)
@@ -324,6 +357,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #2===========================================
+            //"Pattern 2: Up || Down" - steps up until maximum then restarts at minimum or does the opposite
             if (PatternNumber == 2)
             {
                 if (Opposite == false)
@@ -360,6 +394,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #3===========================================
+            //"Pattern 3: Fwd 2 Back 1" - steps 2x forward then x backwards (direction can be reversed)
             if (PatternNumber == 3)
             {
                 if (EveryOther)
@@ -406,6 +441,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #4===========================================
+            //"Pattern 4: Crisscross" - back and forth between up/down patterns moving in opposite direction
             if (PatternNumber == 4)
             {
                 if (EveryOther)
@@ -431,6 +467,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #5===========================================
+            //"Pattern 5: Min Jumper" - back and forth between minimum and an upward or downward pattern
             if (PatternNumber == 5)
             {
                 if (EveryOther)
@@ -466,6 +503,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #6===========================================
+            //"Pattern 6:  Max Jumper" - back and forth between maximum and an upward or downward pattern
             if (PatternNumber == 6)
             {
                 if (EveryOther)
@@ -503,6 +541,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #7===========================================
+            //"Pattern 7:  Min && Max" - back and forth between minimum and maximum value
             if (PatternNumber == 7)
             {
                 if (CurrentCC < Maximum)
@@ -517,6 +556,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #8===========================================
+            //"Pattern 8:  Random #'s" - random values between minimum and maximum
             if (PatternNumber == 8)
             {
                 CurrentCC = RandomNumber(Minimum, Maximum);
@@ -524,17 +564,18 @@ namespace Stimulant
             // ==============================================================================================
         }
 
-        public int RandomNumber(int min, int max)
-        {
-            return random.Next(min, max);
-        }
 
-        public string RandomRoll()
+        //toggles if the pattern is reversed or not
+        public void ReversePattern()
         {
-            IsRandomRoll = true;
-            string newlabel = "thisString";
-            newlabel = UpdatePattern((nint)RandomNumber(0, 8));
-            return newlabel;
+            if (Opposite)
+            {
+                Opposite = false;
+            }
+            else
+            {
+                Opposite = true;
+            }
         }
 
 
@@ -617,7 +658,7 @@ namespace Stimulant
         }
 
 
-        // Determines StepSize from a sliderValue and PatternNumber
+        //determines StepSize from a sliderValue and PatternNumber
         public void TimeSet(float sliderValue)
         {
             if (PatternNumber > 6)
@@ -654,6 +695,7 @@ namespace Stimulant
         }
 
 
+        //converts the time interval being used for the timer for triggering the modulation steps into a frequency value for display purposes
         public string TimeIntervalToFrequency(float timeInterval)
         {
             string Frequency;
@@ -692,36 +734,28 @@ namespace Stimulant
             return Frequency;
         }
 
-        public void IncrementCC(int val)
-        {
 
-            if (ChannelCC + val > -1 && ChannelCC + val < 128)
+        //changes the cc number by the inputed value but remaining in a 0-127 range (it swings around when min/max is surpassed)
+        public void UpdateCCNumber(int val)
+        {
+            var max = 127;
+            var min = 0;
+            if (CCNumber + val > min - 1 && CCNumber + val < (max + 1))
             {
-                ChannelCC += val;
+                CCNumber += val;
             }
-            else if (ChannelCC + val > 127)
+            else if (CCNumber + val > max)
             {
-                ChannelCC += val - 128;
+                CCNumber += val - max - 1;
             }
             else
             {
-                ChannelCC += val + 128;
+                CCNumber += val + max + 1;
             }
         }
 
 
-        public void ReversePattern()
-        {
-            if (Opposite)
-            {
-                Opposite = false;
-            }
-            else
-            {
-                Opposite = true;
-            }
-        }
-
+        //enables or disables auto mode
         public void AutoToggle()
         {
             if (IsAuto)
@@ -734,6 +768,8 @@ namespace Stimulant
             }
         }
 
+
+        //enables or disables auto range
         public void ARToggle()
         {
             if (IsAR)
@@ -746,6 +782,25 @@ namespace Stimulant
             }
         }
 
+
+        //randomizes modulation settings (called in auto mode)
+        public string RandomRoll()
+        {
+            IsRandomRoll = true;
+            string newlabel = "thisString";
+            newlabel = UpdatePattern((nint)RandomNumber(0, 8));
+            return newlabel;
+        }
+
+
+        //selects a random number
+        public int RandomNumber(int min, int max)
+        {
+            return random.Next(min, max);
+        }
+
+
+        //enables or disables the ability to adjust the cc number
         public void CCToggle()
         {
             if (SettingsOn)
@@ -763,6 +818,8 @@ namespace Stimulant
             }
         }
 
+
+        //enables or disables the ability to adjust the auto mode frequency
         public void SettingsToggle()
         {
             if (CCOn)
@@ -779,6 +836,7 @@ namespace Stimulant
                 SettingsOn = true;
             }
         }
+
 
     }
 }
