@@ -740,7 +740,7 @@ namespace Stimulant
         {
             var max = 127;
             var min = 0;
-            if (CCNumber + val > min - 1 && CCNumber + val < (max + 1))
+            if (CCNumber + val >= min && CCNumber + val <= max)
             {
                 CCNumber += val;
             }
