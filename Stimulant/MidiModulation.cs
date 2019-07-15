@@ -126,6 +126,17 @@ namespace Stimulant
             set { _IsAR = value; OnPropertyChanged("IsAR"); }
         }
 
+        private bool _IsTriggerOnly;
+        public bool IsTriggerOnly
+        {
+            get { return _IsTriggerOnly; }
+            set { _IsTriggerOnly = value; OnPropertyChanged("IsTriggerOnly"); }
+        }
+
+        public bool IsNoteOn { get; set; }
+
+        public int NumOfNotesOn { get; set; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
@@ -216,8 +227,6 @@ namespace Stimulant
             if (IsRunning)
             {
 
-                //ClockCount++;
-
                 //auto mode flag during midi mode - random modulation settings occur at some clock rate
                 if (IsAuto)
                 {
@@ -241,6 +250,7 @@ namespace Stimulant
                     ClockCount = 0;
                 }
 
+                //the actual counting
                 ClockCount++;
 
                 //tell modulation to take a step if clock count is at the cutoff
@@ -765,6 +775,19 @@ namespace Stimulant
             else
             {
                 IsAuto = true;
+            }
+        }
+
+        //enables or disables trigger mode
+        public void TriggerToggle()
+        {
+            if (IsTriggerOnly)
+            {
+                IsTriggerOnly = false;
+            }
+            else
+            {
+                IsTriggerOnly = true;
             }
         }
 

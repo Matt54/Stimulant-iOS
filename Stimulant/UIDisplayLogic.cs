@@ -29,6 +29,7 @@ namespace Stimulant
         UIButton buttonInfo;
         UIButton buttonClock;
         UIButton buttonBPM;
+        UIButton buttonTrigger;
         UIButton buttonRandom;
         UIButton buttonAuto;
         UISegmentedControl segmentedPattern;
@@ -67,6 +68,7 @@ namespace Stimulant
             float controlAdjustMode;
             float controlAdjustCCInc;
             float controlAdjustBPM;
+            float controlAdjustTrigger;
             float sizeIncrease;
 
             //Get the Screen Size, Width, and Height
@@ -106,6 +108,7 @@ namespace Stimulant
                     controlAdjustMode = 1.00f;
                     controlAdjustCCInc = 0.99f;
                     controlAdjustBPM = 1f;
+                    controlAdjustTrigger = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -123,6 +126,7 @@ namespace Stimulant
                     controlAdjustMode = 1.00f;
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
+                    controlAdjustTrigger = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -140,6 +144,7 @@ namespace Stimulant
                     controlAdjustMode = 1.00f;
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
+                    controlAdjustTrigger = 1f;
                     buttonYAdjust = 1.005f;
                     sizeIncrease = 1.2f;
                     break;
@@ -157,6 +162,7 @@ namespace Stimulant
                     controlAdjustMode = 1.00f;
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
+                    controlAdjustTrigger = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -174,6 +180,7 @@ namespace Stimulant
                     controlAdjustMode = 1.035f;
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
+                    controlAdjustTrigger = 0.95f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -191,6 +198,7 @@ namespace Stimulant
                     controlAdjustMode = 1.035f;
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
+                    controlAdjustTrigger = 0.95f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -208,6 +216,7 @@ namespace Stimulant
                     controlAdjustMode = 1.035f;
                     controlAdjustCCInc = 1.024f;
                     controlAdjustBPM = 0.95f;
+                    controlAdjustTrigger = 0.95f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -225,6 +234,7 @@ namespace Stimulant
                     controlAdjustMode = 1.02f;
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
+                    controlAdjustTrigger = 0.95f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -242,6 +252,7 @@ namespace Stimulant
                     controlAdjustMode = 1.00f;
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
+                    controlAdjustTrigger = 1f;
                     buttonYAdjust = 1.005f;
                     sizeIncrease = 1.0f;
                     break;
@@ -268,6 +279,7 @@ namespace Stimulant
             LoadInfoButton(screenWidth, screenHeight, sizeSubtract);
             LoadClockButton(screenWidth, screenHeight, sizeSubtract);
             LoadBPMButton(screenWidth, screenHeight, sizeSubtract, controlAdjustBPM);
+            LoadTriggerButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTrigger);
             LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
@@ -465,6 +477,20 @@ namespace Stimulant
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Disabled);
             buttonBPM.Frame = new CGRect(buttonBPMXLoc, buttonBPMYLoc, buttonBPMWidth, buttonBPMHeight);
             //buttonBPM.TouchDown += HandleBPMTouchDown;
+        }
+
+        public void LoadTriggerButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustTrigger)
+        {
+            float buttonTriggerWidth = screenWidth / (12 + sizeSubtract);
+            float buttonTriggerHeight = buttonTriggerWidth;
+            float buttonTriggerXLoc = (float)((screenWidth - buttonTriggerWidth) * (0.95));
+            float buttonTriggerYLoc = (float)((screenHeight - buttonTriggerHeight) / 1.07) * controlAdjustTrigger;
+            buttonTrigger = UIButton.FromType(UIButtonType.Custom);
+            buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+            buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+            buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Disabled);
+            buttonTrigger.Frame = new CGRect(buttonTriggerXLoc, buttonTriggerYLoc, buttonTriggerWidth, buttonTriggerHeight);
+            buttonTrigger.TouchDown += HandleTriggerTouchDown;
         }
 
         public void LoadARButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustAR)
@@ -669,6 +695,7 @@ namespace Stimulant
             View.AddSubview(buttonSettings);
             View.AddSubview(buttonInfo);
             View.AddSubview(buttonBPM);
+            View.AddSubview(buttonTrigger);
             View.AddSubview(buttonClock);
             View.AddSubview(buttonRandom);
             View.AddSubview(buttonAuto);

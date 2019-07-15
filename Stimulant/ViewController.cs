@@ -150,6 +150,19 @@ namespace Stimulant
                             break;
                         }
 
+                    case "IsTriggerOnly":
+                        {
+                            if (myMidiModulation.IsTriggerOnly)
+                            {
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                            }
+                            else
+                            {
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                            }
+                            break;
+                        }
+
                     case "CCOn":
                         {
                             if (myMidiModulation.CCOn)
@@ -273,30 +286,33 @@ namespace Stimulant
                         InvokeOnMainThread(() => {
                             if (myMidiModulation.FireModulation)
                             {
-                                myMidiModulation.UpdateValue();
-                                SendMIDI(0xB0, (byte)myMidiModulation.CCNumber, (byte)myMidiModulation.CurrentCC);
-                                myMidiModulation.ClockCount = 0;
+                                if (!myMidiModulation.IsTriggerOnly || (myMidiModulation.IsTriggerOnly && myMidiModulation.IsNoteOn))
+                                {
+                                    myMidiModulation.UpdateValue();
+                                    SendMIDI(0xB0, (byte)myMidiModulation.CCNumber, (byte)myMidiModulation.CurrentCC);
+                                    myMidiModulation.ClockCount = 0;
 
-                                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                                    var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
 
-                                //Momentarily remove from superview so that it can be on top of progress bar
-                                myCircularProgressBar.RemoveFromSuperview();
-                                //Declare progress bar object (Instantiating my CircularProgressBar class)
-                                myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, pi_mult, barColor);
-                                buttonOnOff.RemoveFromSuperview();
+                                    //Momentarily remove from superview so that it can be on top of progress bar
+                                    myCircularProgressBar.RemoveFromSuperview();
+                                    //Declare progress bar object (Instantiating my CircularProgressBar class)
+                                    myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, pi_mult, barColor);
+                                    buttonOnOff.RemoveFromSuperview();
 
-                                //Add Views
-                                View.AddSubview(myCircularProgressBar);
-                                View.AddSubview(buttonOnOff);
+                                    //Add Views
+                                    View.AddSubview(myCircularProgressBar);
+                                    View.AddSubview(buttonOnOff);
 
-                                myMidiModulation.FireModulation = false;
+                                    myMidiModulation.FireModulation = false;
+                                }
                             }
                         });
                         break;
                 }
             };
 
-
+            myMidiModulation.ModeNumber = 2;
         }
 
         protected void HandleRateSliderChange(object sender, System.EventArgs e)
@@ -418,6 +434,11 @@ namespace Stimulant
         protected void HandleAutoTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.AutoToggle();
+        }
+
+        protected void HandleTriggerTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.TriggerToggle();
         }
 
         void ReadSlider(float sliderValue)
@@ -603,11 +624,8 @@ namespace Stimulant
 
             for (int i = 0; i < Midi.DestinationCount; i++)
             {
-
-
                 var endpoint = MidiEndpoint.GetDestination(i);
                 outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { type, channel, value }) });
-
 
                 //outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { 0xB0, (byte)(myMidiModulation.CCNumber), ccByte }) });
 
@@ -758,12 +776,10 @@ namespace Stimulant
             inputPort = client.CreateInputPort("Stimulant iOS Input Port");
 
             inputPort.MessageReceived += delegate (object sender, MidiPacketsEventArgs e) {
-                //Console.WriteLine("Got {0} packets", e.Packets.Length);
-                //Debug.Write("Got " + Convert.ToString(e.Packets.Length) + " Packets");
                 foreach (MidiPacket mPacket in e.Packets)
                 {
-                    if (myMidiModulation.ModeNumber == 1)
-                    {
+                    //if (myMidiModulation.ModeNumber == 1)
+                    //{
                         var midiData = new byte[mPacket.Length];
                         Marshal.Copy(mPacket.Bytes, midiData, 0, mPacket.Length);
                         //The first four bits of the status byte tell MIDI what command
@@ -796,6 +812,7 @@ namespace Stimulant
                             }
                             myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
                         }
+
                         if (StatusByte == midi_clock)
                         {
                             myMidiModulation.ClockCounter();
@@ -810,7 +827,6 @@ namespace Stimulant
                             myMidiModulation.StepSizeSetter();
                         }
 
-
                         if (StatusByte == midi_stop)
                         {
                             if (myMidiModulation.IsRunning)
@@ -821,7 +837,31 @@ namespace Stimulant
                                 });
                             }
                         }
-                    }
+
+                        if (myMidiModulation.IsTriggerOnly)
+                        {
+                            if(StatusByte == midi_note_on)
+                            {
+                                // handle note on
+                                myMidiModulation.IsNoteOn = true;
+                                myMidiModulation.NumOfNotesOn += 1;
+                            }
+                            if (StatusByte == midi_note_off)
+                            {
+
+                                if (myMidiModulation.NumOfNotesOn > 0)
+                                {
+                                    myMidiModulation.NumOfNotesOn -= 1;
+                                }
+                                if (myMidiModulation.NumOfNotesOn < 1)
+                                {
+                                    // handle note off
+                                    myMidiModulation.IsNoteOn = false;
+                                    myMidiModulation.NumOfNotesOn = 0;
+                                }
+                            }
+                        }
+                    //}
                 }
             };
 
