@@ -86,7 +86,7 @@ namespace Stimulant
         //random number (if created each time a random number is required it results in less "random" of numbers)
         private Random random = new Random();
 
-        //Currently there are only 2 modes (1 = MIDI mode, 2 = time/frequency mode)
+        //Currently there are only 2 modes (1 = MIDI mode, 2 = time/frequency mode, 3 = time/bpm mode)
         //MIDI mode uses the external MIDI clock for its pattern movements, time mode uses a built-in clock
         private int _ModeNumber;
         public int ModeNumber
@@ -226,7 +226,6 @@ namespace Stimulant
         {
             if (IsRunning)
             {
-
                 //auto mode flag during midi mode - random modulation settings occur at some clock rate
                 if (IsAuto)
                 {
@@ -258,7 +257,6 @@ namespace Stimulant
                 {
                     FireModulation = true;
                 }
-
             }
         }
 
@@ -596,7 +594,7 @@ namespace Stimulant
         //rate.
         public void StepSizeSetter()
         {
-
+            
             bool stepBack = false, stepForward = false;
             switch (RateCatch)
             {
@@ -664,7 +662,7 @@ namespace Stimulant
                 }
             }
 
-
+            
         }
 
 
@@ -838,6 +836,19 @@ namespace Stimulant
             else
             {
                 CCOn = true;
+            }
+        }
+
+        //switched between time based modes (bpm vs frequency)
+        public void ClockToggle()
+        {
+            if (ModeNumber == 3)
+            {
+                ModeNumber = 2;
+            }
+            else
+            {
+                ModeNumber = 3;
             }
         }
 

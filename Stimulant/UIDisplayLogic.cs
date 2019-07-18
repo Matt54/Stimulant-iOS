@@ -462,7 +462,7 @@ namespace Stimulant
             buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Highlighted);
             buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Disabled);
             buttonClock.Frame = new CGRect(buttonClockXLoc, buttonClockYLoc, buttonClockWidth, buttonClockHeight);
-            //buttonClock.TouchDown += HandleClockTouchDown;
+            buttonClock.TouchDown += HandleClockTouchDown;
         }
 
         public void LoadBPMButton(float screenWidth, float screenHeight, float sizeSubtract,float controlAdjustBPM)

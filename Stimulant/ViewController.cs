@@ -28,10 +28,13 @@ namespace Stimulant
         //I worry that this is a poor way of doing this. It may not be ideal from a memory standpoint
         MidiModulation myMidiModulation = new MidiModulation();
 
-        //This timer will control how fast the time-based modulation steps
+        //Controls how fast the time-based modulation steps
         HighResolutionTimer timerHighRes;
 
+        //Controls how often the random settings get applied when in automatic mode
         HighResolutionTimer timerAuto;
+
+
 
         public override void ViewDidLoad()
         {
@@ -224,6 +227,7 @@ namespace Stimulant
                                     timerAuto.Stop(joinThread: false);
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
+                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     break;
                                 case 2:
@@ -234,6 +238,18 @@ namespace Stimulant
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
+                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
+                                    ReadSlider(sliderRate.Value);
+                                    break;
+                                case 3:
+                                    if (myMidiModulation.IsAuto)
+                                    {
+                                        timerAuto.Start();
+                                    }
+                                    timerHighRes.Start();
+                                    buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
+                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
+                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     break;
                                 default:
@@ -436,6 +452,11 @@ namespace Stimulant
             myMidiModulation.AutoToggle();
         }
 
+        protected void HandleClockTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.ClockToggle();
+        }
+
         protected void HandleTriggerTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.TriggerToggle();
@@ -460,7 +481,7 @@ namespace Stimulant
             }
             else
             {
-                //MIDI
+
                 string displayText = "";
                 // Conditionals determine the correct rate based on sliderValue
                 if (sliderValue >= (128 * 15 / 16))
@@ -565,10 +586,17 @@ namespace Stimulant
                     myMidiModulation.AutoCutoff = (17 - myMidiModulation.RateCatch) * 24 * 4;
                     labelRate.Text = "Randoms in: " + (17 - myMidiModulation.RateCatch) + " Beats";
                 }
+                else if (myMidiModulation.ModeNumber == 1)
+                {
+                    //MIDI
+                    myMidiModulation.StepSizeSetter();
+                    labelRate.Text = "EXT Clock Sync: " + displayText;
+                }
                 else
                 {
-                    myMidiModulation.StepSizeSetter(); //Do we need this here? I think it gets set every time a clock comes in..
-                    labelRate.Text = "EXT Clock Sync: " + displayText;
+                    //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
+                    timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds(50.0f, myMidiModulation.RateCatch);
+                    labelRate.Text = "BPM Clock Sync: " + displayText;
                 }
 
             }
@@ -599,7 +627,148 @@ namespace Stimulant
             return timeInterval;
         }
 
-        partial void ModeNumChanged(UISegmentedControl sender) { }
+        public float BeatsPerMinuteIntoMilliSeconds(float bpm, int rateCatch)
+        {
+            float myTimeInterval; // milliseconds
+            double intervalMultiplier;
+
+            // 1 beat = 1 quarter note
+            // 1 minute = 60 seconds = 60,000 milliseconds
+            // Quarter note duration (ms) = 60,000 / bpm
+
+            switch (rateCatch)
+            {
+                case 1:
+                    intervalMultiplier = 16;
+                    break;
+                case 2:
+                    intervalMultiplier = 10.667; //16 * (2 / 3);
+                    break;
+                case 3:
+                    intervalMultiplier = 8;
+                    break;
+                case 4:
+                    intervalMultiplier = 5.333;// 8 * (2 / 3);
+                    break;
+                case 5:
+                    intervalMultiplier = 4;
+                    break;
+                case 6:
+                    intervalMultiplier = 2.667;// 4 * (2 / 3);
+                    break;
+                case 7:
+                    intervalMultiplier = 2;
+                    break;
+                case 8:
+                    intervalMultiplier = 1.333;//2 * (2 / 3);
+                    break;
+                case 9:
+                    intervalMultiplier = 1;
+                    break;
+                case 10:
+                    intervalMultiplier = 0.667;// 2 / 3;
+                    break;
+                case 11:
+                    intervalMultiplier = 0.5;
+                    break;
+                case 12:
+                    intervalMultiplier = 0.333;// 1 / 3;
+                    break;
+                case 13:
+                    intervalMultiplier = 0.25;
+                    break;
+                case 14:
+                    intervalMultiplier = 0.167;// 1 / 6;
+                    break;
+                case 15:
+                    intervalMultiplier = 0.125;
+                    break;
+                case 16:
+                    intervalMultiplier = 0.083;// 1 / 12;
+                    break;
+                default:
+                    intervalMultiplier = 1;
+                    break;
+            }
+
+            // we need to determine the step size that we should use to keep the screen refresh under 60Hz
+            // 60000 / bpm * intervalMultiplier / StepsUntilFullModulation cannot cause an interval that exceeds 60Hz
+            // assume bpm is 160 (this will be our max value)
+            int fullModSteps;
+            if (myMidiModulation.PatternNumber > 6)
+            {
+                myMidiModulation.StepSize = 1;
+                fullModSteps = 1;
+            }
+            else
+            {
+                switch (rateCatch)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        //step size = 1
+                        myMidiModulation.StepSize = 1;
+                        //128 steps
+                        fullModSteps = 128;
+                        break;
+                    case 4:
+                    case 5:
+                        //step size = 2
+                        myMidiModulation.StepSize = 2;
+                        //64 steps
+                        fullModSteps = 64;
+                        break;
+                    case 6:
+                    case 7:
+                        //step size = 4
+                        myMidiModulation.StepSize = 4;
+                        //32 steps
+                        fullModSteps = 32;
+                        break;
+                    case 8:
+                    case 9:
+                        //step size = 8
+                        myMidiModulation.StepSize = 8;
+                        //16 steps
+                        fullModSteps = 16;
+                        break;
+                    case 10:
+                    case 11:
+                        //step size = 16
+                        myMidiModulation.StepSize = 16;
+                        //8 steps
+                        fullModSteps = 8;
+                        break;
+                    case 12:
+                    case 13:
+                        //step size = 32
+                        myMidiModulation.StepSize = 32;
+                        //4 steps
+                        fullModSteps = 4;
+                        break;
+                    case 14:
+                    case 15:
+                    case 16:
+                        //step size = 64
+                        myMidiModulation.StepSize = 64;
+                        //2 steps
+                        fullModSteps = 2;
+                        break;
+                    default:
+                        //step size = 1
+                        myMidiModulation.StepSize = 1;
+                        fullModSteps = 128;
+                        break;
+                }
+            }
+
+            //myTimeInterval = (float)Math.Round(60000.0f / bpm * (float)Math.Round(intervalMultiplier, 2) / (float)fullModSteps,2);
+            myTimeInterval = (float)Math.Round(60000.0f / bpm * intervalMultiplier / (float)fullModSteps, 2);
+            return myTimeInterval;
+        }
+
+        //partial void ModeNumChanged(UISegmentedControl sender) { }
 
         protected void PnumChange(object sender, System.EventArgs e)
         {
@@ -609,12 +778,14 @@ namespace Stimulant
             labelPattern.Text = labelText;
         }
 
+        /*
         private void ProgramChange()
         {
             var index = segmentedPattern.SelectedSegment;
             string labelText = myMidiModulation.UpdatePattern(index);
             labelPattern.Text = labelText;
         }
+        */
 
 
         partial void pnumChange(UISegmentedControl sender) { }
@@ -780,87 +951,87 @@ namespace Stimulant
                 {
                     //if (myMidiModulation.ModeNumber == 1)
                     //{
-                        var midiData = new byte[mPacket.Length];
-                        Marshal.Copy(mPacket.Bytes, midiData, 0, mPacket.Length);
-                        //The first four bits of the status byte tell MIDI what command
-                        //The last four bits of the status byte tell MIDI what channel
-                        byte StatusByte = midiData[0];
-                        byte typeData = (byte)((StatusByte & 0xF0) >> 4);
-                        byte channelData = (byte)(StatusByte & 0x0F);
+                    var midiData = new byte[mPacket.Length];
+                    Marshal.Copy(mPacket.Bytes, midiData, 0, mPacket.Length);
+                    //The first four bits of the status byte tell MIDI what command
+                    //The last four bits of the status byte tell MIDI what channel
+                    byte StatusByte = midiData[0];
+                    byte typeData = (byte)((StatusByte & 0xF0) >> 4);
+                    byte channelData = (byte)(StatusByte & 0x0F);
 
-                        //We should check to see if typeData is clock/start/continue/stop/note on/note off
-
-
-                        //-----------defines each midi byte---------------
-                        byte midi_start = 0xfa;         // start byte
-                        byte midi_stop = 0xfc;          // stop byte
-                        byte midi_clock = 0xf8;         // clock byte
-                        byte midi_continue = 0xfb;      // continue byte
-                        byte midi_note_on = 0x90;         // note on
-                        byte midi_note_off = 0x80;         // note off
-                        //------------------------------------------------
+                    //We should check to see if typeData is clock/start/continue/stop/note on/note off
 
 
-                        if ((StatusByte == midi_start) || (StatusByte == midi_continue))
+                    //-----------defines each midi byte---------------
+                    byte midi_start = 0xfa;         // start byte
+                    byte midi_stop = 0xfc;          // stop byte
+                    byte midi_clock = 0xf8;         // clock byte
+                    byte midi_continue = 0xfb;      // continue byte
+                    byte midi_note_on = 0x90;         // note on
+                    byte midi_note_off = 0x80;         // note off
+                                                       //------------------------------------------------
+
+
+                    if ((StatusByte == midi_start) || (StatusByte == midi_continue))
+                    {
+                        if (!myMidiModulation.IsRunning)
                         {
-                            if (!myMidiModulation.IsRunning)
-                            {
-                                InvokeOnMainThread(() => {
-                                    PowerPushed();
-                                    FlipPower();
-                                });
-                            }
-                            myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
+                            InvokeOnMainThread(() => {
+                                PowerPushed();
+                                FlipPower();
+                            });
                         }
+                        myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
+                    }
 
-                        if (StatusByte == midi_clock)
+                    if (StatusByte == midi_clock)
+                    {
+                        myMidiModulation.ClockCounter();
+                        if (myMidiModulation.StepComma == 2)
                         {
-                            myMidiModulation.ClockCounter();
-                            if (myMidiModulation.StepComma == 2)
-                            {
-                                myMidiModulation.StepComma = 0;
-                            }
-                            else
-                            {
-                                myMidiModulation.StepComma = myMidiModulation.StepComma + 1;
-                            }
-                            myMidiModulation.StepSizeSetter();
+                            myMidiModulation.StepComma = 0;
                         }
-
-                        if (StatusByte == midi_stop)
+                        else
                         {
-                            if (myMidiModulation.IsRunning)
-                            {
-                                InvokeOnMainThread(() => {
-                                    PowerPushed();
-                                    FlipPower();
-                                });
-                            }
+                            myMidiModulation.StepComma = myMidiModulation.StepComma + 1;
                         }
+                        myMidiModulation.StepSizeSetter();
+                    }
 
-                        if (myMidiModulation.IsTriggerOnly)
+                    if (StatusByte == midi_stop)
+                    {
+                        if (myMidiModulation.IsRunning)
                         {
-                            if(StatusByte == midi_note_on)
-                            {
-                                // handle note on
-                                myMidiModulation.IsNoteOn = true;
-                                myMidiModulation.NumOfNotesOn += 1;
-                            }
-                            if (StatusByte == midi_note_off)
-                            {
+                            InvokeOnMainThread(() => {
+                                PowerPushed();
+                                FlipPower();
+                            });
+                        }
+                    }
 
-                                if (myMidiModulation.NumOfNotesOn > 0)
-                                {
-                                    myMidiModulation.NumOfNotesOn -= 1;
-                                }
-                                if (myMidiModulation.NumOfNotesOn < 1)
-                                {
-                                    // handle note off
-                                    myMidiModulation.IsNoteOn = false;
-                                    myMidiModulation.NumOfNotesOn = 0;
-                                }
+                    if (myMidiModulation.IsTriggerOnly)
+                    {
+                        if (StatusByte == midi_note_on)
+                        {
+                            // handle note on
+                            myMidiModulation.IsNoteOn = true;
+                            myMidiModulation.NumOfNotesOn += 1;
+                        }
+                        if (StatusByte == midi_note_off)
+                        {
+
+                            if (myMidiModulation.NumOfNotesOn > 0)
+                            {
+                                myMidiModulation.NumOfNotesOn -= 1;
+                            }
+                            if (myMidiModulation.NumOfNotesOn < 1)
+                            {
+                                // handle note off
+                                myMidiModulation.IsNoteOn = false;
+                                myMidiModulation.NumOfNotesOn = 0;
                             }
                         }
+                    }
                     //}
                 }
             };
