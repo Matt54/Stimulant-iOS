@@ -5,6 +5,8 @@ using Xamarin.RangeSlider;
 using System.Diagnostics;
 using Foundation;
 
+using System.Drawing;
+
 namespace Stimulant
 {
     public partial class ViewController
@@ -42,6 +44,7 @@ namespace Stimulant
         UIButton buttonPlus10;
         UIButton buttonMinus1;
         UIButton buttonMinus10;
+        UITextField textFieldBPM;
 
 
 
@@ -90,9 +93,9 @@ namespace Stimulant
             sizeSubtract = (float)2.165333 / screenAspectRatio;
 
             //SetBackground(device); //This sets so many values (and is also not really just setting the background) - we should unpack this.
-                                   //^Just leave the switch statement inside LoadDisplay
+            //^Just leave the switch statement inside LoadDisplay
 
-            switch(device)
+            switch (device)
             {
                 case "8":
                     background = "Back8.png";
@@ -289,6 +292,7 @@ namespace Stimulant
             LoadRateLabel(screenWidth, screenHeight, textAdjustRate, sliderHeight);
             LoadRangeSlider(screenWidth, screenHeight, controlAdjustRange, rangeFontSize);
             LoadCCIncButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustCCInc, sizeIncrease);
+            LoadBPMTextField(screenWidth, screenHeight);
             AddSubviewsToMainview();
 
         }
@@ -408,7 +412,7 @@ namespace Stimulant
             buttonReverse.TouchDown += HandleReverseTouchDown;
         }
 
-        public void LoadCCButton(float screenWidth, float screenHeight, float sizeSubtract,float controlAdjustSettings)
+        public void LoadCCButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustSettings)
         {
             float buttonCCWidth = screenWidth / (12 + sizeSubtract);
             float buttonCCHeight = buttonCCWidth;
@@ -422,7 +426,7 @@ namespace Stimulant
             buttonCC.TouchDown += HandleCCTouchDown;
         }
 
-        public void LoadSettingsButton(float screenWidth, float screenHeight, float sizeSubtract,float controlAdjustSettings)
+        public void LoadSettingsButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustSettings)
         {
             float buttonSettingsWidth = screenWidth / (12 + sizeSubtract);
             float buttonSettingsHeight = buttonSettingsWidth;
@@ -465,7 +469,7 @@ namespace Stimulant
             buttonClock.TouchDown += HandleClockTouchDown;
         }
 
-        public void LoadBPMButton(float screenWidth, float screenHeight, float sizeSubtract,float controlAdjustBPM)
+        public void LoadBPMButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustBPM)
         {
             float buttonBPMWidth = screenWidth / (12 + sizeSubtract);
             float buttonBPMHeight = buttonBPMWidth;
@@ -563,7 +567,7 @@ namespace Stimulant
             float buttonIncWidth = (float)screenWidth / (8 + sizeSubtract);
             float buttonIncHeight = (float)(buttonIncWidth * 0.8 * sizeIncrease);
             float buttonIncXLoc = (float)((screenWidth - buttonIncWidth) / 1.7);
-            float buttonIncYLoc = (float)((screenHeight - buttonIncHeight) / 1.56) * controlAdjustCCInc;
+            float buttonIncYLoc = (float)((screenHeight - buttonIncHeight) / 1.29) * controlAdjustCCInc;
             buttonPlus1 = UIButton.FromType(UIButtonType.Custom);
             buttonPlus1.SetImage(UIImage.FromFile("graphicPlus1ButtonOff.png"), UIControlState.Normal);
             buttonPlus1.SetImage(UIImage.FromFile("graphicPlus1ButtonOn.png"), UIControlState.Highlighted);
@@ -607,7 +611,7 @@ namespace Stimulant
             segmentedPattern.Frame = new CGRect(segXLoc, segYLoc, segWidth, segHeight);
             segmentedPattern.TintColor = UIColor.Green;
             segmentedPattern.SelectedSegment = 0;
-            segmentedPattern.ValueChanged += PnumChange;
+            segmentedPattern.ValueChanged += HandlePatternSegmentChange;
         }
 
         public void LoadPatternLabel(float screenWidth, float screenHeight, float textAdjustPattern, float segHeight)
@@ -678,6 +682,60 @@ namespace Stimulant
             };
         }
 
+        public void LoadBPMTextField(float screenWidth, float screenHeight)
+        {
+            float BPMWidth = (float)(screenWidth / 3);
+            float BPMHeight = (float)(screenHeight / 10);
+            float BPMXLoc = (float)((screenWidth - BPMWidth) / 2);
+            float BPMYLoc = (float)((screenHeight - BPMHeight) / 10);
+            textFieldBPM = new UITextField();
+            textFieldBPM.Frame = new CGRect(BPMXLoc, BPMYLoc, BPMWidth, BPMHeight);
+            textFieldBPM.Layer.BorderColor = UIColor.White.CGColor;
+            textFieldBPM.TextColor = UIColor.White;
+            textFieldBPM.Layer.BorderWidth = 1f;
+            textFieldBPM.TextAlignment = UITextAlignment.Center;
+            textFieldBPM.KeyboardType = UIKeyboardType.NumbersAndPunctuation;
+            textFieldBPM.ReturnKeyType = UIReturnKeyType.Done;
+            //textFieldBPM.Placeholder = "HELLO WORLD";
+            textFieldBPM.AttributedPlaceholder = new NSAttributedString("100", null, UIColor.White);
+            textFieldBPM.MinimumFontSize = 17f;
+            textFieldBPM.AdjustsFontSizeToFitWidth = true;
+
+            textFieldBPM.ShouldChangeCharacters = (textField, range, replacement) =>
+            {
+                var newContent = new NSString(textField.Text).Replace(range, new NSString(replacement)).ToString();
+                int number;
+                return newContent.Length <= 3 && (replacement.Length == 0 || int.TryParse(replacement, out number));
+            };
+        }
+
+
+
+        /*
+        public void KeyboardWillShow(NSNotification notification)
+        {
+            var doneButton = new UIButton(UIButtonType.Custom);
+            doneButton.Frame = new RectangleF(0, 163, 106, 53);
+            doneButton.SetTitle("DONE", UIControlState.Normal);
+            doneButton.SetTitleColor(UIColor.Black, UIControlState.Normal);
+            doneButton.SetTitleColor(UIColor.White, UIControlState.Highlighted);
+
+            doneButton.TouchUpInside += (sender, e) =>
+            {
+                // Make the Done button do its thing!  The textfield shouldn't be the first responder
+                textFieldBPM.ResignFirstResponder();
+            };
+
+            // This is the 'magic' that could change with future version of iOS
+            var keyboard =textFieldBPM.WeakInputDelegate as UIView;
+            if (keyboard != null)
+            {
+                keyboard.AddSubview(doneButton);
+            }
+        }
+        */
+
+
         public void AddSubviewsToMainview()
         {
             //Add Subviews to main view
@@ -704,6 +762,7 @@ namespace Stimulant
             View.AddSubview(buttonPlus10);
             View.AddSubview(buttonMinus1);
             View.AddSubview(buttonMinus10);
+            //View.AddSubview(textFieldBPM);
         }
 
     }

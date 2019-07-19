@@ -594,7 +594,7 @@ namespace Stimulant
         //rate.
         public void StepSizeSetter()
         {
-            
+
             bool stepBack = false, stepForward = false;
             switch (RateCatch)
             {
@@ -662,7 +662,7 @@ namespace Stimulant
                 }
             }
 
-            
+
         }
 
 
@@ -824,10 +824,13 @@ namespace Stimulant
         //enables or disables the ability to adjust the cc number
         public void CCToggle()
         {
+            /*
             if (SettingsOn)
             {
                 SettingsToggle();
             }
+			*/
+            //Instead we need (if bpm adjust is on)
 
             if (CCOn)
             {
@@ -856,10 +859,13 @@ namespace Stimulant
         //enables or disables the ability to adjust the auto mode frequency
         public void SettingsToggle()
         {
+            /*
             if (CCOn)
             {
                 CCToggle();
             }
+			*/
+            //Instead we need (if starting location adjust is on)
 
             if (SettingsOn)
             {

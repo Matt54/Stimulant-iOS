@@ -41,6 +41,7 @@ namespace Stimulant
             base.ViewDidLoad();
             // Perform any additional setup after loading the view, typically from a nib.
 
+            //NSNotificationCenter.DefaultCenter.AddObserver((Foundation.NSString)"UIKeyboardWillShowNotification", KeyboardWillShow);
             //NSNotificationCenter.DefaultCenter.AddObserver((NSString)"UIKeyboardWillShowNotification", KeyboardWillShow);
 
             Midi.Restart(); //This stops the MIDI subsystems and forces it to be reinitialized
@@ -91,6 +92,11 @@ namespace Stimulant
             LoadDisplay();
             myMidiModulation.ModeNumber = 2;
             ReadSlider(sliderRate.Value);
+
+            this.textFieldBPM.ShouldReturn += (textField) => {
+                textFieldBPM.ResignFirstResponder();
+                return true;
+            };
 
             myMidiModulation.PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
             {
@@ -171,22 +177,26 @@ namespace Stimulant
                             if (myMidiModulation.CCOn)
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOn.png"), UIControlState.Normal);
-                                sliderRate.Hidden = true;
+                                //sliderRate.Hidden = true;
+                                segmentedPattern.Hidden = true;
                                 buttonPlus1.Hidden = false;
                                 buttonPlus10.Hidden = false;
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
-                                labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                //labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
                             else
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Normal);
-                                sliderRate.Hidden = false;
+                                //sliderRate.Hidden = false;
+                                segmentedPattern.Hidden = false;
                                 buttonPlus1.Hidden = true;
                                 buttonPlus10.Hidden = true;
                                 buttonMinus1.Hidden = true;
                                 buttonMinus10.Hidden = true;
-                                ReadSlider(sliderRate.Value);
+                                //ReadSlider(sliderRate.Value); //We need an equivalent to a Pattern read
+                                ReadPattern(segmentedPattern.SelectedSegment);
                             }
                             break;
                         }
@@ -195,7 +205,8 @@ namespace Stimulant
                         {
                             if (myMidiModulation.CCOn)
                             {
-                                labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                //labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
                             break;
                         }
@@ -331,11 +342,7 @@ namespace Stimulant
             myMidiModulation.ModeNumber = 2;
         }
 
-        protected void HandleRateSliderChange(object sender, System.EventArgs e)
-        {
-            var myObject = (UISlider)sender;
-            ReadSlider(myObject.Value);
-        }
+
 
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
         {
@@ -460,6 +467,12 @@ namespace Stimulant
         protected void HandleTriggerTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.TriggerToggle();
+        }
+
+        protected void HandleRateSliderChange(object sender, System.EventArgs e)
+        {
+            var myObject = (UISlider)sender;
+            ReadSlider(myObject.Value);
         }
 
         void ReadSlider(float sliderValue)
@@ -770,13 +783,21 @@ namespace Stimulant
 
         //partial void ModeNumChanged(UISegmentedControl sender) { }
 
-        protected void PnumChange(object sender, System.EventArgs e)
+        protected void HandlePatternSegmentChange(object sender, System.EventArgs e)
         {
             var seg = sender as UISegmentedControl;
-            var index = seg.SelectedSegment;
-            string labelText = myMidiModulation.UpdatePattern(index);
+            //var index = seg.SelectedSegment;
+            //ReadPattern(index);
+            ReadPattern(seg.SelectedSegment);
+        }
+
+        void ReadPattern(nint patternIndex)
+        {
+            string labelText = myMidiModulation.UpdatePattern(patternIndex);
             labelPattern.Text = labelText;
         }
+
+
 
         /*
         private void ProgramChange()
