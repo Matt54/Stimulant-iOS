@@ -86,7 +86,6 @@ namespace Stimulant
             // are finished when the Stop function exits 
             //timerHighRes.Stop(joinThread:false)   // Use if you don't care and don't want to wait
 
-
             UIHelper = false;
 
             LoadDisplay();
@@ -168,6 +167,41 @@ namespace Stimulant
                             else
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                            }
+                            break;
+                        }
+
+                    case "BPMOn":
+                        {
+                            if (myMidiModulation.BPMOn)
+                            {
+                                buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOn.png"), UIControlState.Normal);
+                                segmentedPattern.Hidden = true;
+                                buttonPlus1.Hidden = false;
+                                buttonPlus10.Hidden = false;
+                                buttonMinus1.Hidden = false;
+                                buttonMinus10.Hidden = false;
+                                labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                            }
+                            else
+                            {
+                                buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
+                                segmentedPattern.Hidden = false;
+                                buttonPlus1.Hidden = true;
+                                buttonPlus10.Hidden = true;
+                                buttonMinus1.Hidden = true;
+                                buttonMinus10.Hidden = true;
+                                ReadPattern(segmentedPattern.SelectedSegment);
+                            }
+                            break;
+                        }
+
+                    case "BPM":
+                        {
+                            if (myMidiModulation.BPMOn)
+                            {
+                                labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                                ReadSlider(sliderRate.Value);
                             }
                             break;
                         }
@@ -342,27 +376,56 @@ namespace Stimulant
             myMidiModulation.ModeNumber = 2;
         }
 
-
-
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.UpdateCCNumber(1);
+            if (myMidiModulation.CCOn)
+            {
+                myMidiModulation.UpdateCCNumber(1);
+            }
+            else
+            {
+                myMidiModulation.UpdateBPM(1);
+            }
         }
 
         private void HandlePlus10TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.UpdateCCNumber(10);
+            if (myMidiModulation.CCOn)
+            {
+                myMidiModulation.UpdateCCNumber(10);
+            }
+            else
+            {
+                myMidiModulation.UpdateBPM(10);
+            }
         }
 
         private void HandleMinus1TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.UpdateCCNumber(-1);
+            if (myMidiModulation.CCOn)
+            {
+                myMidiModulation.UpdateCCNumber(-1);
+            }
+            else
+            {
+                myMidiModulation.UpdateBPM(-1);
+            }
         }
 
         private void HandleMinus10TouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.UpdateCCNumber(-10);
+            if (myMidiModulation.CCOn)
+            {
+                myMidiModulation.UpdateCCNumber(-10);
+            }
+            else
+            {
+                myMidiModulation.UpdateBPM(-10);
+            }
         }
+
+
+
 
         partial void RateSliderChange(UISlider sender) { }
         partial void StartButton_TouchUpInside(UIButton sender) { }
@@ -428,6 +491,11 @@ namespace Stimulant
         protected void HandleCCTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.CCToggle();
+        }
+
+        private void HandleBPMTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.BPMToggle();
         }
 
         protected void HandleSettingsTouchDown(object sender, System.EventArgs e)
@@ -608,7 +676,7 @@ namespace Stimulant
                 else
                 {
                     //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
-                    timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds(50.0f, myMidiModulation.RateCatch);
+                    timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
                     labelRate.Text = "BPM Clock Sync: " + displayText;
                 }
 

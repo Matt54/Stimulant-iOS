@@ -52,6 +52,21 @@ namespace Stimulant
             set { _CCOn = value; OnPropertyChanged("CCOn"); }
         }
 
+        private int _BPM;
+        public int BPM
+        {
+            get { return _BPM; }
+            set { _BPM = value; OnPropertyChanged("BPM"); }
+        }
+
+        //flag to allow the BPM number to be adjusted (BPM)
+        private bool _BPMOn;
+        public bool BPMOn
+        {
+            get { return _BPMOn; }
+            set { _BPMOn = value; OnPropertyChanged("BPMOn"); }
+        }
+
         //values control how large the value range of the MIDI cc message is (default: min 0 - max 127)
         public int Minimum { get; set; }
         public int Maximum { get; set; }
@@ -172,6 +187,7 @@ namespace Stimulant
             AutoCounter = 0;
             AutoCutoff = 10;
             IsAR = false;
+            BPM = 120;
         }
 
 
@@ -762,6 +778,25 @@ namespace Stimulant
             }
         }
 
+        //changes the bpm by the inputted value but only as large as the max and and small as the min (does not swing around)
+        public void UpdateBPM(int val)
+        {
+            var max = 150;
+            var min = 50;
+            if (BPM + val >= min && BPM + val <= max)
+            {
+                BPM += val;
+            }
+            else if (BPM + val > max)
+            {
+                BPM = max;
+            }
+            else
+            {
+                BPM = min;
+            }
+        }
+
 
         //enables or disables auto mode
         public void AutoToggle()
@@ -824,13 +859,11 @@ namespace Stimulant
         //enables or disables the ability to adjust the cc number
         public void CCToggle()
         {
-            /*
-            if (SettingsOn)
+            //Need this because they use the same GUI region
+            if (BPMOn)
             {
-                SettingsToggle();
+                BPMToggle();
             }
-			*/
-            //Instead we need (if bpm adjust is on)
 
             if (CCOn)
             {
@@ -839,6 +872,24 @@ namespace Stimulant
             else
             {
                 CCOn = true;
+            }
+        }
+
+        public void BPMToggle()
+        {
+            //Need this because they use the same GUI region
+            if (CCOn)
+            {
+                CCToggle();
+            }
+
+            if (BPMOn)
+            {
+                BPMOn = false;
+            }
+            else
+            {
+                BPMOn = true;
             }
         }
 

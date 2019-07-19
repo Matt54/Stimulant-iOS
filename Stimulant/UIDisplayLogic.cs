@@ -417,7 +417,9 @@ namespace Stimulant
             float buttonCCWidth = screenWidth / (12 + sizeSubtract);
             float buttonCCHeight = buttonCCWidth;
             float buttonCCXLoc = (float)((screenWidth - buttonCCWidth) * (0.09));
-            float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.67) * controlAdjustSettings;
+            //float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.67) * controlAdjustSettings;
+            float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.415) * controlAdjustSettings;
+            //float buttonRandomYLoc = (float)((screenHeight - buttonRandomHeight) / 1.415) * controlAdjustRandoms;
             buttonCC = UIButton.FromType(UIButtonType.Custom);
             buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Normal);
             buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Highlighted);
@@ -473,14 +475,20 @@ namespace Stimulant
         {
             float buttonBPMWidth = screenWidth / (12 + sizeSubtract);
             float buttonBPMHeight = buttonBPMWidth;
-            float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.05));
-            float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.07) * controlAdjustBPM;
+            //float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.05));
+            //float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.07) * controlAdjustBPM;
+            float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.91));
+            float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.415) * controlAdjustBPM;
+
+            //float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
+            //float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
+
             buttonBPM = UIButton.FromType(UIButtonType.Custom);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Highlighted);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Disabled);
             buttonBPM.Frame = new CGRect(buttonBPMXLoc, buttonBPMYLoc, buttonBPMWidth, buttonBPMHeight);
-            //buttonBPM.TouchDown += HandleBPMTouchDown;
+            buttonBPM.TouchDown += HandleBPMTouchDown;
         }
 
         public void LoadTriggerButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustTrigger)
@@ -529,8 +537,15 @@ namespace Stimulant
         {
             float buttonAutoWidth = screenWidth / (12 + sizeSubtract);
             float buttonAutoHeight = buttonAutoWidth;
-            float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
-            float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
+            //float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
+            //float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
+
+            float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.05));
+            float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.07) * controlAdjustRandoms;
+
+            //float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.05));
+            //float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.07) * controlAdjustBPM;
+
             buttonAuto = UIButton.FromType(UIButtonType.Custom);
             buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
             buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Highlighted);
@@ -755,7 +770,7 @@ namespace Stimulant
             View.AddSubview(buttonBPM);
             View.AddSubview(buttonTrigger);
             View.AddSubview(buttonClock);
-            View.AddSubview(buttonRandom);
+            //View.AddSubview(buttonRandom);
             View.AddSubview(buttonAuto);
             View.AddSubview(buttonAR);
             View.AddSubview(buttonPlus1);
