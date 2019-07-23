@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Stimulant
 {
     public class MidiModulation : INotifyPropertyChanged
     {
-        //flag that allows modulation to occur if true
+        // flag that allows modulation to occur if true
         public bool IsRunning { get; set; }
 
-        //trigger for the modulation to take a step
+        // trigger for the modulation to take a step
         private bool _FireModulation;
         public bool FireModulation
         {
@@ -17,7 +19,7 @@ namespace Stimulant
             set { _FireModulation = value; OnPropertyChanged("FireModulation"); }
         }
 
-        //controls the step's direction and amount (or simply just selects the next cc value)
+        // controls the step's direction and amount (or simply just selects the next cc value)
         private int _PatternNumber;
         public int PatternNumber
         {
@@ -25,7 +27,7 @@ namespace Stimulant
             set { _PatternNumber = value; OnPropertyChanged("PatternNumber"); }
         }
 
-        //description of the pattern for the UI to readout
+        // description of the pattern for the UI to readout
         private string _PatternString;
         public string PatternString
         {
@@ -33,10 +35,10 @@ namespace Stimulant
             set { _PatternString = value; OnPropertyChanged("PatternString"); }
         }
 
-        //cc value sent in the MIDI continuous controller message (0-127)
+        // cc value sent in the MIDI continuous controller message (0-127)
         public int CurrentCC { get; set; }
 
-        //cc number used in the MIDI continuous controller message (it can be changed - see CCon)
+        // cc number used in the MIDI continuous controller message (it can be changed - see CCon)
         private int _CCNumber;
         public int CCNumber
         {
@@ -44,7 +46,7 @@ namespace Stimulant
             set { _CCNumber = value; OnPropertyChanged("CCNumber"); }
         }
 
-        //flag to allow the cc number to be adjusted (CCNumber)
+        // flag to allow the cc number to be adjusted (CCNumber)
         private bool _CCOn;
         public bool CCOn
         {
@@ -59,7 +61,13 @@ namespace Stimulant
             set { _BPM = value; OnPropertyChanged("BPM"); }
         }
 
-        //flag to allow the BPM number to be adjusted (BPM)
+        // used to record amount of time between tap presses to set BPM
+        Stopwatch bpmTapClock = new Stopwatch();
+
+        //int[] bpmTaps = { 0, 0, 0, 0 };
+        List<int> bpmTaps = new List<int>();
+
+        // flag to allow the BPM number to be adjusted (BPM)
         private bool _BPMOn;
         public bool BPMOn
         {
@@ -67,30 +75,30 @@ namespace Stimulant
             set { _BPMOn = value; OnPropertyChanged("BPMOn"); }
         }
 
-        //values control how large the value range of the MIDI cc message is (default: min 0 - max 127)
+        // values control how large the value range of the MIDI cc message is (default: min 0 - max 127)
         public int Minimum { get; set; }
         public int Maximum { get; set; }
 
-        //sets the stepsize and stepcomma based on the rate of the modulation
+        // sets the stepsize and stepcomma based on the rate of the modulation
         public int RateCatch { get; set; }
 
-        //values control influences how large of a step to take
+        // values control influences how large of a step to take
         public int StepSize { get; set; }
         public int StepComma { get; set; }
 
-        //values influence how often steps are taken
+        // values influence how often steps are taken
         public int ClockCount { get; set; }
         public int ClockCutoff { get; set; }
 
-        //Is this unused?
+        // Is this unused?
         public int RateRemember { get; set; }
 
-        //previous value and other bool helpers for pattern purposes
+        // previous value and other bool helpers for pattern purposes
         public int LastCC { get; set; }
         public bool EveryOther { get; set; }
         public bool OppositeHelper { get; set; }
 
-        //flag to reverse pattern direction
+        // flag to reverse pattern direction
         private bool _Opposite;
         public bool Opposite
         {
@@ -98,11 +106,11 @@ namespace Stimulant
             set { _Opposite = value; OnPropertyChanged("Opposite"); }
         }
 
-        //random number (if created each time a random number is required it results in less "random" of numbers)
+        // random number (if created each time a random number is required it results in less "random" of numbers)
         private Random random = new Random();
 
-        //Currently there are only 2 modes (1 = MIDI mode, 2 = time/frequency mode, 3 = time/bpm mode)
-        //MIDI mode uses the external MIDI clock for its pattern movements, time mode uses a built-in clock
+        // Currently there are only 2 modes (1 = MIDI mode, 2 = time/frequency mode, 3 = time/bpm mode)
+        // MIDI mode uses the external MIDI clock for its pattern movements, time mode uses a built-in clock
         private int _ModeNumber;
         public int ModeNumber
         {
@@ -110,7 +118,7 @@ namespace Stimulant
             set { _ModeNumber = value; OnPropertyChanged("ModeNumber"); }
         }
 
-        //flag for the "auto mode" which just randomizes the modulation settings at a certain frequency/# of MIDI clock pulses
+        // flag for the "auto mode" which just randomizes the modulation settings at a certain frequency/# of MIDI clock pulses
         private bool _IsAuto;
         public bool IsAuto
         {
@@ -118,14 +126,14 @@ namespace Stimulant
             set { _IsAuto = value; OnPropertyChanged("IsAuto"); }
         }
 
-        //vales control the frequency of the modulation randomization
+        // vales control the frequency of the modulation randomization
         public int AutoCounter { get; set; }
         public int AutoCutoff { get; set; }
 
-        //trigger for the modulation to randomize its settings
+        // trigger for the modulation to randomize its settings
         public bool IsRandomRoll { get; set; }
 
-        //flag to allow the "auto mode" to have its frequency or # of MIDI clock pulses required before randomization to be adjusted
+        // flag to allow the "auto mode" to have its frequency or # of MIDI clock pulses required before randomization to be adjusted
         private bool _SettingsOn;
         public bool SettingsOn
         {
@@ -133,7 +141,7 @@ namespace Stimulant
             set { _SettingsOn = value; OnPropertyChanged("SettingsOn"); }
         }
 
-        //(AR = auto range) flag to allow the minimum and maximum values to be set in auto mode
+        // (AR = auto range) flag to allow the minimum and maximum values to be set in auto mode
         private bool _IsAR;
         public bool IsAR
         {
@@ -164,10 +172,10 @@ namespace Stimulant
         }
 
 
-        //Class Constructor
+        // Class Constructor
         public MidiModulation()
         {
-            //Default Values for New Object of Class
+            // Default Values for New Object of Class
             PatternNumber = 1;
             ModeNumber = 0;
             ClockCount = 0;
@@ -191,7 +199,7 @@ namespace Stimulant
         }
 
 
-        //takes in a value from a segmented control  to set the pattern number and relays back a description of the pattern
+        // takes in a value from a segmented control  to set the pattern number and relays back a description of the pattern
         public string UpdatePattern(nint patternIndex)
         {
             string labelText;
@@ -237,16 +245,16 @@ namespace Stimulant
         }
 
 
-        //used in MIDI clock mode to limit the rate of the modulation
+        // used in MIDI clock mode to limit the rate of the modulation
         public void ClockCounter()
         {
             if (IsRunning)
             {
-                //auto mode flag during midi mode - random modulation settings occur at some clock rate
+                // auto mode flag during midi mode - random modulation settings occur at some clock rate
                 if (IsAuto)
                 {
-                    //AutoCutoff can be adjusted with settings button on and the rate slider
-                    //RandomRoll is disabled when settings are on
+                    // AutoCutoff can be adjusted with settings button on and the rate slider
+                    // RandomRoll is disabled when settings are on
                     if (!SettingsOn)
                     {
                         AutoCounter++;
@@ -259,16 +267,16 @@ namespace Stimulant
                     }
                 }
 
-                //when the rate changes the ClockCutoff is sometimes adjusted. We need to reset the ClockCount if this condition occurs.
+                // when the rate changes the ClockCutoff is sometimes adjusted. We need to reset the ClockCount if this condition occurs.
                 if (ClockCount > ClockCutoff)
                 {
                     ClockCount = 0;
                 }
 
-                //the actual counting
+                // the actual counting
                 ClockCount++;
 
-                //tell modulation to take a step if clock count is at the cutoff
+                // tell modulation to take a step if clock count is at the cutoff
                 if (ClockCount == ClockCutoff)
                 {
                     FireModulation = true;
@@ -277,13 +285,13 @@ namespace Stimulant
         }
 
 
-        //UpdateValue stores the different available patterns
-        //it steps the CC value to the next appropriate value based on the pattern number
-        //lots of arithmetic here - only a short summary will be provided for each pattern
+        // UpdateValue stores the different available patterns
+        // it steps the CC value to the next appropriate value based on the pattern number
+        // lots of arithmetic here - only a short summary will be provided for each pattern
         public void UpdateValue()
         {
             // =========================================Program #1===========================================
-            //"Pattern 1: Up && Down" - steps up until maximum then step down until minimum
+            // "Pattern 1: Up && Down" - steps up until maximum then step down until minimum
             if (PatternNumber == 1)
             {
                 if (Opposite == false)
@@ -893,7 +901,62 @@ namespace Stimulant
             }
         }
 
-        //switched between time based modes (bpm vs frequency)
+        public void BPMTap()
+        {
+
+            // BPM Tap algorithm here
+            // 1 beat = 1 quarter note
+            // 1 minute = 60 seconds = 60,000 milliseconds
+            // Quarter note duration (ms) = 60,000 / bpm
+
+            if (!bpmTapClock.IsRunning)
+            {
+                bpmTapClock.Start();
+            }
+            else
+            {
+                if (bpmTapClock.ElapsedMilliseconds < 400 || bpmTapClock.ElapsedMilliseconds > 1200)
+                {
+                    bpmTapClock.Restart();
+                    bpmTaps.Clear();
+                }
+                else
+                {
+                    AverageBPM((double)bpmTapClock.ElapsedMilliseconds);
+                    bpmTapClock.Restart();
+                }
+            }
+        }
+
+        private void AverageBPM(double elapsedTime)
+        {
+            int sumBPM = 0;
+            int maxAverageWindow = 4; // max number of taps counted
+            int deviationTolerance = 20; // max deviation in bpm before we considered it a new window
+
+            int inputBPM = (int)Math.Round(60000 / elapsedTime);
+
+            if (Math.Abs(BPM - inputBPM) > deviationTolerance)
+            {
+                bpmTaps.Clear();
+            }
+
+            if (bpmTaps.Count > maxAverageWindow)
+            {
+                bpmTaps.RemoveAt(0); // remove first count from list if above max window
+            }
+
+            bpmTaps.Add(inputBPM);
+
+            foreach (int bpmTap in bpmTaps)
+            {
+                sumBPM += bpmTap;
+            }
+
+            BPM = sumBPM / bpmTaps.Count;
+        }
+
+        // switched between time based modes (bpm vs frequency)
         public void ClockToggle()
         {
             if (ModeNumber == 3)
@@ -907,7 +970,7 @@ namespace Stimulant
         }
 
 
-        //enables or disables the ability to adjust the auto mode frequency
+        // enables or disables the ability to adjust the auto mode frequency
         public void SettingsToggle()
         {
             /*
@@ -916,7 +979,8 @@ namespace Stimulant
                 CCToggle();
             }
 			*/
-            //Instead we need (if starting location adjust is on)
+
+            // Instead we need (if starting location adjust is on)
 
             if (SettingsOn)
             {

@@ -182,6 +182,7 @@ namespace Stimulant
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
                                 labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                                buttonTap.Hidden = false;
                             }
                             else
                             {
@@ -192,6 +193,7 @@ namespace Stimulant
                                 buttonMinus1.Hidden = true;
                                 buttonMinus10.Hidden = true;
                                 ReadPattern(segmentedPattern.SelectedSegment);
+                                buttonTap.Hidden = true;
                             }
                             break;
                         }
@@ -530,6 +532,11 @@ namespace Stimulant
         protected void HandleClockTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.ClockToggle();
+        }
+
+        protected void HandleTapTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.BPMTap();
         }
 
         protected void HandleTriggerTouchDown(object sender, System.EventArgs e)

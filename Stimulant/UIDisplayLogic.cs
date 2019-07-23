@@ -44,6 +44,7 @@ namespace Stimulant
         UIButton buttonPlus10;
         UIButton buttonMinus1;
         UIButton buttonMinus10;
+        UIButton buttonTap;
         UITextField textFieldBPM;
 
 
@@ -72,6 +73,7 @@ namespace Stimulant
             float controlAdjustCCInc;
             float controlAdjustBPM;
             float controlAdjustTrigger;
+            float controlAdjustTap;
             float sizeIncrease;
 
             //Get the Screen Size, Width, and Height
@@ -112,6 +114,7 @@ namespace Stimulant
                     controlAdjustCCInc = 0.99f;
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -130,6 +133,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -148,6 +152,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.005f;
                     sizeIncrease = 1.2f;
                     break;
@@ -166,6 +171,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -184,6 +190,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
                     controlAdjustTrigger = 0.95f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -202,6 +209,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
                     controlAdjustTrigger = 0.95f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -220,6 +228,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.024f;
                     controlAdjustBPM = 0.95f;
                     controlAdjustTrigger = 0.95f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -238,6 +247,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.025f;
                     controlAdjustBPM = 0.95f;
                     controlAdjustTrigger = 0.95f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     break;
@@ -256,6 +266,7 @@ namespace Stimulant
                     controlAdjustCCInc = 1.00f;
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
+                    controlAdjustTap = 1f;
                     buttonYAdjust = 1.005f;
                     sizeIncrease = 1.0f;
                     break;
@@ -292,6 +303,7 @@ namespace Stimulant
             LoadRateLabel(screenWidth, screenHeight, textAdjustRate, sliderHeight);
             LoadRangeSlider(screenWidth, screenHeight, controlAdjustRange, rangeFontSize);
             LoadCCIncButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustCCInc, sizeIncrease);
+            LoadTapButton(screenWidth, screenHeight, sizeSubtract);
             LoadBPMTextField(screenWidth, screenHeight);
             AddSubviewsToMainview();
 
@@ -489,6 +501,21 @@ namespace Stimulant
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Disabled);
             buttonBPM.Frame = new CGRect(buttonBPMXLoc, buttonBPMYLoc, buttonBPMWidth, buttonBPMHeight);
             buttonBPM.TouchDown += HandleBPMTouchDown;
+        }
+
+        public void LoadTapButton(float screenWidth, float screenHeight, float sizeSubtract)
+        {
+            float buttonTapWidth = (float)(screenWidth / (5 + sizeSubtract));
+            float buttonTapHeight = buttonTapWidth * 3 / 5;
+            float buttonTapXLoc = (float)((screenWidth - buttonTapWidth) * (0.91));
+            float buttonTapYLoc = (float)((screenHeight - buttonTapHeight) / 1.29);
+            buttonTap = UIButton.FromType(UIButtonType.Custom);
+            buttonTap.Hidden = true;
+            buttonTap.SetImage(UIImage.FromFile("graphicTapButtonOff.png"), UIControlState.Normal);
+            buttonTap.SetImage(UIImage.FromFile("graphicTapButtonOn.png"), UIControlState.Highlighted);
+            buttonTap.SetImage(UIImage.FromFile("graphicTapButtonOff.png"), UIControlState.Disabled);
+            buttonTap.Frame = new CGRect(buttonTapXLoc, buttonTapYLoc, buttonTapWidth, buttonTapHeight);
+            buttonTap.TouchDown += HandleTapTouchDown;
         }
 
         public void LoadTriggerButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustTrigger)
@@ -768,6 +795,7 @@ namespace Stimulant
             View.AddSubview(buttonSettings);
             View.AddSubview(buttonInfo);
             View.AddSubview(buttonBPM);
+            View.AddSubview(buttonTap);
             View.AddSubview(buttonTrigger);
             View.AddSubview(buttonClock);
             //View.AddSubview(buttonRandom);
