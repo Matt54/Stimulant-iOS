@@ -310,6 +310,12 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicClockButtonOn.png">
         <Link>Resources\graphicClockButtonOn.png</Link>
       </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicLocationButtonOff.png">
+        <Link>Resources\graphicLocationButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicLocationButtonOn.png">
+        <Link>Resources\graphicLocationButtonOn.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
