@@ -571,7 +571,8 @@ namespace Stimulant
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Highlighted);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Disabled);
             buttonLocation.Frame = new CGRect(buttonLocationXLoc, buttonLocationYLoc, buttonLocationWidth, buttonLocationHeight);
-            //buttonLocation.TouchDown += HandleLocationTouchDown;
+            buttonLocation.Enabled = false;
+            buttonLocation.TouchDown += HandleLocationTouchDown;
         }
 
         public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
@@ -767,7 +768,7 @@ namespace Stimulant
             //sliderHidden.MinimumTrackTintColor = UIColor.Clear;
             sliderHidden.SetMinTrackImage(new UIImage(), UIControlState.Normal);
             sliderHidden.SetMaxTrackImage(new UIImage(), UIControlState.Normal);
-            //sliderHidden.ValueChanged += HandleHiddenSliderChange;
+            sliderHidden.ValueChanged += HandleHiddenSliderChange;
         }
 
         public void LoadBPMTextField(float screenWidth, float screenHeight)

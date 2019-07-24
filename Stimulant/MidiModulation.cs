@@ -54,6 +54,7 @@ namespace Stimulant
             set { _CCOn = value; OnPropertyChanged("CCOn"); }
         }
 
+        // beats per minute used in time mode
         private int _BPM;
         public int BPM
         {
@@ -64,7 +65,7 @@ namespace Stimulant
         // used to record amount of time between tap presses to set BPM
         Stopwatch bpmTapClock = new Stopwatch();
 
-        //int[] bpmTaps = { 0, 0, 0, 0 };
+        // stores a window of beats per minute taps so we can average them
         List<int> bpmTaps = new List<int>();
 
         // flag to allow the BPM number to be adjusted (BPM)
@@ -149,6 +150,7 @@ namespace Stimulant
             set { _IsAR = value; OnPropertyChanged("IsAR"); }
         }
 
+        // trigger only prevents modulation except when at least one note is on
         private bool _IsTriggerOnly;
         public bool IsTriggerOnly
         {
@@ -156,8 +158,21 @@ namespace Stimulant
             set { _IsTriggerOnly = value; OnPropertyChanged("IsTriggerOnly"); }
         }
 
+        // restarts modulation at the starting location (only in trigger only mode)
+        private bool _IsRestartEachNote;
+        public bool IsRestartEachNote
+        {
+            get { return _IsRestartEachNote; }
+            set { _IsRestartEachNote = value; OnPropertyChanged("IsRestartEachNote"); }
+        }
+
+        // value the modulation restarts at in trigger only mode with the restart each note setting on
+        public int StartingLocation { get; set; }
+
+        // is there at least one note on?
         public bool IsNoteOn { get; set; }
 
+        // number of notes currently pressed
         public int NumOfNotesOn { get; set; }
 
 
@@ -389,7 +404,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #2===========================================
-            //"Pattern 2: Up || Down" - steps up until maximum then restarts at minimum or does the opposite
+            // "Pattern 2: Up || Down" - steps up until maximum then restarts at minimum or does the opposite
             if (PatternNumber == 2)
             {
                 if (Opposite == false)
@@ -426,7 +441,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #3===========================================
-            //"Pattern 3: Fwd 2 Back 1" - steps 2x forward then x backwards (direction can be reversed)
+            // "Pattern 3: Fwd 2 Back 1" - steps 2x forward then x backwards (direction can be reversed)
             if (PatternNumber == 3)
             {
                 if (EveryOther)
@@ -473,7 +488,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #4===========================================
-            //"Pattern 4: Crisscross" - back and forth between up/down patterns moving in opposite direction
+            // "Pattern 4: Crisscross" - back and forth between up/down patterns moving in opposite direction
             if (PatternNumber == 4)
             {
                 if (EveryOther)
@@ -499,7 +514,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #5===========================================
-            //"Pattern 5: Min Jumper" - back and forth between minimum and an upward or downward pattern
+            // "Pattern 5: Min Jumper" - back and forth between minimum and an upward or downward pattern
             if (PatternNumber == 5)
             {
                 if (EveryOther)
@@ -535,7 +550,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #6===========================================
-            //"Pattern 6:  Max Jumper" - back and forth between maximum and an upward or downward pattern
+            // "Pattern 6:  Max Jumper" - back and forth between maximum and an upward or downward pattern
             if (PatternNumber == 6)
             {
                 if (EveryOther)
@@ -573,7 +588,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #7===========================================
-            //"Pattern 7:  Min && Max" - back and forth between minimum and maximum value
+            // "Pattern 7:  Min && Max" - back and forth between minimum and maximum value
             if (PatternNumber == 7)
             {
                 if (CurrentCC < Maximum)
@@ -588,7 +603,7 @@ namespace Stimulant
             // ==============================================================================================
 
             // =========================================Program #8===========================================
-            //"Pattern 8:  Random #'s" - random values between minimum and maximum
+            // "Pattern 8:  Random #'s" - random values between minimum and maximum
             if (PatternNumber == 8)
             {
                 CurrentCC = RandomNumber(Minimum, Maximum);
@@ -597,7 +612,7 @@ namespace Stimulant
         }
 
 
-        //toggles if the pattern is reversed or not
+        // toggles if the pattern is reversed or not
         public void ReversePattern()
         {
             if (Opposite)
@@ -611,11 +626,11 @@ namespace Stimulant
         }
 
 
-        //Step Size Setter is used to determine how much the current cc value should change in order to adhere to the overall timing concept while in midi mode.
-        //To put this simply, midi clock signals come in at 24 pulses per quarter note. In order to achieve the best resolution possible with our
-        //modulation, we need to make use of all of these pulses. In order to reconcile 24 pulses with a 128 value range for the midi cc (0-127), we sometimes
-        //have to make little adjustments to the step size (hence the StepComma) to make the overall movement through the pattern range hit at the designated
-        //rate.
+        // Step Size Setter is used to determine how much the current cc value should change in order to adhere to the overall timing concept while in midi mode.
+        // To put this simply, midi clock signals come in at 24 pulses per quarter note. In order to achieve the best resolution possible with our
+        // modulation, we need to make use of all of these pulses. In order to reconcile 24 pulses with a 128 value range for the midi cc (0-127), we sometimes
+        // have to make little adjustments to the step size (hence the StepComma) to make the overall movement through the pattern range hit at the designated
+        // rate.
         public void StepSizeSetter()
         {
 
@@ -685,12 +700,10 @@ namespace Stimulant
                     StepSize++;
                 }
             }
-
-
         }
 
 
-        //determines StepSize from a sliderValue and PatternNumber
+        // determines StepSize from a sliderValue and PatternNumber
         public void TimeSet(float sliderValue)
         {
             if (PatternNumber > 6)
@@ -727,7 +740,7 @@ namespace Stimulant
         }
 
 
-        //converts the time interval being used for the timer for triggering the modulation steps into a frequency value for display purposes
+        // converts the time interval being used for the timer for triggering the modulation steps into a frequency value for display purposes
         public string TimeIntervalToFrequency(float timeInterval)
         {
             string Frequency;
@@ -767,7 +780,7 @@ namespace Stimulant
         }
 
 
-        //changes the cc number by the inputed value but remaining in a 0-127 range (it swings around when min/max is surpassed)
+        // changes the cc number by the inputed value but remaining in a 0-127 range (it swings around when min/max is surpassed)
         public void UpdateCCNumber(int val)
         {
             var max = 127;
@@ -786,7 +799,7 @@ namespace Stimulant
             }
         }
 
-        //changes the bpm by the inputted value but only as large as the max and and small as the min (does not swing around)
+        // changes the bpm by the inputted value but only as large as the max and and small as the min (does not swing around)
         public void UpdateBPM(int val)
         {
             var max = 150;
@@ -806,7 +819,7 @@ namespace Stimulant
         }
 
 
-        //enables or disables auto mode
+        // enables or disables auto mode
         public void AutoToggle()
         {
             if (IsAuto)
@@ -819,7 +832,7 @@ namespace Stimulant
             }
         }
 
-        //enables or disables trigger mode
+        // enables or disables trigger mode
         public void TriggerToggle()
         {
             if (IsTriggerOnly)
@@ -833,7 +846,7 @@ namespace Stimulant
         }
 
 
-        //enables or disables auto range
+        // enables or disables auto range
         public void ARToggle()
         {
             if (IsAR)
@@ -847,7 +860,7 @@ namespace Stimulant
         }
 
 
-        //randomizes modulation settings (called in auto mode)
+        // randomizes modulation settings (called in auto mode)
         public string RandomRoll()
         {
             IsRandomRoll = true;
@@ -857,17 +870,17 @@ namespace Stimulant
         }
 
 
-        //selects a random number
+        // selects a random number
         public int RandomNumber(int min, int max)
         {
             return random.Next(min, max);
         }
 
 
-        //enables or disables the ability to adjust the cc number
+        // enables or disables the ability to adjust the cc number
         public void CCToggle()
         {
-            //Need this because they use the same GUI region
+            // Need this because they use the same GUI region
             if (BPMOn)
             {
                 BPMToggle();
@@ -885,7 +898,7 @@ namespace Stimulant
 
         public void BPMToggle()
         {
-            //Need this because they use the same GUI region
+            // Need this because they use the same GUI region
             if (CCOn)
             {
                 CCToggle();
@@ -966,6 +979,19 @@ namespace Stimulant
             else
             {
                 ModeNumber = 3;
+            }
+        }
+
+        // enables or disables auto range
+        public void RestartToggle()
+        {
+            if (IsRestartEachNote)
+            {
+                IsRestartEachNote = false;
+            }
+            else
+            {
+                IsRestartEachNote = true;
             }
         }
 

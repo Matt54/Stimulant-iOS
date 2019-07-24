@@ -17,21 +17,21 @@ namespace Stimulant
         {// Note: this .ctor should not contain any initialization logic.
         }
 
-        //Declare MidiClient Object: The MidiClient class is used to communicate with the MIDI subsystem on MacOS and iOS
-        //-It exposes various events and creates input and output midi ports using CreateInputPort/CreateOutputPort methods
+        // Declare MidiClient Object: The MidiClient class is used to communicate with the MIDI subsystem on MacOS and iOS
+        // It exposes various events and creates input and output midi ports using CreateInputPort/CreateOutputPort methods
         MidiClient client;
 
-        //Simply, the input and output port objects created by calling CreateInputPort/CreateOutputPort methods
+        // Simply, the input and output port objects created by calling CreateInputPort/CreateOutputPort methods
         MidiPort outputPort, inputPort;
 
-        //Declare MidiModulation object: MidiModulation class stores all the current modulation parameters
-        //I worry that this is a poor way of doing this. It may not be ideal from a memory standpoint
+        // Declare MidiModulation object: MidiModulation class stores all the current modulation parameters
+        // I worry that this is a poor way of doing this. It may not be ideal from a memory standpoint
         MidiModulation myMidiModulation = new MidiModulation();
 
-        //Controls how fast the time-based modulation steps
+        // Controls how fast the time-based modulation steps
         HighResolutionTimer timerHighRes;
 
-        //Controls how often the random settings get applied when in automatic mode
+        // Controls how often the random settings get applied when in automatic mode
         HighResolutionTimer timerAuto;
 
 
@@ -158,15 +158,36 @@ namespace Stimulant
                             break;
                         }
 
+                    case "IsRestartEachNote":
+                        {
+                            if (myMidiModulation.IsRestartEachNote)
+                            {
+                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
+                                sliderHidden.Hidden = false;
+                                ReadHiddenSlider(sliderHidden.Value);
+                            }
+                            else
+                            {
+                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
+                                sliderHidden.Hidden = true;
+                            }
+                            break;
+                        }
+
                     case "IsTriggerOnly":
                         {
                             if (myMidiModulation.IsTriggerOnly)
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                                buttonLocation.Enabled = true;
                             }
                             else
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                                myMidiModulation.NumOfNotesOn = 0;
+                                myMidiModulation.IsNoteOn = false;
+                                myMidiModulation.IsRestartEachNote = false;
+                                buttonLocation.Enabled = false;
                             }
                             break;
                         }
@@ -342,6 +363,21 @@ namespace Stimulant
                                     buttonReverse.Hidden = false;
                                     break;
                             }
+
+
+                            if (myMidiModulation.PatternNumber > 6)
+                            {
+                                myMidiModulation.IsRestartEachNote = false;
+                                buttonLocation.Enabled = false;
+                            }
+                            else
+                            {
+                                if (myMidiModulation.IsTriggerOnly)
+                                {
+                                    buttonLocation.Enabled = true;
+                                }
+                            }
+
                             break;
                         }
 
@@ -483,6 +519,22 @@ namespace Stimulant
             }
             myCircularProgressBar.Hidden = true;
             buttonOnOff.Frame = smallStartSize;
+        }
+
+        protected void HandleLocationTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.RestartToggle();
+        }
+
+        protected void HandleHiddenSliderChange(object sender, System.EventArgs e)
+        {
+            var myObject = (UISlider)sender;
+            ReadHiddenSlider(myObject.Value);
+        }
+
+        void ReadHiddenSlider(float sliderValue)
+        {
+            myMidiModulation.StartingLocation = (int)sliderValue;
         }
 
         protected void HandleReverseTouchDown(object sender, System.EventArgs e)
@@ -1112,6 +1164,21 @@ namespace Stimulant
                             // handle note on
                             myMidiModulation.IsNoteOn = true;
                             myMidiModulation.NumOfNotesOn += 1;
+
+                            // Restart first if in restart mode
+                            if (myMidiModulation.IsRestartEachNote)
+                            {
+                                myMidiModulation.CurrentCC = myMidiModulation.StartingLocation;
+
+                                if (myMidiModulation.PatternNumber == 4)
+                                {
+                                    myMidiModulation.EveryOther = false;
+                                }
+                                else if (myMidiModulation.PatternNumber == 5 || myMidiModulation.PatternNumber == 6)
+                                {
+                                    myMidiModulation.EveryOther = true;
+                                }
+                            }
                         }
                         if (StatusByte == midi_note_off)
                         {
