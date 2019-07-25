@@ -432,9 +432,10 @@ namespace Stimulant
             buttonReverse = UIButton.FromType(UIButtonType.Custom);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
-            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Disabled);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
             buttonReverse.Frame = new CGRect(buttonReverseXLoc, buttonReverseYLoc, buttonReverseWidth, buttonReverseHeight);
-            buttonReverse.Hidden = true;
+            //buttonReverse.Hidden = true;
+            buttonReverse.Enabled = false;
             buttonReverse.TouchDown += HandleReverseTouchDown;
         }
 
@@ -463,9 +464,10 @@ namespace Stimulant
             buttonSettings = UIButton.FromType(UIButtonType.Custom);
             buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Normal);
             buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Highlighted);
-            buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Disabled);
+            buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonDisabled.png"), UIControlState.Disabled);
             buttonSettings.Frame = new CGRect(buttonSettingsXLoc, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
-            buttonSettings.Hidden = true;
+            //buttonSettings.Hidden = true;
+            buttonSettings.Enabled = false;
             buttonSettings.TouchDown += HandleSettingsTouchDown;
         }
 
@@ -512,7 +514,8 @@ namespace Stimulant
             buttonBPM = UIButton.FromType(UIButtonType.Custom);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Highlighted);
-            buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Disabled);
+            buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonDisabled.png"), UIControlState.Disabled);
+            buttonBPM.Enabled = false;
             buttonBPM.Frame = new CGRect(buttonBPMXLoc, buttonBPMYLoc, buttonBPMWidth, buttonBPMHeight);
             buttonBPM.TouchDown += HandleBPMTouchDown;
         }
@@ -555,7 +558,8 @@ namespace Stimulant
             buttonAR = UIButton.FromType(UIButtonType.Custom);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Highlighted);
-            buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Disabled);
+            buttonAR.SetImage(UIImage.FromFile("graphicARButtonDisabled.png"), UIControlState.Disabled);
+            buttonAR.Enabled = false;
             buttonAR.Frame = new CGRect(buttonARXLoc, buttonARYLoc, buttonARWidth, buttonARHeight);
             buttonAR.TouchDown += HandleARTouchDown;
         }
@@ -569,7 +573,7 @@ namespace Stimulant
             buttonLocation = UIButton.FromType(UIButtonType.Custom);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Highlighted);
-            buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Disabled);
+            buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonDisabled.png"), UIControlState.Disabled);
             buttonLocation.Frame = new CGRect(buttonLocationXLoc, buttonLocationYLoc, buttonLocationWidth, buttonLocationHeight);
             buttonLocation.Enabled = false;
             buttonLocation.TouchDown += HandleLocationTouchDown;

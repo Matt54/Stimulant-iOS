@@ -130,16 +130,24 @@ namespace Stimulant
                                     timerAuto.Start();
                                 }
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Normal);
-                                buttonSettings.Hidden = false;
+                                //buttonSettings.Hidden = false;
+                                buttonSettings.Enabled = true;
+                                buttonAR.Enabled = true;
                             }
                             else
                             {
                                 timerAuto.Stop(joinThread: false);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
-                                buttonSettings.Hidden = true;
+                                //buttonSettings.Hidden = true;
+                                buttonSettings.Enabled = false;
+                                buttonAR.Enabled = false;
                                 if (myMidiModulation.SettingsOn)
                                 {
                                     myMidiModulation.SettingsOn = false;
+                                }
+                                if (myMidiModulation.IsAR)
+                                {
+                                    myMidiModulation.IsAR = false;
                                 }
                             }
                             break;
@@ -297,6 +305,11 @@ namespace Stimulant
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
+                                    buttonBPM.Enabled = false;
+                                    if (myMidiModulation.BPMOn)
+                                    {
+                                        myMidiModulation.BPMOn = false;
+                                    }
                                     break;
                                 case 2:
                                     if (myMidiModulation.IsAuto)
@@ -308,6 +321,11 @@ namespace Stimulant
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
+                                    buttonBPM.Enabled = false;
+                                    if (myMidiModulation.BPMOn)
+                                    {
+                                        myMidiModulation.BPMOn = false;
+                                    }
                                     break;
                                 case 3:
                                     if (myMidiModulation.IsAuto)
@@ -318,6 +336,7 @@ namespace Stimulant
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
+                                    buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
                                     break;
                                 default:
@@ -356,11 +375,13 @@ namespace Stimulant
                                 case 7:
                                 case 8:
                                     myMidiModulation.Opposite = false;
-                                    buttonReverse.Hidden = true;
+                                    //buttonReverse.Hidden = true;
+                                    buttonReverse.Enabled = false;
                                     buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
                                     break;
                                 default:
                                     buttonReverse.Hidden = false;
+                                    buttonReverse.Enabled = true;
                                     break;
                             }
 

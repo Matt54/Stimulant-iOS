@@ -316,6 +316,21 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicLocationButtonOn.png">
         <Link>Resources\graphicLocationButtonOn.png</Link>
       </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicARButtonDisabled.png">
+        <Link>Resources\graphicARButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicBPMButtonDisabled.png">
+        <Link>Resources\graphicBPMButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicLocationButtonDisabled.png">
+        <Link>Resources\graphicLocationButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicReverseButtonDisabled.png">
+        <Link>Resources\graphicReverseButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\graphicSettingsButtonDisabled.png">
+        <Link>Resources\graphicSettingsButtonDisabled.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
