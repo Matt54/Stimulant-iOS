@@ -130,6 +130,7 @@ namespace Stimulant
                                     timerAuto.Start();
                                 }
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Normal);
+                                buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Highlighted);
                                 //buttonSettings.Hidden = false;
                                 buttonSettings.Enabled = true;
                                 buttonAR.Enabled = true;
@@ -138,6 +139,7 @@ namespace Stimulant
                             {
                                 timerAuto.Stop(joinThread: false);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
+                                buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Highlighted);
                                 //buttonSettings.Hidden = true;
                                 buttonSettings.Enabled = false;
                                 buttonAR.Enabled = false;
@@ -187,11 +189,13 @@ namespace Stimulant
                             if (myMidiModulation.IsTriggerOnly)
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
                                 buttonLocation.Enabled = true;
                             }
                             else
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
                                 myMidiModulation.NumOfNotesOn = 0;
                                 myMidiModulation.IsNoteOn = false;
                                 myMidiModulation.IsRestartEachNote = false;
@@ -248,6 +252,8 @@ namespace Stimulant
                                 buttonPlus10.Hidden = false;
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
+                                buttonTap.Hidden = false;
+                                buttonTap.Enabled = false;
                                 //labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                                 labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
@@ -260,6 +266,8 @@ namespace Stimulant
                                 buttonPlus10.Hidden = true;
                                 buttonMinus1.Hidden = true;
                                 buttonMinus10.Hidden = true;
+                                buttonTap.Hidden = true;
+                                buttonTap.Enabled = true;
                                 //ReadSlider(sliderRate.Value); //We need an equivalent to a Pattern read
                                 ReadPattern(segmentedPattern.SelectedSegment);
                             }
@@ -310,6 +318,7 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
+                                    labelMode.Text = "External Clock Mode";
                                     break;
                                 case 2:
                                     if (myMidiModulation.IsAuto)
@@ -326,6 +335,7 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
+                                    labelMode.Text = "Frequency Timing Mode";
                                     break;
                                 case 3:
                                     if (myMidiModulation.IsAuto)
@@ -334,10 +344,11 @@ namespace Stimulant
                                     }
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
-                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
+                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
+                                    labelMode.Text = "Internal Clock Mode";
                                     break;
                                 default:
                                     break;

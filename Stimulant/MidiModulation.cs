@@ -972,6 +972,9 @@ namespace Stimulant
         // switched between time based modes (bpm vs frequency)
         public void ClockToggle()
         {
+            ModeNumber = 3;
+
+            /*
             if (ModeNumber == 3)
             {
                 ModeNumber = 2;
@@ -980,6 +983,7 @@ namespace Stimulant
             {
                 ModeNumber = 3;
             }
+            */
         }
 
         // enables or disables auto range

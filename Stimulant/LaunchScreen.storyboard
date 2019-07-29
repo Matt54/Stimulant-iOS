@@ -38,7 +38,4 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="GraphicLaunchScreen.png" width="1125" height="2436"/>
-    </resources>
 </document>

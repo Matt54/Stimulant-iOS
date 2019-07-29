@@ -22,6 +22,7 @@ namespace Stimulant
 
         //Declare View References
         UIButton buttonOnOff;
+        UILabel labelMode;
         UIButton buttonTime;
         UIButton buttonMidi;
         UIButton buttonReverse;
@@ -40,6 +41,7 @@ namespace Stimulant
         UILabel labelRate;
         UISlider sliderRate;
         RangeSliderControl rangeSlider;
+        UILabel labelRange;
         UIButton buttonPlus1;
         UIButton buttonPlus10;
         UIButton buttonMinus1;
@@ -63,7 +65,9 @@ namespace Stimulant
 
             float buttonYAdjust;
             float sizeSubtract;
+            float textAdjustMode;
             float textAdjustRate;
+            float textAdjustRange;
             float textAdjustPattern;
             float controlAdjustRate;
             float controlAdjustPattern;
@@ -105,7 +109,9 @@ namespace Stimulant
                 case "8":
                     background = "Back8.png";
                     overlay = "Over8.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 0.96f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 0.975f;
                     controlAdjustRate = 0.99f;
                     controlAdjustPattern = 0.99f;
@@ -125,7 +131,9 @@ namespace Stimulant
                 case "8Plus":
                     background = "Back8Plus.png";
                     overlay = "Over8Plus.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 0.99f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.00f;
                     controlAdjustRate = 1.0f;
                     controlAdjustPattern = 1.0f;
@@ -145,7 +153,9 @@ namespace Stimulant
                 case "XS":
                     background = "BackXS.png";
                     overlay = "OverXS.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 0.995f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1f;
                     controlAdjustRate = 1f;
                     controlAdjustPattern = 1.0f;
@@ -160,12 +170,14 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     buttonYAdjust = 1.005f;
-                    sizeIncrease = 1.2f;
+                    sizeIncrease = 1f;
                     break;
                 case "XR":
                     background = "BackXSMax.png";
                     overlay = "OverXSMax.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 1.015f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.01f;
                     controlAdjustRate = 1.0f;
                     controlAdjustPattern = 1.0f;
@@ -185,7 +197,9 @@ namespace Stimulant
                 case "iPad":
                     background = "BackiPad.png";
                     overlay = "OveriPad.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 1.04f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.035f;
                     controlAdjustRate = 1.025f;
                     controlAdjustPattern = 1.01f;
@@ -205,7 +219,9 @@ namespace Stimulant
                 case "iPadPro":
                     background = "BackiPadPro.png";
                     overlay = "OveriPadPro.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 1.04f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.035f;
                     controlAdjustRate = 1.025f;
                     controlAdjustPattern = 1.01f;
@@ -225,7 +241,9 @@ namespace Stimulant
                 case "iPadPro11":
                     background = "BackiPadPro11.png";
                     overlay = "OveriPadPro11.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 1.053f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.043f;
                     controlAdjustRate = 1.024f;
                     controlAdjustPattern = 1.01f;
@@ -245,7 +263,9 @@ namespace Stimulant
                 case "iPadNext":
                     background = "BackiPadNext.png";
                     overlay = "OveriPadNext.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 1.055f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1.045f;
                     controlAdjustRate = 1.025f;
                     controlAdjustPattern = 1.009f;
@@ -265,7 +285,9 @@ namespace Stimulant
                 default:
                     background = "BackXS.png";
                     overlay = "OverXS.png";
+                    textAdjustMode = 1f;
                     textAdjustRate = 0.995f;
+                    textAdjustRange = 1f;
                     textAdjustPattern = 1f;
                     controlAdjustRate = 1f;
                     controlAdjustPattern = 1.0f;
@@ -285,10 +307,11 @@ namespace Stimulant
             }
 
             //Add the overlay view (Just UI Graphics - no controls)
-            if (UIImage.FromBundle(overlay) != null)
+            /*if (UIImage.FromBundle(overlay) != null)
             {
                 this.View.InsertSubview(new UIImageView(UIImage.FromBundle(overlay)), 0);
             }
+            */
 
             //Add the background Graphic
             if (UIImage.FromFile(background) != null)
@@ -310,15 +333,18 @@ namespace Stimulant
             LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
+            LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
             LoadSegmented(screenWidth, screenHeight, controlAdjustPattern, segHeight);
             LoadRateSlider(screenWidth, screenHeight, controlAdjustRate, sliderHeight);
             LoadPatternLabel(screenWidth, screenHeight, textAdjustPattern, segHeight);
             LoadRateLabel(screenWidth, screenHeight, textAdjustRate, sliderHeight);
+            LoadRangeLabel(screenWidth, screenHeight, textAdjustRange, rangeFontSize);
             LoadRangeSlider(screenWidth, screenHeight, controlAdjustRange, rangeFontSize);
             LoadCCIncButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustCCInc, sizeIncrease);
             LoadTapButton(screenWidth, screenHeight, sizeSubtract);
             LoadHiddenSlider(screenWidth, screenHeight, controlAdjustRate, sliderHeight);
             LoadBPMTextField(screenWidth, screenHeight);
+
             AddSubviewsToMainview();
 
         }
@@ -371,7 +397,7 @@ namespace Stimulant
         {
             //Button is half the screen size
             float buttonWidth = screenWidth / (1 + sizeSubtract);
-            float buttonHeight = buttonWidth;
+            float buttonHeight = (float)(buttonWidth/1.061);
 
             //Centers the button in the screen Horizontally and moves it 25%ish down the screen
             float buttonXLoc = (screenWidth - buttonWidth) / 2;
@@ -404,19 +430,19 @@ namespace Stimulant
         public void LoadProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract)
         {
             //Set progress bar size based on screen width (it will fit exactly around the button)
-            lineWidth = (int)(screenWidth / 35);
-            float progressWidth = (float)((screenWidth / (1 + sizeSubtract)) + 3 * lineWidth);
+            lineWidth = (int)(screenWidth / 33);
+            float progressWidth = (float)((screenWidth / (1.219 + sizeSubtract)) + 3 * lineWidth);
             float progressHeight = progressWidth;
 
             //Centers the progress bar on the screen
             float progressXLoc = (screenWidth - progressWidth) / 2;
-            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.15 - 0.55 * lineWidth) - (1 - buttonYAdjust) * screenHeight);
+            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.05 - 0.55 * lineWidth) - (1 - buttonYAdjust) * screenHeight);
 
             //Declare rectangle object (Instantiating the CGRect class)
             progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
 
             //Declare color object (Instantiating the UIColor class)
-            barColor = UIColor.FromRGB(0, 255, 0);
+            barColor = UIColor.FromRGB(0, 0, 0);
 
             //Declare progress bar object (Instantiating my CircularProgressBar class)
             myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, 0.0f, barColor);
@@ -424,28 +450,16 @@ namespace Stimulant
 
         public void LoadReverseButton(float screenWidth, float screenHeight, float sizeSubtract)
         {
-            float buttonReverseWidth = screenWidth / (5 + sizeSubtract);
-            float buttonReverseHeight = buttonReverseWidth;
-            //Centers the button in the screen Horizontally and moves it 25%ish down the screen
-            float buttonReverseXLoc = (float)((screenWidth - buttonReverseWidth) / 1.1);
-            float buttonReverseYLoc = (float)((screenHeight - buttonReverseHeight) / 2.05);
-            buttonReverse = UIButton.FromType(UIButtonType.Custom);
-            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
-            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
-            buttonReverse.Frame = new CGRect(buttonReverseXLoc, buttonReverseYLoc, buttonReverseWidth, buttonReverseHeight);
-            //buttonReverse.Hidden = true;
-            buttonReverse.Enabled = false;
-            buttonReverse.TouchDown += HandleReverseTouchDown;
+            
         }
 
         public void LoadCCButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustSettings)
         {
-            float buttonCCWidth = screenWidth / (12 + sizeSubtract);
+            float buttonCCWidth = screenWidth / (9 + sizeSubtract);
             float buttonCCHeight = buttonCCWidth;
-            float buttonCCXLoc = (float)((screenWidth - buttonCCWidth) * (0.09));
+            float buttonCCXLoc = (float)((screenWidth - buttonCCWidth) * (0.98));
             //float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.67) * controlAdjustSettings;
-            float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.415) * controlAdjustSettings;
+            float buttonCCYLoc = (float)((screenHeight - buttonCCHeight) / 1.465) * controlAdjustSettings;
             //float buttonRandomYLoc = (float)((screenHeight - buttonRandomHeight) / 1.415) * controlAdjustRandoms;
             buttonCC = UIButton.FromType(UIButtonType.Custom);
             buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Normal);
@@ -453,14 +467,40 @@ namespace Stimulant
             buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Disabled);
             buttonCC.Frame = new CGRect(buttonCCXLoc, buttonCCYLoc, buttonCCWidth, buttonCCHeight);
             buttonCC.TouchDown += HandleCCTouchDown;
+
+            /*
+            
+            */
+
+            /*
+            float buttonBPMWidth = screenWidth / (12 + sizeSubtract);
+            float buttonBPMHeight = buttonBPMWidth;
+            float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.91));
+            float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.415) * controlAdjustBPM;
+            */
+
+            //float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
+            //float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
+
+            buttonBPM = UIButton.FromType(UIButtonType.Custom);
+            buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
+            buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Highlighted);
+            buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonDisabled.png"), UIControlState.Disabled);
+            buttonBPM.Enabled = false;
+            buttonBPM.Frame = new CGRect((float)((screenWidth - buttonCCWidth) * (0.02)), buttonCCYLoc, buttonCCWidth, buttonCCHeight);
+            buttonBPM.TouchDown += HandleBPMTouchDown;
+
+            
         }
 
         public void LoadSettingsButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustSettings)
         {
-            float buttonSettingsWidth = screenWidth / (12 + sizeSubtract);
+
+            float buttonSettingsWidth = screenWidth / (9 + sizeSubtract);
             float buttonSettingsHeight = buttonSettingsWidth;
-            float buttonSettingsXLoc = (float)((screenWidth - buttonSettingsWidth) * (0.91));
-            float buttonSettingsYLoc = (float)((screenHeight - buttonSettingsHeight) / 1.67) * controlAdjustSettings;
+            float buttonSettingsXLoc = (float)((screenWidth - buttonSettingsWidth) * (0.98));
+            float buttonSettingsYLoc = (float)((screenHeight - buttonSettingsHeight) / 1.8) * controlAdjustSettings;
+
             buttonSettings = UIButton.FromType(UIButtonType.Custom);
             buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Normal);
             buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Highlighted);
@@ -469,6 +509,25 @@ namespace Stimulant
             //buttonSettings.Hidden = true;
             buttonSettings.Enabled = false;
             buttonSettings.TouchDown += HandleSettingsTouchDown;
+
+            /*
+            float buttonReverseWidth = screenWidth / (5 + sizeSubtract);
+            float buttonReverseHeight = buttonReverseWidth;
+            float buttonReverseXLoc = (float)((screenWidth - buttonReverseWidth) / 1.1);
+            float buttonReverseYLoc = (float)((screenHeight - buttonReverseHeight) / 2.05);
+            */
+
+            buttonReverse = UIButton.FromType(UIButtonType.Custom);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
+            buttonReverse.Frame = new CGRect((float)((screenWidth - buttonSettingsWidth) * (0.02)), buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
+
+            //buttonReverse.Hidden = true;
+            buttonReverse.Enabled = false;
+            buttonReverse.TouchDown += HandleReverseTouchDown;
+
+
         }
 
         public void LoadInfoButton(float screenWidth, float screenHeight, float sizeSubtract)
@@ -487,29 +546,16 @@ namespace Stimulant
 
         public void LoadClockButton(float screenWidth, float screenHeight, float sizeSubtract)
         {
-            float buttonClockWidth = screenWidth / (12 + sizeSubtract);
-            float buttonClockHeight = buttonClockWidth;
-            float buttonClockXLoc = (float)((screenWidth - buttonClockWidth) * (0.05));
-            float buttonClockYLoc = (float)((screenHeight - buttonClockHeight) / 1.02);
-            buttonClock = UIButton.FromType(UIButtonType.Custom);
-            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
-            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Highlighted);
-            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Disabled);
-            buttonClock.Frame = new CGRect(buttonClockXLoc, buttonClockYLoc, buttonClockWidth, buttonClockHeight);
-            buttonClock.TouchDown += HandleClockTouchDown;
+            
         }
 
         public void LoadBPMButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustBPM)
         {
+            /*
             float buttonBPMWidth = screenWidth / (12 + sizeSubtract);
             float buttonBPMHeight = buttonBPMWidth;
-            //float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.05));
-            //float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.07) * controlAdjustBPM;
             float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.91));
             float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.415) * controlAdjustBPM;
-
-            //float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
-            //float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
 
             buttonBPM = UIButton.FromType(UIButtonType.Custom);
             buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
@@ -518,14 +564,15 @@ namespace Stimulant
             buttonBPM.Enabled = false;
             buttonBPM.Frame = new CGRect(buttonBPMXLoc, buttonBPMYLoc, buttonBPMWidth, buttonBPMHeight);
             buttonBPM.TouchDown += HandleBPMTouchDown;
+            */
         }
 
         public void LoadTapButton(float screenWidth, float screenHeight, float sizeSubtract)
         {
-            float buttonTapWidth = (float)(screenWidth / (5 + sizeSubtract));
-            float buttonTapHeight = buttonTapWidth * 3 / 5;
-            float buttonTapXLoc = (float)((screenWidth - buttonTapWidth) * (0.91));
-            float buttonTapYLoc = (float)((screenHeight - buttonTapHeight) / 1.29);
+            float buttonTapWidth = (float)(screenWidth / (9 * sizeSubtract));
+            float buttonTapHeight = buttonTapWidth;// * 3 / 5;
+            float buttonTapXLoc = (float)((screenWidth - buttonTapWidth) * 0.5);
+            float buttonTapYLoc = (float)((screenHeight - buttonTapHeight) / 1.35);
             buttonTap = UIButton.FromType(UIButtonType.Custom);
             buttonTap.Hidden = true;
             buttonTap.SetImage(UIImage.FromFile("graphicTapButtonOff.png"), UIControlState.Normal);
@@ -537,24 +584,36 @@ namespace Stimulant
 
         public void LoadTriggerButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustTrigger)
         {
-            float buttonTriggerWidth = screenWidth / (12 + sizeSubtract);
+            float buttonTriggerWidth = (float)(screenWidth / (5 * sizeSubtract));
             float buttonTriggerHeight = buttonTriggerWidth;
-            float buttonTriggerXLoc = (float)((screenWidth - buttonTriggerWidth) * (0.95));
-            float buttonTriggerYLoc = (float)((screenHeight - buttonTriggerHeight) / 1.07) * controlAdjustTrigger;
+            float buttonTriggerXLoc = 0;// (float)((screenWidth - buttonTriggerWidth) * (0.95));
+            float buttonTriggerYLoc = (float)((screenHeight - buttonTriggerHeight) / 1.175) * controlAdjustTrigger;
             buttonTrigger = UIButton.FromType(UIButtonType.Custom);
             buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
-            buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+            buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
             buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Disabled);
             buttonTrigger.Frame = new CGRect(buttonTriggerXLoc, buttonTriggerYLoc, buttonTriggerWidth, buttonTriggerHeight);
             buttonTrigger.TouchDown += HandleTriggerTouchDown;
+
+            buttonAuto = UIButton.FromType(UIButtonType.Custom);
+            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
+            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Highlighted);
+            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Disabled);
+            buttonAuto.Frame = new CGRect((float)(screenWidth - buttonTriggerWidth), buttonTriggerYLoc, buttonTriggerWidth, buttonTriggerHeight);
+            buttonAuto.TouchDown += HandleAutoTouchDown;
+        }
+
+        public void LoadAutoButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
+        {
+            
         }
 
         public void LoadARButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustAR)
         {
-            float buttonARWidth = screenWidth / (12 + sizeSubtract);
+            float buttonARWidth = screenWidth / (9 + sizeSubtract);
             float buttonARHeight = buttonARWidth;
-            float buttonARXLoc = (float)((screenWidth - buttonARWidth) * (0.05));
-            float buttonARYLoc = (float)((screenHeight - buttonARHeight) * (0.23)) * controlAdjustAR;
+            float buttonARXLoc = (float)((screenWidth - buttonARWidth) * (0.98));
+            float buttonARYLoc = (float)((screenHeight - buttonARHeight) * (0.08)) * controlAdjustAR;
             buttonAR = UIButton.FromType(UIButtonType.Custom);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Highlighted);
@@ -562,21 +621,26 @@ namespace Stimulant
             buttonAR.Enabled = false;
             buttonAR.Frame = new CGRect(buttonARXLoc, buttonARYLoc, buttonARWidth, buttonARHeight);
             buttonAR.TouchDown += HandleARTouchDown;
-        }
 
-        public void LoadLocationButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustLocation)
-        {
+            /*
             float buttonLocationWidth = screenWidth / (12 + sizeSubtract);
             float buttonLocationHeight = buttonLocationWidth;
             float buttonLocationXLoc = (float)((screenWidth - buttonLocationWidth) * (0.95));
             float buttonLocationYLoc = (float)((screenHeight - buttonLocationHeight) * (0.23)) * controlAdjustLocation;
+            */
+
             buttonLocation = UIButton.FromType(UIButtonType.Custom);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Highlighted);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonDisabled.png"), UIControlState.Disabled);
-            buttonLocation.Frame = new CGRect(buttonLocationXLoc, buttonLocationYLoc, buttonLocationWidth, buttonLocationHeight);
+            buttonLocation.Frame = new CGRect((float)((screenWidth - buttonARWidth) * (0.02)), buttonARYLoc, buttonARWidth, buttonARHeight);
             buttonLocation.Enabled = false;
             buttonLocation.TouchDown += HandleLocationTouchDown;
+        }
+
+        public void LoadLocationButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustLocation)
+        {
+            
         }
 
         public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
@@ -593,56 +657,63 @@ namespace Stimulant
             buttonRandom.TouchDown += HandleRandomTouchDown;
         }
 
-        public void LoadAutoButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
-        {
-            float buttonAutoWidth = screenWidth / (12 + sizeSubtract);
-            float buttonAutoHeight = buttonAutoWidth;
-            //float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.91));
-            //float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.415) * controlAdjustRandoms;
-
-            float buttonAutoXLoc = (float)((screenWidth - buttonAutoWidth) * (0.05));
-            float buttonAutoYLoc = (float)((screenHeight - buttonAutoHeight) / 1.07) * controlAdjustRandoms;
-
-            //float buttonBPMXLoc = (float)((screenWidth - buttonBPMWidth) * (0.05));
-            //float buttonBPMYLoc = (float)((screenHeight - buttonBPMHeight) / 1.07) * controlAdjustBPM;
-
-            buttonAuto = UIButton.FromType(UIButtonType.Custom);
-            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
-            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Highlighted);
-            buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Disabled);
-            buttonAuto.Frame = new CGRect(buttonAutoXLoc, buttonAutoYLoc, buttonAutoWidth, buttonAutoHeight);
-            buttonAuto.TouchDown += HandleAutoTouchDown;
-        }
+        
 
         public void LoadTimeandMidiButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustMode)
         {
-            float buttonTimeWidth = (float)(screenWidth / (2.1 + sizeSubtract));
-            float buttonTimeHeight = buttonTimeWidth * 3 / 5;
-            float buttonTimeXLoc = (float)((screenWidth - buttonTimeWidth) / 4.5);
-            float buttonTimeYLoc = (float)((screenHeight - buttonTimeHeight) / 1.08) * controlAdjustMode;
+            float buttonTimeWidth = (float)(screenWidth / (3 * sizeSubtract));
+            float buttonTimeHeight = (float) (buttonTimeWidth / 1.68);
+            float buttonTimeXLoc = (float)(screenWidth - (2*buttonTimeWidth));
+            float buttonTimeYLoc = (float)((screenHeight - buttonTimeHeight) / 1.05) * controlAdjustMode;
             buttonTime = UIButton.FromType(UIButtonType.Custom);
             buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
-            buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Highlighted);
+            buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Highlighted);
             buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Disabled);
             buttonTime.Frame = new CGRect(buttonTimeXLoc, buttonTimeYLoc, buttonTimeWidth, buttonTimeHeight);
 
             buttonMidi = UIButton.FromType(UIButtonType.Custom);
             buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
-            buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Highlighted);
+            buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Highlighted);
             buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Disabled);
-            buttonMidi.Frame = new CGRect(screenWidth - buttonTimeXLoc - buttonTimeWidth, buttonTimeYLoc, buttonTimeWidth, buttonTimeHeight);
+            buttonMidi.Frame = new CGRect((float)(screenWidth - (buttonTimeWidth)), buttonTimeYLoc, buttonTimeWidth, buttonTimeHeight);
+
+            float buttonClockWidth = screenWidth / (12 + sizeSubtract);
+            float buttonClockHeight = buttonClockWidth;
+            float buttonClockXLoc = 0;// (float)((screenWidth - buttonClockWidth) * (0.05));
+            float buttonClockYLoc = (float)((screenHeight - buttonClockHeight) / 1.02);
+            buttonClock = UIButton.FromType(UIButtonType.Custom);
+            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
+            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Highlighted);
+            buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Disabled);
+            buttonClock.Frame = new CGRect(buttonClockXLoc, buttonTimeYLoc, buttonTimeWidth, buttonTimeHeight);
+            buttonClock.TouchDown += HandleClockTouchDown;
 
             //Button Event Handler Delegates
             buttonTime.TouchDown += HandleTimeTouchDown;
             buttonMidi.TouchDown += HandleMidiTouchDown;
         }
 
+        public void LoadModeLabel(float screenWidth, float screenHeight, float textAdjustMode)
+        {
+            float labelModeWidth = (float)(screenWidth / 1.8);
+            float labelModeHeight = (float)(screenHeight / 8);
+            float labelModeXLoc = (float)((screenWidth - labelModeWidth) / 2);
+            float labelModeYLoc = (float)(((screenHeight - labelModeHeight) / 1.25) * textAdjustMode);
+            labelMode = new UILabel();
+            labelMode.Frame = new CGRect(labelModeXLoc, labelModeYLoc, labelModeWidth, labelModeHeight);
+            labelMode.Text = "Hello World";
+            labelMode.TextAlignment = UITextAlignment.Center;
+            labelMode.TextColor = UIColor.Black;
+            labelMode.Font = UIFont.SystemFontOfSize(100);
+            labelMode.AdjustsFontSizeToFitWidth = true;
+        }
+
         public void LoadCCIncButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustCCInc, float sizeIncrease)
         {
-            float buttonIncWidth = (float)screenWidth / (8 + sizeSubtract);
+            float buttonIncWidth = (float)screenWidth / (6 + sizeSubtract);
             float buttonIncHeight = (float)(buttonIncWidth * 0.8 * sizeIncrease);
-            float buttonIncXLoc = (float)((screenWidth - buttonIncWidth) / 1.7);
-            float buttonIncYLoc = (float)((screenHeight - buttonIncHeight) / 1.29) * controlAdjustCCInc;
+            float buttonIncXLoc = (float)((screenWidth - buttonIncWidth) / 1.4);
+            float buttonIncYLoc = (float)((screenHeight - buttonIncHeight) / 1.35) * controlAdjustCCInc;
             buttonPlus1 = UIButton.FromType(UIButtonType.Custom);
             buttonPlus1.SetImage(UIImage.FromFile("graphicPlus1ButtonOff.png"), UIControlState.Normal);
             buttonPlus1.SetImage(UIImage.FromFile("graphicPlus1ButtonOn.png"), UIControlState.Highlighted);
@@ -654,7 +725,7 @@ namespace Stimulant
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOff.png"), UIControlState.Normal);
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOn.png"), UIControlState.Highlighted);
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOff.png"), UIControlState.Disabled);
-            buttonPlus10.Frame = new CGRect(buttonIncXLoc * (1.25), buttonIncYLoc, buttonIncWidth, buttonIncHeight);
+            buttonPlus10.Frame = new CGRect(buttonIncXLoc * (1.35), buttonIncYLoc, buttonIncWidth, buttonIncHeight);
             buttonPlus10.Hidden = true;
 
             buttonMinus1 = UIButton.FromType(UIButtonType.Custom);
@@ -668,7 +739,7 @@ namespace Stimulant
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOff.png"), UIControlState.Normal);
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOn.png"), UIControlState.Highlighted);
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOff.png"), UIControlState.Disabled);
-            buttonMinus10.Frame = new CGRect(screenWidth - buttonIncXLoc * (1.25) - buttonIncWidth, buttonIncYLoc, buttonIncWidth, buttonIncHeight);
+            buttonMinus10.Frame = new CGRect(screenWidth - buttonIncXLoc * (1.35) - buttonIncWidth, buttonIncYLoc, buttonIncWidth, buttonIncHeight);
             buttonMinus10.Hidden = true;
 
             buttonPlus1.TouchDown += HandlePlus1TouchDown;
@@ -681,10 +752,10 @@ namespace Stimulant
         {
             float segWidth = (float)(screenWidth / 1.2);
             float segXLoc = (float)((screenWidth - segWidth) / 2);
-            float segYLoc = (float)((screenHeight - segHeight) / 1.29) * controlAdjustPattern;
+            float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
             segmentedPattern = new UISegmentedControl("1", "2", "3", "4", "5", "6", "7", "8");
             segmentedPattern.Frame = new CGRect(segXLoc, segYLoc, segWidth, segHeight);
-            segmentedPattern.TintColor = UIColor.Green;
+            segmentedPattern.TintColor = UIColor.Black;
             segmentedPattern.SelectedSegment = 0;
             segmentedPattern.ValueChanged += HandlePatternSegmentChange;
         }
@@ -694,12 +765,12 @@ namespace Stimulant
             float labelPatternWidth = (float)(screenWidth / 1.8);
             float labelPatternHeight = (float)(screenHeight / 8);
             float labelPatternXLoc = (float)((screenWidth - labelPatternWidth) / 2);
-            float labelPatternYLoc = (float)(((screenHeight - segHeight) / 1.57) * textAdjustPattern);
+            float labelPatternYLoc = (float)(((screenHeight - segHeight) / 1.65) * textAdjustPattern);
             labelPattern = new UILabel();
             labelPattern.Text = "Pattern 1: Up & Down";
             labelPattern.Frame = new CGRect(labelPatternXLoc, labelPatternYLoc, labelPatternWidth, labelPatternHeight);
             labelPattern.TextAlignment = UITextAlignment.Center;
-            labelPattern.TextColor = UIColor.White;
+            labelPattern.TextColor = UIColor.Black;
             labelPattern.Font = UIFont.SystemFontOfSize(100);
             labelPattern.AdjustsFontSizeToFitWidth = true;
         }
@@ -708,13 +779,13 @@ namespace Stimulant
         {
             float sliderWidth = (float)(screenWidth / 1.2);
             float sliderXLoc = (float)((screenWidth - sliderWidth) / 2);
-            float sliderYLoc = (float)((screenHeight - sliderHeight) / 1.49) * controlAdjustRate;
+            float sliderYLoc = (float)((screenHeight - sliderHeight) / 1.6) * controlAdjustRate;
             sliderRate = new UISlider();
             sliderRate.Frame = new CGRect(sliderXLoc, sliderYLoc, sliderWidth, sliderHeight);
             sliderRate.MinValue = 0;
             sliderRate.MaxValue = 127;
             sliderRate.Value = 63;
-            sliderRate.TintColor = UIColor.Green;
+            sliderRate.TintColor = UIColor.Black;
             sliderRate.ValueChanged += HandleRateSliderChange;
         }
 
@@ -723,14 +794,29 @@ namespace Stimulant
             float labelRateWidth = (float)(screenWidth / 1.8);
             float labelRateHeight = (float)(screenHeight / 8);
             float labelRateXLoc = (float)((screenWidth - labelRateWidth) / 2);
-            float labelRateYLoc = (float)(((screenHeight - sliderHeight) / 1.61) * textAdjustRate);
+            float labelRateYLoc = (float)(((screenHeight - sliderHeight) / 1.8) * textAdjustRate);
             labelRate = new UILabel();
             labelRate.Frame = new CGRect(labelRateXLoc, labelRateYLoc, labelRateWidth, labelRateHeight);
             labelRate.Text = "Press Button Above";
             labelRate.TextAlignment = UITextAlignment.Center;
-            labelRate.TextColor = UIColor.White;
+            labelRate.TextColor = UIColor.Black;
             labelRate.Font = UIFont.SystemFontOfSize(100);
             labelRate.AdjustsFontSizeToFitWidth = true;
+        }
+
+        public void LoadRangeLabel(float screenWidth, float screenHeight, float textAdjustRange, float rangeFontSize)
+        {
+            float labelRangeWidth = (float)(screenWidth / 1.8);
+            float labelRangeHeight = (float)(screenHeight / 8);
+            float labelRangeXLoc = (float)((screenWidth - labelRangeWidth) / 2);
+            float labelRangeYLoc = (float)(((screenHeight - labelRangeHeight) / 180) * textAdjustRange);
+            labelRange = new UILabel();
+            labelRange.Frame = new CGRect(labelRangeXLoc, labelRangeYLoc, labelRangeWidth, labelRangeHeight);
+            labelRange.Text = "Modulation Range";
+            labelRange.TextAlignment = UITextAlignment.Center;
+            labelRange.TextColor = UIColor.Black;
+            labelRange.Font = UIFont.SystemFontOfSize(100);
+            labelRange.AdjustsFontSizeToFitWidth = true;
         }
 
         public void LoadRangeSlider(float screenWidth, float screenHeight, float controlAdjustRange, float rangeFontSize)
@@ -738,15 +824,16 @@ namespace Stimulant
             float rangeWidth = (float)(screenWidth / 1.15);
             float rangeHeight = (float)(screenHeight / 10);
             float rangeXLoc = (float)((screenWidth - rangeWidth) / 2);
-            float rangeYLoc = (float)((screenHeight - rangeHeight) / 16) * controlAdjustRange;
+            float rangeYLoc = (float)((screenHeight - rangeHeight) / 7) * controlAdjustRange;
             rangeSlider = new RangeSliderControl();
             rangeSlider.ShowTextAboveThumbs = true;
             rangeSlider.TextSize = rangeFontSize;
             rangeSlider.Frame = new CGRect(rangeXLoc, rangeYLoc, rangeWidth, rangeHeight);
-            rangeSlider.TintColor = UIColor.Green;
+            rangeSlider.TintColor = UIColor.Black;
             rangeSlider.MaximumValue = 127;
             rangeSlider.MinimumValue = 0;
-            rangeSlider.TextColor = UIColor.White;
+            rangeSlider.TextColor = UIColor.Black;
+            
             rangeSlider.LowerValue = 0;
             rangeSlider.UpperValue = 127;
             rangeSlider.DragCompleted += (object sender, EventArgs e) =>
@@ -784,7 +871,7 @@ namespace Stimulant
             textFieldBPM = new UITextField();
             textFieldBPM.Frame = new CGRect(BPMXLoc, BPMYLoc, BPMWidth, BPMHeight);
             textFieldBPM.Layer.BorderColor = UIColor.White.CGColor;
-            textFieldBPM.TextColor = UIColor.White;
+            textFieldBPM.TextColor = UIColor.Black;
             textFieldBPM.Layer.BorderWidth = 1f;
             textFieldBPM.TextAlignment = UITextAlignment.Center;
             textFieldBPM.KeyboardType = UIKeyboardType.NumbersAndPunctuation;
@@ -838,14 +925,16 @@ namespace Stimulant
             View.AddSubview(segmentedPattern);
             View.AddSubview(labelPattern);
             View.AddSubview(buttonMidi);
+            View.AddSubview(labelMode);
             View.AddSubview(sliderRate);
             View.AddSubview(labelRate);
+            View.AddSubview(labelRange);
             View.AddSubview(rangeSlider);
             View.AddSubview(sliderHidden);
             View.AddSubview(buttonReverse);
             View.AddSubview(buttonCC);
             View.AddSubview(buttonSettings);
-            View.AddSubview(buttonInfo);
+            //View.AddSubview(buttonInfo);
             View.AddSubview(buttonBPM);
             View.AddSubview(buttonTap);
             View.AddSubview(buttonTrigger);

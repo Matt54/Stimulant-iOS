@@ -59,13 +59,13 @@ namespace Stimulant
 
             // Draw circle
             CGPath path = new CGPath();
-            UIColor.FromRGB(15, 15, 15).SetStroke();
-            path.AddArc(x0, y0, _radius, 0, 2.0f * (float)Math.PI, true);
+            UIColor.FromRGB(100, 100, 100).SetStroke();
+            path.AddArc(x0, y0, _radius, 0.78f * (float)Math.PI, (2.22f) * (float)Math.PI, false);
             g.AddPath(path);
             g.DrawPath(CGPathDrawingMode.Stroke);
             CGPath path2 = new CGPath();
             _barColor.SetStroke();
-            path2.AddArc(x0, y0, _radius, 0.5f * (float)Math.PI, 0.5f * (float)Math.PI + _piMult * (float)Math.PI, false);
+            path2.AddArc(x0, y0, _radius, 0.78f * (float)Math.PI, (0.78f * (float)Math.PI + (float)(0.72*_piMult) * (float)Math.PI), false);
             //path2.AddArc(x0, y0, _radius, -0.5f * (float)Math.PI, 0.5f * (float)Math.PI + _piMult * (float)Math.PI * 0.99, true);
             g.AddPath(path2);
             g.DrawPath(CGPathDrawingMode.Stroke);
