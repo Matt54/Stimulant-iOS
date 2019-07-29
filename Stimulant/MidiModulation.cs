@@ -233,7 +233,7 @@ namespace Stimulant
                     PatternNumber = 3;
                     break;
                 case 3:
-                    labelText = "Pattern 4: Crisscross";
+                    labelText = "Pattern 4: Crisscrossed";
                     PatternNumber = 4;
                     break;
                 case 4:

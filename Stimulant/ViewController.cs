@@ -762,13 +762,15 @@ namespace Stimulant
                 {
                     //MIDI
                     myMidiModulation.StepSizeSetter();
-                    labelRate.Text = "EXT Clock Sync: " + displayText;
+                    //EXT Clock Sync
+                    labelRate.Text = "Clock Sync: " + displayText;
                 }
                 else
                 {
                     //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
                     timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
-                    labelRate.Text = "BPM Clock Sync: " + displayText;
+                    //INT Clock Sync
+                    labelRate.Text = "Clock Sync: " + displayText;
                 }
 
             }
