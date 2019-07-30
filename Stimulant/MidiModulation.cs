@@ -637,12 +637,14 @@ namespace Stimulant
             bool stepBack = false, stepForward = false;
             switch (RateCatch)
             {
+                case 21:
                 case 1:
                 case 3:
                 case 5:
                     StepSize = 1;
                     stepForward = true;
                     break;
+                case 20:
                 case 2:
                 case 4:
                     StepSize = 1;
@@ -679,7 +681,7 @@ namespace Stimulant
                     StepSize = 32;
                     break;
                 case 15:
-                    StepSize = 42;
+                    StepSize = 43;
                     stepBack = true;
                     break;
                 case 16:

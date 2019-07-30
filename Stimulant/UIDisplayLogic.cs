@@ -462,9 +462,9 @@ namespace Stimulant
 
         public void LoadHiddenSlider(float screenWidth, float screenHeight, float controlAdjustHidden, float sliderHeight)
         {
-            float sliderWidth = (float)(screenWidth / 1.2);
+            float sliderWidth = (float)(screenWidth / 1.09);
             float sliderXLoc = (float)((screenWidth - sliderWidth) / 2);
-            float sliderYLoc = (float)((screenHeight - sliderHeight) / 27) * controlAdjustHidden;
+            float sliderYLoc = (float)((screenHeight - sliderHeight) / 8.19) * controlAdjustHidden;
             sliderHidden = new UISlider();
             sliderHidden.Frame = new CGRect(sliderXLoc, sliderYLoc, sliderWidth, sliderHeight);
             sliderHidden.MinValue = 0;

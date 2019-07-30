@@ -160,7 +160,7 @@ namespace Stimulant
                             if (myMidiModulation.IsAR)
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOn.png"), UIControlState.Normal);
-                                
+
                             }
                             else
                             {
@@ -659,101 +659,113 @@ namespace Stimulant
 
                 string displayText = "";
                 // Conditionals determine the correct rate based on sliderValue
-                if (sliderValue >= (128 * 15 / 16))
+                if (sliderValue >= (128 * 17 / 18))
                 { // 32 note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/48";
                     myMidiModulation.RateCatch = 16;
                 }
-                else if (sliderValue >= (128 * 14 / 16))
+                else if (sliderValue >= (128 * 16 / 18))
                 { // 32 notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/32";
                     myMidiModulation.RateCatch = 15;
                 }
-                else if (sliderValue >= (128 * 13 / 16))
+                else if (sliderValue >= (128 * 15 / 18))
                 {  // sixteenth note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/24";
                     myMidiModulation.RateCatch = 14;
                 }
-                else if (sliderValue >= (128 * 12 / 16))
+                else if (sliderValue >= (128 * 14 / 18))
                 { // sixteenth notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/16";
                     myMidiModulation.RateCatch = 13;
                 }
-                else if (sliderValue >= (128 * 11 / 16))
+                else if (sliderValue >= (128 * 13 / 18))
                 {  // eighth note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/12";
                     myMidiModulation.RateCatch = 12;
                 }
-                else if (sliderValue >= (128 * 10 / 16))
+                else if (sliderValue >= (128 * 12 / 18))
                 {  // eighth notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/8 ";
                     myMidiModulation.RateCatch = 11;
                 }
-                else if (sliderValue >= (128 * 9 / 16))
+                else if (sliderValue >= (128 * 11 / 18))
                 {  // quarter note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/6 ";
                     myMidiModulation.RateCatch = 10;
                 }
-                else if (sliderValue >= (128 * 8 / 16))
+                else if (sliderValue >= (128 * 10 / 18))
                 {  // quarter notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/4 ";
                     myMidiModulation.RateCatch = 9;
                 }
-                else if (sliderValue >= (128 * 7 / 16))
+                else if (sliderValue >= (128 * 9 / 18))
                 {  // half note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/3 ";
                     myMidiModulation.RateCatch = 8;
                 }
-                else if (sliderValue >= (128 * 6 / 16))
+                else if (sliderValue >= (128 * 8 / 18))
                 {  // half note
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/2 ";
                     myMidiModulation.RateCatch = 7;
                 }
-                else if (sliderValue >= (128 * 5 / 16))
+                else if (sliderValue >= (128 * 7 / 18))
                 { // whole note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "3/4 ";
                     myMidiModulation.RateCatch = 6;
                 }
-                else if (sliderValue >= (128 * 4 / 16))
+                else if (sliderValue >= (128 * 6 / 18))
                 { // whole note
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/1 ";
                     myMidiModulation.RateCatch = 5;
                 }
-                else if (sliderValue >= (128 * 3 / 16))
+                else if (sliderValue >= (128 * 5 / 18))
                 { // 2 bar triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "3/2 ";
                     myMidiModulation.RateCatch = 4;
                 }
-                else if (sliderValue >= (128 * 2 / 16))
+                else if (sliderValue >= (128 * 4 / 18))
                 { // 2 bars
                     myMidiModulation.ClockCutoff = 2;
                     displayText = "2/1 ";
                     myMidiModulation.RateCatch = 3;
                 }
-                else if (sliderValue >= (128 * 1 / 16))
+                else if (sliderValue >= (128 * 3 / 18))
                 { // 4 bar triples
                     myMidiModulation.ClockCutoff = 2;
                     displayText = "3/1 ";
                     myMidiModulation.RateCatch = 2;
                 }
-                else if (sliderValue < 8)
+                else if (sliderValue >= (128 * 2 / 18))
                 { // 4 bar
                     myMidiModulation.ClockCutoff = 4;
                     displayText = "4/1 ";
                     myMidiModulation.RateCatch = 1;
+                }
+                else if (sliderValue >= (128 * 1 / 18))
+                { // 4 bar
+                    myMidiModulation.ClockCutoff = 4;
+                    displayText = "6/1 ";
+                    myMidiModulation.RateCatch = 20;
+                }
+                else if (sliderValue < 7)
+                { // 4 bar
+                    myMidiModulation.ClockCutoff = 8;
+                    displayText = "8/1 ";
+                    myMidiModulation.RateCatch = 21;
                 }
 
                 if (myMidiModulation.SettingsOn)
@@ -815,16 +827,22 @@ namespace Stimulant
 
             switch (rateCatch)
             {
-                case 1:
+                case 21: // 8/1
+                    intervalMultiplier = 32;
+                    break;
+                case 20: // 6/1
+                    intervalMultiplier = 21.33;
+                    break;
+                case 1: // 4/1
                     intervalMultiplier = 16;
                     break;
-                case 2:
+                case 2: // 3/1
                     intervalMultiplier = 10.667; //16 * (2 / 3);
                     break;
-                case 3:
+                case 3: // 2/1
                     intervalMultiplier = 8;
                     break;
-                case 4:
+                case 4: // 3/2
                     intervalMultiplier = 5.333;// 8 * (2 / 3);
                     break;
                 case 5:
