@@ -177,13 +177,22 @@ namespace Stimulant
                                 sliderHidden.Hidden = false;
                                 ReadHiddenSlider(sliderHidden.Value);
                                 rangeSlider.Enabled = false;
+                                labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
                             }
                             else
-                            {
+                            { 
+                            
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = true;
                                 rangeSlider.Enabled = true;
+                                labelRange.Text = "Modulation Range";
                             }
+                            break;
+                        }
+
+                    case "StartingLocation":
+                        {
+                            labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
                             break;
                         }
 

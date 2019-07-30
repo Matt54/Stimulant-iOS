@@ -167,7 +167,12 @@ namespace Stimulant
         }
 
         // value the modulation restarts at in trigger only mode with the restart each note setting on
-        public int StartingLocation { get; set; }
+        private int _StartingLocation;
+        public int StartingLocation
+        {
+            get { return _StartingLocation; }
+            set { _StartingLocation = value; OnPropertyChanged("StartingLocation"); }
+        }
 
         // is there at least one note on?
         public bool IsNoteOn { get; set; }
