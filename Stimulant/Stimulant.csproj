@@ -144,10 +144,6 @@
         <Compile Include="HighResolutionTimer.cs" />
     </ItemGroup>
     <ItemGroup>
-      <BundleResource Include="Resources\slider-default7-handle.png" />
-      <BundleResource Include="Resources\slider-default7-handle%402x.png" />
-      <BundleResource Include="Resources\slider-default7-handle-disabled.png" />
-      <BundleResource Include="Resources\slider-default7-handle-disabled%402x.png" />
       <BundleResource Include="Resources\slider-default7-track.png" />
       <BundleResource Include="Resources\slider-default7-track%402x.png" />
       <BundleResource Include="Resources\slider-default7-trackBackground.png" />
@@ -318,6 +314,39 @@
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicLocationThumb.png">
         <Link>Resources\graphicLocationThumb.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateThumb.png">
+        <Link>Resources\graphicRateThumb.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateMax.png">
+        <Link>Resources\graphicRateMax.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateMin.png">
+        <Link>Resources\graphicRateMin.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateThumb%402x.png">
+        <Link>Resources\graphicRateThumb%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateMax%402x.png">
+        <Link>Resources\graphicRateMax%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRateMin%402x.png">
+        <Link>Resources\graphicRateMin%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicLocationThumb%402x.png">
+        <Link>Resources\graphicLocationThumb%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\slider-default7-handle.png">
+        <Link>Resources\slider-default7-handle.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\slider-default7-handle%402x.png">
+        <Link>Resources\slider-default7-handle%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\slider-default7-handle-disabled.png">
+        <Link>Resources\slider-default7-handle-disabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\slider-default7-handle-disabled%402x.png">
+        <Link>Resources\slider-default7-handle-disabled%402x.png</Link>
       </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

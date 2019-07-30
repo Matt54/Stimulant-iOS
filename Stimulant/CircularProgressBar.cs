@@ -59,7 +59,7 @@ namespace Stimulant
 
             // Draw circle
             CGPath path = new CGPath();
-            UIColor.FromRGB(100, 100, 100).SetStroke();
+            UIColor.FromRGB(155, 155, 155).SetStroke();
             path.AddArc(x0, y0, _radius, 0.78f * (float)Math.PI, (2.22f) * (float)Math.PI, false);
             g.AddPath(path);
             g.DrawPath(CGPathDrawingMode.Stroke);

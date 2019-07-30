@@ -160,6 +160,7 @@ namespace Stimulant
                             if (myMidiModulation.IsAR)
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOn.png"), UIControlState.Normal);
+                                
                             }
                             else
                             {
@@ -175,11 +176,13 @@ namespace Stimulant
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = false;
                                 ReadHiddenSlider(sliderHidden.Value);
+                                rangeSlider.Enabled = false;
                             }
                             else
                             {
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = true;
+                                rangeSlider.Enabled = true;
                             }
                             break;
                         }
@@ -659,7 +662,7 @@ namespace Stimulant
                 if (sliderValue >= (128 * 15 / 16))
                 { // 32 note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/32T";
+                    displayText = "1/48";
                     myMidiModulation.RateCatch = 16;
                 }
                 else if (sliderValue >= (128 * 14 / 16))
@@ -671,7 +674,7 @@ namespace Stimulant
                 else if (sliderValue >= (128 * 13 / 16))
                 {  // sixteenth note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/16T";
+                    displayText = "1/24";
                     myMidiModulation.RateCatch = 14;
                 }
                 else if (sliderValue >= (128 * 12 / 16))
@@ -683,73 +686,73 @@ namespace Stimulant
                 else if (sliderValue >= (128 * 11 / 16))
                 {  // eighth note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/8T";
+                    displayText = "1/12";
                     myMidiModulation.RateCatch = 12;
                 }
                 else if (sliderValue >= (128 * 10 / 16))
                 {  // eighth notes
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/8";
+                    displayText = "1/8 ";
                     myMidiModulation.RateCatch = 11;
                 }
                 else if (sliderValue >= (128 * 9 / 16))
                 {  // quarter note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/4T";
+                    displayText = "1/6 ";
                     myMidiModulation.RateCatch = 10;
                 }
                 else if (sliderValue >= (128 * 8 / 16))
                 {  // quarter notes
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/4";
+                    displayText = "1/4 ";
                     myMidiModulation.RateCatch = 9;
                 }
                 else if (sliderValue >= (128 * 7 / 16))
                 {  // half note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/2T";
+                    displayText = "1/3 ";
                     myMidiModulation.RateCatch = 8;
                 }
                 else if (sliderValue >= (128 * 6 / 16))
                 {  // half note
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/2";
+                    displayText = "1/2 ";
                     myMidiModulation.RateCatch = 7;
                 }
                 else if (sliderValue >= (128 * 5 / 16))
                 { // whole note triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/1T";
+                    displayText = "3/4 ";
                     myMidiModulation.RateCatch = 6;
                 }
                 else if (sliderValue >= (128 * 4 / 16))
                 { // whole note
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "1/1";
+                    displayText = "1/1 ";
                     myMidiModulation.RateCatch = 5;
                 }
                 else if (sliderValue >= (128 * 3 / 16))
                 { // 2 bar triples
                     myMidiModulation.ClockCutoff = 1;
-                    displayText = "2/1T";
+                    displayText = "3/2 ";
                     myMidiModulation.RateCatch = 4;
                 }
                 else if (sliderValue >= (128 * 2 / 16))
                 { // 2 bars
                     myMidiModulation.ClockCutoff = 2;
-                    displayText = "2/1";
+                    displayText = "2/1 ";
                     myMidiModulation.RateCatch = 3;
                 }
                 else if (sliderValue >= (128 * 1 / 16))
                 { // 4 bar triples
                     myMidiModulation.ClockCutoff = 2;
-                    displayText = "4/1T";
+                    displayText = "3/1 ";
                     myMidiModulation.RateCatch = 2;
                 }
                 else if (sliderValue < 8)
                 { // 4 bar
                     myMidiModulation.ClockCutoff = 4;
-                    displayText = "4/1";
+                    displayText = "4/1 ";
                     myMidiModulation.RateCatch = 1;
                 }
 
@@ -763,14 +766,14 @@ namespace Stimulant
                     //MIDI
                     myMidiModulation.StepSizeSetter();
                     //EXT Clock Sync
-                    labelRate.Text = "Clock Sync: " + displayText;
+                    labelRate.Text = "Ext. Clock Sync: " + displayText;
                 }
                 else
                 {
                     //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
                     timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
                     //INT Clock Sync
-                    labelRate.Text = "Clock Sync: " + displayText;
+                    labelRate.Text = "Int. Clock Sync: " + displayText;
                 }
 
             }
@@ -840,7 +843,7 @@ namespace Stimulant
                     intervalMultiplier = 1;
                     break;
                 case 10:
-                    intervalMultiplier = 0.667;// 2 / 3;
+                    intervalMultiplier = 0.667;// 1/6;
                     break;
                 case 11:
                     intervalMultiplier = 0.5;
