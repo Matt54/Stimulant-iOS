@@ -24,6 +24,7 @@ namespace Stimulant
         //Declare View References
         UIButton buttonOnOff;
         UILabel labelMode;
+        UILabel labelDetails;
         UIButton buttonTime;
         UIButton buttonMidi;
         UIButton buttonReverse;
@@ -67,6 +68,7 @@ namespace Stimulant
             float buttonYAdjust;
             float sizeSubtract;
             float textAdjustMode;
+            float textAdjustDetails;
             float textAdjustRate;
             float textAdjustRange;
             float textAdjustPattern;
@@ -111,6 +113,7 @@ namespace Stimulant
                     background = "Back8.png";
                     overlay = "Over8.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1f;// 0.96f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1f;//0.975f;
@@ -134,6 +137,7 @@ namespace Stimulant
                     background = "Back8Plus.png";
                     overlay = "Over8Plus.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 0.99f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.00f;
@@ -156,6 +160,7 @@ namespace Stimulant
                     background = "BackXS.png";
                     overlay = "OverXS.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 0.995f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1f;
@@ -180,6 +185,7 @@ namespace Stimulant
                     background = "BackXSMax.png";
                     overlay = "OverXSMax.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1.015f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.01f;
@@ -202,6 +208,7 @@ namespace Stimulant
                     background = "BackiPad.png";
                     overlay = "OveriPad.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1.04f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.035f;
@@ -224,6 +231,7 @@ namespace Stimulant
                     background = "BackiPadPro.png";
                     overlay = "OveriPadPro.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1.04f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.035f;
@@ -246,6 +254,7 @@ namespace Stimulant
                     background = "BackiPadPro11.png";
                     overlay = "OveriPadPro11.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1.053f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.043f;
@@ -268,6 +277,7 @@ namespace Stimulant
                     background = "BackiPadNext.png";
                     overlay = "OveriPadNext.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 1.055f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1.045f;
@@ -290,6 +300,7 @@ namespace Stimulant
                     background = "BackXS.png";
                     overlay = "OverXS.png";
                     textAdjustMode = 1f;
+                    textAdjustDetails = 1f;
                     textAdjustRate = 0.995f;
                     textAdjustRange = 1f;
                     textAdjustPattern = 1f;
@@ -338,6 +349,7 @@ namespace Stimulant
             //LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
             LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
+            LoadDetailsLabel(screenWidth, screenHeight, textAdjustDetails);
             LoadSegmented(screenWidth, screenHeight, controlAdjustPattern, segHeight);
             LoadRateSlider(screenWidth, screenHeight, controlAdjustRate, sliderHeight);
             LoadPatternLabel(screenWidth, screenHeight, textAdjustPattern, segHeight);
@@ -753,6 +765,21 @@ namespace Stimulant
             labelMode.AdjustsFontSizeToFitWidth = true;
         }
 
+        public void LoadDetailsLabel(float screenWidth, float screenHeight, float textAdjustDetails)
+        {
+            float labelDetailsWidth = (float)(screenWidth / 1.8);
+            float labelDetailsHeight = (float)(screenHeight / 8);
+            float labelDetailsXLoc = (float)((screenWidth - labelDetailsWidth) / 2);
+            float labelDetailsYLoc = (float)(((screenHeight - labelDetailsHeight) / 1.18) * textAdjustDetails);
+            labelDetails = new UILabel();
+            labelDetails.Frame = new CGRect(labelDetailsXLoc, labelDetailsYLoc, labelDetailsWidth, labelDetailsHeight);
+            labelDetails.Text = "Current Mode Information";
+            labelDetails.TextAlignment = UITextAlignment.Center;
+            labelDetails.TextColor = UIColor.Black;
+            labelDetails.Font = UIFont.SystemFontOfSize(100);
+            labelDetails.AdjustsFontSizeToFitWidth = true;
+        }
+
         public void LoadTimeandMidiButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustMode)
         {
             float buttonTimeWidth = (float)(screenWidth / (3 * sizeSubtract));
@@ -879,6 +906,7 @@ namespace Stimulant
             View.AddSubview(labelPattern);
             View.AddSubview(buttonMidi);
             View.AddSubview(labelMode);
+            View.AddSubview(labelDetails);
             View.AddSubview(sliderRate);
             View.AddSubview(labelRate);
             View.AddSubview(labelRange);

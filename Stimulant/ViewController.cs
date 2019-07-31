@@ -330,7 +330,8 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = "External Clock Mode";
+                                    labelMode.Text = "Ext Clock Mode";
+                                    labelDetails.Text = "Midi Clock Adjusts Rate";
                                     break;
                                 case 2:
                                     if (myMidiModulation.IsAuto)
@@ -347,7 +348,8 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = "Frequency Timing Mode";
+                                    labelMode.Text = "Frequency Timing";
+                                    labelDetails.Text = "Hz Sets Modulation Rate";
                                     break;
                                 case 3:
                                     if (myMidiModulation.IsAuto)
@@ -360,7 +362,8 @@ namespace Stimulant
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
-                                    labelMode.Text = "Internal Clock Mode";
+                                    labelMode.Text = "Int Clock Mode";
+                                    labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
                                     break;
                                 default:
                                     break;
