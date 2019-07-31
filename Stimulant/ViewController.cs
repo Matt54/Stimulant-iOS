@@ -107,10 +107,13 @@ namespace Stimulant
                             if (myMidiModulation.Opposite)
                             {
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                                labelMode.Text = "Opposite Direction";
+                                labelDetails.Text = "Pattern Is Reversed";
                             }
                             else
                             {
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -131,16 +134,17 @@ namespace Stimulant
                                 }
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Normal);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Highlighted);
-                                //buttonSettings.Hidden = false;
                                 buttonSettings.Enabled = true;
                                 buttonAR.Enabled = true;
+
+                                labelMode.Text = " Automatic Mode ";
+                                labelDetails.Text = "Randoms At A Set Rate";
                             }
                             else
                             {
                                 timerAuto.Stop(joinThread: false);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Highlighted);
-                                //buttonSettings.Hidden = true;
                                 buttonSettings.Enabled = false;
                                 buttonAR.Enabled = false;
                                 if (myMidiModulation.SettingsOn)
@@ -151,6 +155,7 @@ namespace Stimulant
                                 {
                                     myMidiModulation.IsAR = false;
                                 }
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -160,11 +165,13 @@ namespace Stimulant
                             if (myMidiModulation.IsAR)
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOn.png"), UIControlState.Normal);
-
+                                labelMode.Text = "Automatic Range";
+                                labelDetails.Text = "Randoms Change Range";
                             }
                             else
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -178,14 +185,18 @@ namespace Stimulant
                                 ReadHiddenSlider(sliderHidden.Value);
                                 rangeSlider.Enabled = false;
                                 labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+
+                                labelMode.Text = " Restart Pattern   ";
+                                labelDetails.Text = "Begins At Starting Value";
                             }
                             else
-                            { 
-                            
+                            {
+
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = true;
                                 rangeSlider.Enabled = true;
                                 labelRange.Text = "Modulation Range";
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -203,6 +214,9 @@ namespace Stimulant
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
                                 buttonLocation.Enabled = true;
+
+                                labelMode.Text = " Note On Trigger   ";
+                                labelDetails.Text = "Modulation When Playing";
                             }
                             else
                             {
@@ -212,6 +226,7 @@ namespace Stimulant
                                 myMidiModulation.IsNoteOn = false;
                                 myMidiModulation.IsRestartEachNote = false;
                                 buttonLocation.Enabled = false;
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -228,6 +243,9 @@ namespace Stimulant
                                 buttonMinus10.Hidden = false;
                                 labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
                                 buttonTap.Hidden = false;
+
+                                labelMode.Text = "Tempo Adjustment";
+                                labelDetails.Text = "Tap Or Use Arrows To Set";
                             }
                             else
                             {
@@ -239,6 +257,7 @@ namespace Stimulant
                                 buttonMinus10.Hidden = true;
                                 ReadPattern(segmentedPattern.SelectedSegment);
                                 buttonTap.Hidden = true;
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -258,7 +277,6 @@ namespace Stimulant
                             if (myMidiModulation.CCOn)
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOn.png"), UIControlState.Normal);
-                                //sliderRate.Hidden = true;
                                 segmentedPattern.Hidden = true;
                                 buttonPlus1.Hidden = false;
                                 buttonPlus10.Hidden = false;
@@ -266,13 +284,14 @@ namespace Stimulant
                                 buttonMinus10.Hidden = false;
                                 buttonTap.Hidden = false;
                                 buttonTap.Enabled = false;
-                                //labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                                 labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+
+                                labelMode.Text = "CC Number Setting";
+                                labelDetails.Text = "Value Adjusted By Arrows";
                             }
                             else
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Normal);
-                                //sliderRate.Hidden = false;
                                 segmentedPattern.Hidden = false;
                                 buttonPlus1.Hidden = true;
                                 buttonPlus10.Hidden = true;
@@ -280,8 +299,8 @@ namespace Stimulant
                                 buttonMinus10.Hidden = true;
                                 buttonTap.Hidden = true;
                                 buttonTap.Enabled = true;
-                                //ReadSlider(sliderRate.Value); //We need an equivalent to a Pattern read
                                 ReadPattern(segmentedPattern.SelectedSegment);
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -290,7 +309,6 @@ namespace Stimulant
                         {
                             if (myMidiModulation.CCOn)
                             {
-                                //labelRate.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                                 labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                             }
                             break;
@@ -304,12 +322,15 @@ namespace Stimulant
                                 myMidiModulation.RateRemember = (int)sliderRate.Value;
                                 sliderRate.Value = (float)myMidiModulation.AutoCutoff;
                                 ReadSlider(sliderRate.Value);
+                                labelMode.Text = "Auto Rate Setting";
+                                labelDetails.Text = "Value Adjusted By Slider";
                             }
                             else
                             {
                                 buttonSettings.SetImage(UIImage.FromFile("graphicSettingsButtonOff.png"), UIControlState.Normal);
                                 sliderRate.Value = myMidiModulation.RateRemember;
                                 ReadSlider(sliderRate.Value);
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -330,8 +351,8 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = "Ext Clock Mode";
-                                    labelDetails.Text = "Midi Clock Adjusts Rate";
+                                    labelMode.Text = " Ext Clock Mode   ";
+                                    labelDetails.Text = " Midi Clock Adjusts Rate ";
                                     break;
                                 case 2:
                                     if (myMidiModulation.IsAuto)
@@ -348,8 +369,8 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = "Frequency Timing";
-                                    labelDetails.Text = "Hz Sets Modulation Rate";
+                                    labelMode.Text = "Free Timing Mode";
+                                    labelDetails.Text = "Rate Based On Frequency";
                                     break;
                                 case 3:
                                     if (myMidiModulation.IsAuto)
@@ -362,7 +383,7 @@ namespace Stimulant
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
-                                    labelMode.Text = "Int Clock Mode";
+                                    labelMode.Text = " Int Clock Mode   ";
                                     labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
                                     break;
                                 default:
@@ -459,6 +480,25 @@ namespace Stimulant
             };
 
             myMidiModulation.ModeNumber = 2;
+        }
+
+        private void ResetDisplay()
+        {
+            switch (myMidiModulation.ModeNumber)
+            {
+                case 1:
+                    labelMode.Text = "  Ext Clock Mode  ";
+                    labelDetails.Text = " Midi Clock Adjusts Rate ";
+                    break;
+                case 2:
+                    labelMode.Text = "Free Timing Mode";
+                    labelDetails.Text = "Rate Based On Frequency";
+                    break;
+                case 3:
+                    labelMode.Text = " Int Clock Mode ";
+                    labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
+                    break;
+            }
         }
 
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
@@ -656,6 +696,7 @@ namespace Stimulant
                 //TIME
                 if (myMidiModulation.SettingsOn)
                 {
+                    myMidiModulation.AutoCutoff =(int) sliderValue;
                     timerAuto.Interval = (float)Math.Round(((128 - sliderValue) * 100), 0);
                     labelRate.Text = "Randoms in: " + timerAuto.Interval + " ms";
                 }
@@ -675,115 +716,116 @@ namespace Stimulant
                 { // 32 note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/48";
-                    myMidiModulation.RateCatch = 16;
+                    myMidiModulation.RateCatch = 18;
                 }
                 else if (sliderValue >= (128 * 16 / 18))
                 { // 32 notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/32";
-                    myMidiModulation.RateCatch = 15;
+                    myMidiModulation.RateCatch = 17;
                 }
                 else if (sliderValue >= (128 * 15 / 18))
                 {  // sixteenth note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/24";
-                    myMidiModulation.RateCatch = 14;
+                    myMidiModulation.RateCatch = 16;
                 }
                 else if (sliderValue >= (128 * 14 / 18))
                 { // sixteenth notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/16";
-                    myMidiModulation.RateCatch = 13;
+                    myMidiModulation.RateCatch = 15;
                 }
                 else if (sliderValue >= (128 * 13 / 18))
                 {  // eighth note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/12";
-                    myMidiModulation.RateCatch = 12;
+                    myMidiModulation.RateCatch = 14;
                 }
                 else if (sliderValue >= (128 * 12 / 18))
                 {  // eighth notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/8 ";
-                    myMidiModulation.RateCatch = 11;
+                    myMidiModulation.RateCatch = 13;
                 }
                 else if (sliderValue >= (128 * 11 / 18))
                 {  // quarter note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/6 ";
-                    myMidiModulation.RateCatch = 10;
+                    myMidiModulation.RateCatch = 12;
                 }
                 else if (sliderValue >= (128 * 10 / 18))
                 {  // quarter notes
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/4 ";
-                    myMidiModulation.RateCatch = 9;
+                    myMidiModulation.RateCatch = 11;
                 }
                 else if (sliderValue >= (128 * 9 / 18))
                 {  // half note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/3 ";
-                    myMidiModulation.RateCatch = 8;
+                    myMidiModulation.RateCatch = 10;
                 }
                 else if (sliderValue >= (128 * 8 / 18))
                 {  // half note
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/2 ";
-                    myMidiModulation.RateCatch = 7;
+                    myMidiModulation.RateCatch = 9;
                 }
                 else if (sliderValue >= (128 * 7 / 18))
                 { // whole note triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "3/4 ";
-                    myMidiModulation.RateCatch = 6;
+                    myMidiModulation.RateCatch = 8;
                 }
                 else if (sliderValue >= (128 * 6 / 18))
                 { // whole note
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "1/1 ";
-                    myMidiModulation.RateCatch = 5;
+                    myMidiModulation.RateCatch = 7;
                 }
                 else if (sliderValue >= (128 * 5 / 18))
                 { // 2 bar triples
                     myMidiModulation.ClockCutoff = 1;
                     displayText = "3/2 ";
-                    myMidiModulation.RateCatch = 4;
+                    myMidiModulation.RateCatch = 6;
                 }
                 else if (sliderValue >= (128 * 4 / 18))
                 { // 2 bars
                     myMidiModulation.ClockCutoff = 2;
                     displayText = "2/1 ";
-                    myMidiModulation.RateCatch = 3;
+                    myMidiModulation.RateCatch = 5;
                 }
                 else if (sliderValue >= (128 * 3 / 18))
                 { // 4 bar triples
                     myMidiModulation.ClockCutoff = 2;
                     displayText = "3/1 ";
-                    myMidiModulation.RateCatch = 2;
+                    myMidiModulation.RateCatch = 4;
                 }
                 else if (sliderValue >= (128 * 2 / 18))
                 { // 4 bar
                     myMidiModulation.ClockCutoff = 4;
                     displayText = "4/1 ";
-                    myMidiModulation.RateCatch = 1;
+                    myMidiModulation.RateCatch = 3;
                 }
                 else if (sliderValue >= (128 * 1 / 18))
                 { // 4 bar
                     myMidiModulation.ClockCutoff = 4;
                     displayText = "6/1 ";
-                    myMidiModulation.RateCatch = 20;
+                    myMidiModulation.RateCatch = 2;
                 }
                 else if (sliderValue < 7)
                 { // 4 bar
                     myMidiModulation.ClockCutoff = 8;
                     displayText = "8/1 ";
-                    myMidiModulation.RateCatch = 21;
+                    myMidiModulation.RateCatch = 1;
                 }
 
                 if (myMidiModulation.SettingsOn)
                 {
-                    myMidiModulation.AutoCutoff = (17 - myMidiModulation.RateCatch) * 24 * 4;
-                    labelRate.Text = "Randoms in: " + (17 - myMidiModulation.RateCatch) + " Beats";
+
+                    myMidiModulation.AutoCutoff = (19 - myMidiModulation.RateCatch) * 24 * 4;
+                    labelRate.Text = "Randoms in: " + (19 - myMidiModulation.RateCatch) + " Beats";
                 }
                 else if (myMidiModulation.ModeNumber == 1)
                 {
@@ -839,58 +881,58 @@ namespace Stimulant
 
             switch (rateCatch)
             {
-                case 21: // 8/1
+                case 1: // 8/1
                     intervalMultiplier = 32;
                     break;
-                case 20: // 6/1
+                case 2: // 6/1
                     intervalMultiplier = 21.33;
                     break;
-                case 1: // 4/1
+                case 3: // 4/1
                     intervalMultiplier = 16;
                     break;
-                case 2: // 3/1
+                case 4: // 3/1
                     intervalMultiplier = 10.667; //16 * (2 / 3);
                     break;
-                case 3: // 2/1
+                case 5: // 2/1
                     intervalMultiplier = 8;
                     break;
-                case 4: // 3/2
+                case 6: // 3/2
                     intervalMultiplier = 5.333;// 8 * (2 / 3);
                     break;
-                case 5:
+                case 7:
                     intervalMultiplier = 4;
                     break;
-                case 6:
+                case 8:
                     intervalMultiplier = 2.667;// 4 * (2 / 3);
                     break;
-                case 7:
+                case 9:
                     intervalMultiplier = 2;
                     break;
-                case 8:
+                case 10:
                     intervalMultiplier = 1.333;//2 * (2 / 3);
                     break;
-                case 9:
+                case 11:
                     intervalMultiplier = 1;
                     break;
-                case 10:
+                case 12:
                     intervalMultiplier = 0.667;// 1/6;
                     break;
-                case 11:
+                case 13:
                     intervalMultiplier = 0.5;
                     break;
-                case 12:
+                case 14:
                     intervalMultiplier = 0.333;// 1 / 3;
                     break;
-                case 13:
+                case 15:
                     intervalMultiplier = 0.25;
                     break;
-                case 14:
+                case 16:
                     intervalMultiplier = 0.167;// 1 / 6;
                     break;
-                case 15:
+                case 17:
                     intervalMultiplier = 0.125;
                     break;
-                case 16:
+                case 18:
                     intervalMultiplier = 0.083;// 1 / 12;
                     break;
                 default:
@@ -911,52 +953,54 @@ namespace Stimulant
             {
                 switch (rateCatch)
                 {
-                    case 1:
-                    case 2:
+                    case 1: //added later on
+                    case 2: //added later on
                     case 3:
+                    case 4:
+                    case 5:
                         //step size = 1
                         myMidiModulation.StepSize = 1;
                         //128 steps
                         fullModSteps = 128;
                         break;
-                    case 4:
-                    case 5:
+                    case 6:
+                    case 7:
                         //step size = 2
                         myMidiModulation.StepSize = 2;
                         //64 steps
                         fullModSteps = 64;
                         break;
-                    case 6:
-                    case 7:
+                    case 8:
+                    case 9:
                         //step size = 4
                         myMidiModulation.StepSize = 4;
                         //32 steps
                         fullModSteps = 32;
                         break;
-                    case 8:
-                    case 9:
+                    case 10:
+                    case 11:
                         //step size = 8
                         myMidiModulation.StepSize = 8;
                         //16 steps
                         fullModSteps = 16;
                         break;
-                    case 10:
-                    case 11:
+                    case 12:
+                    case 13:
                         //step size = 16
                         myMidiModulation.StepSize = 16;
                         //8 steps
                         fullModSteps = 8;
                         break;
-                    case 12:
-                    case 13:
+                    case 14:
+                    case 15:
                         //step size = 32
                         myMidiModulation.StepSize = 32;
                         //4 steps
                         fullModSteps = 4;
                         break;
-                    case 14:
-                    case 15:
                     case 16:
+                    case 17:
+                    case 18:
                         //step size = 64
                         myMidiModulation.StepSize = 64;
                         //2 steps

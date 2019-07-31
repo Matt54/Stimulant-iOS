@@ -755,7 +755,7 @@ namespace Stimulant
             float labelModeWidth = (float)(screenWidth / 1.8);
             float labelModeHeight = (float)(screenHeight / 8);
             float labelModeXLoc = (float)((screenWidth - labelModeWidth) / 2);
-            float labelModeYLoc = (float)(((screenHeight - labelModeHeight) / 1.25) * textAdjustMode);
+            float labelModeYLoc = (float)(((screenHeight - labelModeHeight) / 1.24) * textAdjustMode);
             labelMode = new UILabel();
             labelMode.Frame = new CGRect(labelModeXLoc, labelModeYLoc, labelModeWidth, labelModeHeight);
             labelMode.Text = "Hello World";
@@ -770,7 +770,7 @@ namespace Stimulant
             float labelDetailsWidth = (float)(screenWidth / 1.8);
             float labelDetailsHeight = (float)(screenHeight / 8);
             float labelDetailsXLoc = (float)((screenWidth - labelDetailsWidth) / 2);
-            float labelDetailsYLoc = (float)(((screenHeight - labelDetailsHeight) / 1.18) * textAdjustDetails);
+            float labelDetailsYLoc = (float)(((screenHeight - labelDetailsHeight) / 1.185) * textAdjustDetails);
             labelDetails = new UILabel();
             labelDetails.Frame = new CGRect(labelDetailsXLoc, labelDetailsYLoc, labelDetailsWidth, labelDetailsHeight);
             labelDetails.Text = "Current Mode Information";
