@@ -275,12 +275,13 @@ namespace Stimulant
                 {
                     // AutoCutoff can be adjusted with settings button on and the rate slider
                     // RandomRoll is disabled when settings are on
-                    if (!SettingsOn)
+                    if (!SettingsOn && ModeNumber==1)
                     {
                         AutoCounter++;
                         if (AutoCounter > AutoCutoff)
                         {
                             AutoCounter = 0;
+
                             PatternString = RandomRoll();
                         }
 
