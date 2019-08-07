@@ -348,6 +348,27 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\slider-default7-handle-disabled%402x.png">
         <Link>Resources\slider-default7-handle-disabled%402x.png</Link>
       </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicAutoPatternButtonOff.png">
+        <Link>Resources\graphicAutoPatternButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicAutoPatternButtonOn.png">
+        <Link>Resources\graphicAutoPatternButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicAutoRateButtonOff.png">
+        <Link>Resources\graphicAutoRateButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicAutoRateButtonOn.png">
+        <Link>Resources\graphicAutoRateButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRandomButtonDisabled.png">
+        <Link>Resources\graphicRandomButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRandomButtonOff.png">
+        <Link>Resources\graphicRandomButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRandomButtonOn.png">
+        <Link>Resources\graphicRandomButtonOn.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

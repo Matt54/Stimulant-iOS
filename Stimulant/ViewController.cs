@@ -686,6 +686,16 @@ namespace Stimulant
             myMidiModulation.BPMToggle();
         }
 
+        private void HandleAutoPatternTouchDown(object sender, System.EventArgs e)
+        {
+            
+        }
+
+        private void HandleAutoRateTouchDown(object sender, System.EventArgs e)
+        {
+
+        }
+
         protected void HandleSettingsTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.SettingsToggle();
