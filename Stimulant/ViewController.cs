@@ -62,7 +62,7 @@ namespace Stimulant
                 InvokeOnMainThread(() => {
                     if (myMidiModulation.IsRunning)
                     {
-                        if(myMidiModulation.ModeNumber == 1)
+                        if (myMidiModulation.ModeNumber == 1)
                         {
                             myMidiModulation.ClockCounter();
                         }
@@ -82,9 +82,11 @@ namespace Stimulant
                 InvokeOnMainThread(() => {
                     if (!myMidiModulation.SettingsOn)
                     {
-                        if(myMidiModulation.ModeNumber == 2)
+                        if (myMidiModulation.ModeNumber == 2)
                         {
-                            labelPattern.Text = myMidiModulation.RandomRoll();
+                            myMidiModulation.IsRandomRoll = true;
+                            //labelPattern.Text = myMidiModulation.RandomRoll();
+
                         }
                         else
                         {
@@ -92,7 +94,8 @@ namespace Stimulant
                             if (myMidiModulation.AutoCounter > myMidiModulation.AutoCutoff)
                             {
                                 myMidiModulation.AutoCounter = 0;
-                                myMidiModulation.PatternString = myMidiModulation.RandomRoll();
+                                //myMidiModulation.PatternString = myMidiModulation.RandomRoll();
+                                myMidiModulation.IsRandomRoll = true;
                             }
                         }
                     }
@@ -150,7 +153,7 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsAuto)
                             {
-                                
+
                                 if (myMidiModulation.ModeNumber == 2 || myMidiModulation.ModeNumber == 3)
                                 {
                                     timerAuto.Start();
@@ -158,7 +161,7 @@ namespace Stimulant
                                 }
                                 else
                                 {
-                                    myMidiModulation.AutoCutoff = (int) (64 * (1728 / 127));
+                                    myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
                                 }
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Normal);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Highlighted);
@@ -188,6 +191,38 @@ namespace Stimulant
                             break;
                         }
 
+                    case "IsRandomRoll":
+                        {
+                            if (myMidiModulation.IsRandomRoll)
+                            {
+                                InvokeOnMainThread(() =>
+                                {
+                                    if (myMidiModulation.IsAutoPattern)
+                                    {
+                                        labelPattern.Text = myMidiModulation.RandomRoll();
+                                        segmentedPattern.SelectedSegment = myMidiModulation.PatternNumber - 1;
+                                    }
+
+                                    if (myMidiModulation.IsAutoRate)
+                                    {
+                                        sliderRate.Value = myMidiModulation.RandomNumber(1, 127);
+                                        ReadSlider(sliderRate.Value);
+                                    }
+
+                                    if (myMidiModulation.IsAR)
+                                    {
+                                        rangeSlider.UpperValue = myMidiModulation.RandomNumber(1, 127);
+                                        myMidiModulation.Maximum = (int)rangeSlider.UpperValue;
+                                        rangeSlider.LowerValue = myMidiModulation.RandomNumber(1, myMidiModulation.Maximum);
+                                        myMidiModulation.Minimum = (int)rangeSlider.LowerValue;
+                                    }
+                                    myMidiModulation.IsRandomRoll = false;
+                                    //labelMode.Text = "Hello World";
+                                });
+                            }
+                            break;
+                        }
+
                     case "IsAR":
                         {
                             if (myMidiModulation.IsAR)
@@ -199,6 +234,38 @@ namespace Stimulant
                             else
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
+                                ResetDisplay();
+                            }
+                            break;
+                        }
+
+                    case "IsAutoPattern":
+                        {
+                            if (myMidiModulation.IsAutoPattern)
+                            {
+                                buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOn.png"), UIControlState.Normal);
+                                labelMode.Text = "Automatic Pattern";
+                                labelDetails.Text = "Randoms Change Pattern";
+                            }
+                            else
+                            {
+                                buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOff.png"), UIControlState.Normal);
+                                ResetDisplay();
+                            }
+                            break;
+                        }
+
+                    case "IsAutoRate":
+                        {
+                            if (myMidiModulation.IsAutoRate)
+                            {
+                                buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOn.png"), UIControlState.Normal);
+                                labelMode.Text = "Automatic Rate";
+                                labelDetails.Text = "Randoms Change Rate";
+                            }
+                            else
+                            {
+                                buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Normal);
                                 ResetDisplay();
                             }
                             break;
@@ -356,8 +423,8 @@ namespace Stimulant
                                 else
                                 {
                                     double tempVal;
-                                     tempVal = myMidiModulation.AutoCutoff*127/1728;
-                                    sliderRate.Value=(float)tempVal;
+                                    tempVal = myMidiModulation.AutoCutoff * 127 / 1728;
+                                    sliderRate.Value = (float)tempVal;
                                 }
                                 ReadSlider(sliderRate.Value);
                                 labelMode.Text = "Auto Rate Setting";
@@ -384,7 +451,7 @@ namespace Stimulant
                                     timerAuto.Stop(joinThread: false);
                                     myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
                                     //}
-                                        
+
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
@@ -419,8 +486,8 @@ namespace Stimulant
                                 case 3:
                                     //if (myMidiModulation.IsAuto)
                                     //{
-                                        timerAuto.Start();
-                                        myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
+                                    timerAuto.Start();
+                                    myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
                                     //}
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
@@ -441,6 +508,8 @@ namespace Stimulant
                     case "PatternNumber":
                         {
 
+                            /*
+
                             if (myMidiModulation.IsRandomRoll == true)
                             {
 
@@ -456,10 +525,11 @@ namespace Stimulant
                                 }
                                 myMidiModulation.IsRandomRoll = false;
                             }
+                            */
 
                             //if (myMidiModulation.ModeNumber == 2)
                             //{
-                                ReadSlider(sliderRate.Value);
+                            ReadSlider(sliderRate.Value);
                             //}
 
                             switch (myMidiModulation.PatternNumber)
@@ -688,12 +758,12 @@ namespace Stimulant
 
         private void HandleAutoPatternTouchDown(object sender, System.EventArgs e)
         {
-            
+            myMidiModulation.AutoPatternToggle();
         }
 
         private void HandleAutoRateTouchDown(object sender, System.EventArgs e)
         {
-
+            myMidiModulation.AutoRateToggle();
         }
 
         protected void HandleSettingsTouchDown(object sender, System.EventArgs e)
@@ -717,7 +787,9 @@ namespace Stimulant
 
         protected void HandleRandomTouchDown(object sender, System.EventArgs e)
         {
-            labelPattern.Text = myMidiModulation.RandomRoll();
+            //labelPattern.Text = myMidiModulation.RandomRoll();
+            //myMidiModulation.IsRandomRoll = true;
+            myMidiModulation.RandomToggle();
         }
 
         protected void HandleAutoTouchDown(object sender, System.EventArgs e)
@@ -753,7 +825,7 @@ namespace Stimulant
                 //TIME
                 if (myMidiModulation.SettingsOn)
                 {
-                    myMidiModulation.AutoCutoff =(int) sliderValue;
+                    myMidiModulation.AutoCutoff = (int)sliderValue;
                     timerAuto.Interval = (float)Math.Round(((128 - sliderValue) * 100), 0);
                     labelRate.Text = "Randoms in: " + timerAuto.Interval + " ms";
                 }

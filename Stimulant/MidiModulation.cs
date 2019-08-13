@@ -132,7 +132,12 @@ namespace Stimulant
         public int AutoCutoff { get; set; }
 
         // trigger for the modulation to randomize its settings
-        public bool IsRandomRoll { get; set; }
+        private bool _IsRandomRoll;
+        public bool IsRandomRoll
+        {
+            get { return _IsRandomRoll; }
+            set { _IsRandomRoll = value; OnPropertyChanged("IsRandomRoll"); }
+        }
 
         // flag to allow the "auto mode" to have its frequency or # of MIDI clock pulses required before randomization to be adjusted
         private bool _SettingsOn;
@@ -148,6 +153,22 @@ namespace Stimulant
         {
             get { return _IsAR; }
             set { _IsAR = value; OnPropertyChanged("IsAR"); }
+        }
+
+        // Auto Pattern flag to allow the pattern to be set in auto mode
+        private bool _IsAutoPattern;
+        public bool IsAutoPattern
+        {
+            get { return _IsAutoPattern; }
+            set { _IsAutoPattern = value; OnPropertyChanged("IsAutoPattern"); }
+        }
+
+        // Auto Pattern flag to allow the pattern to be set in auto mode
+        private bool _IsAutoRate;
+        public bool IsAutoRate
+        {
+            get { return _IsAutoRate; }
+            set { _IsAutoRate = value; OnPropertyChanged("IsAutoRate"); }
         }
 
         // trigger only prevents modulation except when at least one note is on
@@ -215,6 +236,8 @@ namespace Stimulant
             AutoCounter = 0;
             AutoCutoff = 10;
             IsAR = false;
+            IsAutoRate = false;
+            IsAutoPattern = false;
             BPM = 120;
         }
 
@@ -275,13 +298,12 @@ namespace Stimulant
                 {
                     // AutoCutoff can be adjusted with settings button on and the rate slider
                     // RandomRoll is disabled when settings are on
-                    if (!SettingsOn && ModeNumber==1)
+                    if (!SettingsOn && ModeNumber == 1)
                     {
                         AutoCounter++;
                         if (AutoCounter > AutoCutoff)
                         {
                             AutoCounter = 0;
-
                             PatternString = RandomRoll();
                         }
 
@@ -867,11 +889,37 @@ namespace Stimulant
             }
         }
 
+        // enables or disables auto pattern
+        public void AutoPatternToggle()
+        {
+            if (IsAutoPattern)
+            {
+                IsAutoPattern = false;
+            }
+            else
+            {
+                IsAutoPattern = true;
+            }
+        }
 
-        // randomizes modulation settings (called in auto mode)
+        // enables or disables auto rate
+        public void AutoRateToggle()
+        {
+            if (IsAutoRate)
+            {
+                IsAutoRate = false;
+            }
+            else
+            {
+                IsAutoRate = true;
+            }
+        }
+
+
+        // randomizes Pattern
         public string RandomRoll()
         {
-            IsRandomRoll = true;
+            //IsRandomRoll = true;
             string newlabel = "thisString";
             newlabel = UpdatePattern((nint)RandomNumber(0, 8));
             return newlabel;
@@ -882,6 +930,11 @@ namespace Stimulant
         public int RandomNumber(int min, int max)
         {
             return random.Next(min, max);
+        }
+
+        public void RandomToggle()
+        {
+            IsRandomRoll = true;
         }
 
 
