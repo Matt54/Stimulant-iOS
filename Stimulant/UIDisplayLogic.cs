@@ -418,7 +418,7 @@ namespace Stimulant
 
         public void LoadRangeLabel(float screenWidth, float screenHeight, float textAdjustRange, float rangeFontSize)
         {
-            float labelRangeWidth = (float)(screenWidth / 1.8);
+            float labelRangeWidth = (float)(screenWidth / 1.6);
             float labelRangeHeight = (float)(screenHeight / 8);
             float labelRangeXLoc = (float)((screenWidth - labelRangeWidth) / 2);
             float labelRangeYLoc = (float)(((screenHeight - labelRangeHeight) / 300) * textAdjustRange);
@@ -433,9 +433,9 @@ namespace Stimulant
 
         public void LoadARButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustAR)
         {
-            float buttonARWidth = screenWidth / (9 + sizeSubtract);
+            float buttonARWidth = screenWidth / (11 + sizeSubtract);
             float buttonARHeight = buttonARWidth;
-            float buttonARXLoc = (float)((screenWidth - buttonARWidth) * (0.951));
+            float buttonARXLoc = (float)((screenWidth - buttonARWidth) * (0.98));
             float buttonARYLoc = (float)((screenHeight - buttonARHeight) * (0.08)) * controlAdjustAR;
             buttonAR = UIButton.FromType(UIButtonType.Custom);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
@@ -449,7 +449,7 @@ namespace Stimulant
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Highlighted);
             buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonDisabled.png"), UIControlState.Disabled);
-            buttonLocation.Frame = new CGRect((float)((screenWidth - buttonARWidth) * (0.049)), buttonARYLoc, buttonARWidth, buttonARHeight);
+            buttonLocation.Frame = new CGRect((float)((screenWidth - buttonARWidth) * (0.02)), buttonARYLoc, buttonARWidth, buttonARHeight);
             buttonLocation.Enabled = false;
             buttonLocation.TouchDown += HandleLocationTouchDown;
         }
@@ -724,7 +724,7 @@ namespace Stimulant
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOff.png"), UIControlState.Normal);
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOn.png"), UIControlState.Highlighted);
             buttonPlus10.SetImage(UIImage.FromFile("graphicPlus10ButtonOff.png"), UIControlState.Disabled);
-            buttonPlus10.Frame = new CGRect(buttonIncXLoc * (1.35), buttonIncYLoc, buttonIncWidth, buttonIncHeight);
+            buttonPlus10.Frame = new CGRect(buttonIncXLoc * (1.3), buttonIncYLoc, buttonIncWidth, buttonIncHeight);
             buttonPlus10.Hidden = true;
 
             buttonMinus1 = UIButton.FromType(UIButtonType.Custom);
@@ -738,7 +738,7 @@ namespace Stimulant
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOff.png"), UIControlState.Normal);
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOn.png"), UIControlState.Highlighted);
             buttonMinus10.SetImage(UIImage.FromFile("graphicMinus10ButtonOff.png"), UIControlState.Disabled);
-            buttonMinus10.Frame = new CGRect(screenWidth - buttonIncXLoc * (1.35) - buttonIncWidth, buttonIncYLoc, buttonIncWidth, buttonIncHeight);
+            buttonMinus10.Frame = new CGRect(screenWidth - buttonIncXLoc * (1.3) - buttonIncWidth, buttonIncYLoc, buttonIncWidth, buttonIncHeight);
             buttonMinus10.Hidden = true;
 
             buttonPlus1.TouchDown += HandlePlus1TouchDown;
