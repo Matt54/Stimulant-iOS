@@ -150,9 +150,6 @@
       <BundleResource Include="Resources\slider-default7-trackBackground%402x.png" />
       <BundleResource Include="Resources\slider-default7-trackCrossedOver.png" />
       <BundleResource Include="Resources\slider-default7-trackCrossedOver%402x.png" />
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\Back8Plus.png">
-        <Link>Resources\Back8Plus.png</Link>
-      </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackXSMax.png">
         <Link>Resources\BackXSMax.png</Link>
       </BundleResource>
@@ -162,15 +159,6 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OverXSMax.png">
         <Link>Resources\OverXSMax.png</Link>
       </BundleResource>
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPad.png">
-        <Link>Resources\BackiPad.png</Link>
-      </BundleResource>
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadNext.png">
-        <Link>Resources\BackiPadNext.png</Link>
-      </BundleResource>
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadPro.png">
-        <Link>Resources\BackiPadPro.png</Link>
-      </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPad.png">
         <Link>Resources\OveriPad.png</Link>
       </BundleResource>
@@ -179,9 +167,6 @@
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPadPro.png">
         <Link>Resources\OveriPadPro.png</Link>
-      </BundleResource>
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\BackiPadPro11.png">
-        <Link>Resources\BackiPadPro11.png</Link>
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Background Exports\OveriPadPro11.png">
         <Link>Resources\OveriPadPro11.png</Link>
@@ -309,9 +294,6 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicTriggerButtonOn.png">
         <Link>Resources\graphicTriggerButtonOn.png</Link>
       </BundleResource>
-      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\Back8.png">
-        <Link>Resources\Back8.png</Link>
-      </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicLocationThumb.png">
         <Link>Resources\graphicLocationThumb.png</Link>
       </BundleResource>
@@ -368,6 +350,21 @@
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicRandomButtonOn.png">
         <Link>Resources\graphicRandomButtonOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\Back8.png">
+        <Link>Resources\Back8.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\Back8Plus.png">
+        <Link>Resources\Back8Plus.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\BackiPad.png">
+        <Link>Resources\BackiPad.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\BackiPadNext.png">
+        <Link>Resources\BackiPadNext.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\BackiPadPro.png">
+        <Link>Resources\BackiPadPro.png</Link>
       </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

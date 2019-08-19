@@ -423,8 +423,8 @@ namespace Stimulant
                                 else
                                 {
                                     double tempVal;
-                                    tempVal = myMidiModulation.AutoCutoff * 127 / 1728;
-                                    sliderRate.Value = (float)tempVal;
+                                    tempVal = myMidiModulation.AutoCutoff * 128 / 1728;
+                                    sliderRate.Value = ((float)tempVal-3); //(oddly enough, this subtraction fixes a weird drifting bug..)
                                 }
                                 ReadSlider(sliderRate.Value);
                                 labelMode.Text = "Auto Rate Setting";
@@ -950,23 +950,26 @@ namespace Stimulant
                     myMidiModulation.RateCatch = 1;
                 }
 
-                if (myMidiModulation.RateCatch > 5)
+                if (!myMidiModulation.SettingsOn)
                 {
-                    myMidiModulation.ClockCutoff = 1;
-                }
-                else if (myMidiModulation.RateCatch > 3)
-                {
-                    myMidiModulation.ClockCutoff = 2;
-                }
-                else if (myMidiModulation.RateCatch > 1)
-                {
-                    myMidiModulation.ClockCutoff = 4;
-                }
-                else
-                {
-                    myMidiModulation.ClockCutoff = 8;
-                }
 
+                    if (myMidiModulation.RateCatch > 5)
+                    {
+                        myMidiModulation.ClockCutoff = 1;
+                    }
+                    else if (myMidiModulation.RateCatch > 3)
+                    {
+                        myMidiModulation.ClockCutoff = 2;
+                    }
+                    else if (myMidiModulation.RateCatch > 1)
+                    {
+                        myMidiModulation.ClockCutoff = 4;
+                    }
+                    else
+                    {
+                        myMidiModulation.ClockCutoff = 8;
+                    }
+                }
 
                 if (myMidiModulation.SettingsOn)
                 {

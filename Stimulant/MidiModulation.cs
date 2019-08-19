@@ -304,7 +304,8 @@ namespace Stimulant
                         if (AutoCounter > AutoCutoff)
                         {
                             AutoCounter = 0;
-                            PatternString = RandomRoll();
+                            //PatternString = RandomRoll();
+                            IsRandomRoll = true;
                         }
 
                     }
@@ -503,9 +504,20 @@ namespace Stimulant
                         CurrentCC = Minimum;
                         LastCC = Minimum;
                     }
+                    if (CurrentCC <= Minimum)
+                    {
+                        CurrentCC = Minimum;
+                        LastCC = Minimum;
+                    }
                 }
+                
                 else
                 {
+                    if (CurrentCC >= Maximum)
+                    {
+                        CurrentCC = Minimum;
+                        LastCC = Minimum;
+                    }
                     if (CurrentCC <= Minimum)
                     {
                         CurrentCC = Maximum;
@@ -661,73 +673,75 @@ namespace Stimulant
         // rate.
         public void StepSizeSetter()
         {
-
-            bool stepBack = false, stepForward = false;
-            switch (RateCatch)
+            if (!SettingsOn)
             {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                    StepSize = 1;
-                    stepForward = true;
-                    break;
-                case 2:
-                case 4:
-                case 6:
-                    StepSize = 1;
-                    break;
-                case 8:
-                    StepSize = 2;
-                    break;
-                case 9:
-                    StepSize = 3;
-                    stepBack = true;
-                    break;
-                case 10:
-                    StepSize = 4;
-                    break;
-                case 11:
-                    StepSize = 5;
-                    stepForward = true;
-                    break;
-                case 12:
-                    StepSize = 8;
-                    break;
-                case 13:
-                    StepSize = 11;
-                    stepBack = true;
-                    break;
-                case 14:
-                    StepSize = 16;
-                    break;
-                case 15:
-                    StepSize = 21;
-                    stepForward = true;
-                    break;
-                case 16:
-                    StepSize = 32;
-                    break;
-                case 17:
-                    StepSize = 43;
-                    stepBack = true;
-                    break;
-                case 18:
-                    StepSize = 64;
-                    break;
-            }
-            if (stepBack)
-            {
-                if (StepComma == 2)
+                bool stepBack = false, stepForward = false;
+                switch (RateCatch)
                 {
-                    StepSize--;
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                        StepSize = 1;
+                        stepForward = true;
+                        break;
+                    case 2:
+                    case 4:
+                    case 6:
+                        StepSize = 1;
+                        break;
+                    case 8:
+                        StepSize = 2;
+                        break;
+                    case 9:
+                        StepSize = 3;
+                        stepBack = true;
+                        break;
+                    case 10:
+                        StepSize = 4;
+                        break;
+                    case 11:
+                        StepSize = 5;
+                        stepForward = true;
+                        break;
+                    case 12:
+                        StepSize = 8;
+                        break;
+                    case 13:
+                        StepSize = 11;
+                        stepBack = true;
+                        break;
+                    case 14:
+                        StepSize = 16;
+                        break;
+                    case 15:
+                        StepSize = 21;
+                        stepForward = true;
+                        break;
+                    case 16:
+                        StepSize = 32;
+                        break;
+                    case 17:
+                        StepSize = 43;
+                        stepBack = true;
+                        break;
+                    case 18:
+                        StepSize = 64;
+                        break;
                 }
-            }
-            if (stepForward)
-            {
-                if (StepComma == 2)
+                if (stepBack)
                 {
-                    StepSize++;
+                    if (StepComma == 2)
+                    {
+                        StepSize--;
+                    }
+                }
+                if (stepForward)
+                {
+                    if (StepComma == 2)
+                    {
+                        StepSize++;
+                    }
                 }
             }
         }
