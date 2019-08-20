@@ -166,7 +166,7 @@ namespace Stimulant
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Normal);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOn.png"), UIControlState.Highlighted);
                                 buttonSettings.Enabled = true;
-                                buttonAR.Enabled = true;
+                                //buttonAR.Enabled = true;
 
                                 labelMode.Text = " Automatic Mode ";
                                 labelDetails.Text = "Randoms At A Set Rate";
@@ -177,7 +177,7 @@ namespace Stimulant
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Normal);
                                 buttonAuto.SetImage(UIImage.FromFile("graphicAutoButtonOff.png"), UIControlState.Highlighted);
                                 buttonSettings.Enabled = false;
-                                buttonAR.Enabled = false;
+                                //buttonAR.Enabled = false;
                                 if (myMidiModulation.SettingsOn)
                                 {
                                     myMidiModulation.SettingsOn = false;
@@ -230,11 +230,19 @@ namespace Stimulant
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOn.png"), UIControlState.Normal);
                                 labelMode.Text = "Automatic Range";
                                 labelDetails.Text = "Randoms Change Range";
+                                buttonRandom.Enabled = true;
                             }
                             else
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
                                 ResetDisplay();
+
+
+                                if((!myMidiModulation.IsAR) && (!myMidiModulation.IsAutoPattern) && (!myMidiModulation.IsAR))
+                                {
+                                    buttonRandom.Enabled = false;
+                                }
+
                             }
                             break;
                         }
@@ -246,11 +254,17 @@ namespace Stimulant
                                 buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOn.png"), UIControlState.Normal);
                                 labelMode.Text = "Automatic Pattern";
                                 labelDetails.Text = "Randoms Change Pattern";
+                                buttonRandom.Enabled = true;
                             }
                             else
                             {
                                 buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOff.png"), UIControlState.Normal);
                                 ResetDisplay();
+
+                                if ((!myMidiModulation.IsAR) && (!myMidiModulation.IsAutoPattern) && (!myMidiModulation.IsAR))
+                                {
+                                    buttonRandom.Enabled = false;
+                                }
                             }
                             break;
                         }
@@ -262,11 +276,17 @@ namespace Stimulant
                                 buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOn.png"), UIControlState.Normal);
                                 labelMode.Text = "Automatic Rate";
                                 labelDetails.Text = "Randoms Change Rate";
+                                buttonRandom.Enabled = true;
                             }
                             else
                             {
                                 buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Normal);
                                 ResetDisplay();
+
+                                if ((!myMidiModulation.IsAR) && (!myMidiModulation.IsAutoPattern) && (!myMidiModulation.IsAR))
+                                {
+                                    buttonRandom.Enabled = false;
+                                }
                             }
                             break;
                         }

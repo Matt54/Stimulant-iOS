@@ -465,7 +465,7 @@ namespace Stimulant
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Normal);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonOff.png"), UIControlState.Highlighted);
             buttonAR.SetImage(UIImage.FromFile("graphicARButtonDisabled.png"), UIControlState.Disabled);
-            buttonAR.Enabled = false;
+            //buttonAR.Enabled = false;
             buttonAR.Frame = new CGRect(buttonARXLoc, buttonARYLoc, buttonARWidth, buttonARHeight);
             buttonAR.TouchDown += HandleARTouchDown;
 
@@ -623,9 +623,10 @@ namespace Stimulant
             buttonRandom = UIButton.FromType(UIButtonType.Custom);
             buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
             buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Disabled);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonDisabled.png"), UIControlState.Disabled);
             buttonRandom.Frame = new CGRect(screenWidth - buttonSettingsXLoc + buttonSettingsWidth/5, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
             buttonRandom.TouchDown += HandleRandomTouchDown;
+            buttonRandom.Enabled = false;
 
             buttonAutoRate = UIButton.FromType(UIButtonType.Custom);
             buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Normal);

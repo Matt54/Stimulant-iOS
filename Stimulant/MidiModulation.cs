@@ -438,33 +438,70 @@ namespace Stimulant
             {
                 if (Opposite == false)
                 {
-                    if (CurrentCC < Maximum)
+                    if (CurrentCC <= Maximum)
                     {
-                        CurrentCC += StepSize;
-                        if (CurrentCC > Maximum)
+                        //CurrentCC += StepSize;
+                        
+                        if (CurrentCC == Maximum)
                         {
                             CurrentCC = Minimum;
                         }
+                        else
+                        {
+                            CurrentCC += StepSize;
+                        }
+                        
+                        if (CurrentCC > Maximum)
+                        {
+                            //CurrentCC = Minimum;
+                            CurrentCC = Maximum;
+                            //CurrentCC = Minimum + (CurrentCC - Maximum);
+                        }
                     }
+                    else if(CurrentCC > Maximum)
+                    {
+                        CurrentCC = Maximum;
+                        //CurrentCC = Minimum + (CurrentCC - Maximum);
+                    }
+                    /*
                     else
                     {
                         CurrentCC = Minimum;
                     }
+                    */
                 }
                 else
                 {
-                    if (CurrentCC > Minimum)
+                    //CurrentCC -= StepSize;
+                    if (CurrentCC >= Minimum)
                     {
-                        CurrentCC -= StepSize;
-                        if (CurrentCC < Minimum)
+                        if (CurrentCC == Minimum)
                         {
                             CurrentCC = Maximum;
                         }
+                        else
+                        {
+                            CurrentCC -= StepSize;
+                        }
+
+                        if (CurrentCC < Minimum)
+                        {
+                            //CurrentCC = Maximum;
+                            CurrentCC = Minimum;
+                            //CurrentCC = Maximum - (Minimum-CurrentCC);
+                        }
                     }
+                    else if (CurrentCC < Minimum)
+                    {
+                        CurrentCC = Minimum;
+                        //CurrentCC = Maximum - (Minimum - CurrentCC);
+                    }
+                    /*
                     else
                     {
                         CurrentCC = Maximum;
                     }
+                    */
                 }
             }
             // ==============================================================================================
