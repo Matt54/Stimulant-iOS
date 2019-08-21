@@ -510,6 +510,7 @@ namespace Stimulant
             // "Pattern 3: Fwd 2 Back 1" - steps 2x forward then x backwards (direction can be reversed)
             if (PatternNumber == 3)
             {
+
                 if (EveryOther)
                 {
                     if (Opposite == false)
@@ -534,6 +535,7 @@ namespace Stimulant
                         CurrentCC += StepSize;
                     }
                 }
+
                 if (Opposite == false)
                 {
                     if (CurrentCC >= Maximum)

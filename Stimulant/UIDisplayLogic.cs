@@ -130,7 +130,7 @@ namespace Stimulant
                     controlAdjustPattern = 1f;//0.99f;
                     controlAdjustRange = 0.6f; //0.85f;
                     controlAdjustSettings = 0.985f;//0.98f;
-                    controlAdjustRandoms = 1f;//0.99f;
+                    controlAdjustRandoms = 0.79f;//0.99f;
                     controlAdjustAR = 0.4f;
                     controlAdjustMode = 1.0f;
                     controlAdjustCCInc = 1f;//0.99f;
@@ -178,7 +178,7 @@ namespace Stimulant
                     textAdjustPattern = 1f;
                     controlAdjustRate = 1f;
                     controlAdjustPattern = 1.0f;
-                    controlAdjustRange = 1.0f;
+                    controlAdjustRange = 0.98f;
                     controlAdjustSettings = 0.995f;
                     controlAdjustRandoms = 1.0f;
                     controlAdjustAR = 1.00f;
@@ -187,7 +187,7 @@ namespace Stimulant
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
                     controlAdjustTap = 1f;
-                    controlAdjustHidden = 1f;
+                    controlAdjustHidden = 1.006f;
                     buttonYAdjust = 1.005f;
                     controlAdjustProgress = 1.0f;
                     sizeIncrease = 1f;
@@ -231,14 +231,14 @@ namespace Stimulant
                     controlAdjustPattern = 1.01f;
                     controlAdjustRange = 0.7f;
                     controlAdjustSettings = 1.005f;
-                    controlAdjustRandoms = 1.02f;
+                    controlAdjustRandoms = 0.85f;
                     controlAdjustAR = 0.5f;
                     controlAdjustMode = 1f;
                     controlAdjustCCInc = 1.01f;
                     controlAdjustBPM = 0.95f;
                     controlAdjustTrigger = 1.026f;
                     controlAdjustTap = 1.01f;
-                    controlAdjustHidden = 0.6f;
+                    controlAdjustHidden = 0.615f;
                     controlAdjustProgress = 1.01f;
                     buttonYAdjust = 0.99f;
                     sizeIncrease = 1.0f;
@@ -530,6 +530,41 @@ namespace Stimulant
 
         }
 
+        public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
+        {
+
+            float buttonRandomWidth = screenWidth / (4 + sizeSubtract);
+            float buttonRandomHeight = buttonRandomWidth;
+            float buttonRandomXLoc = 0; //(float)((screenWidth - buttonRandomWidth) * (0.09));
+            float buttonRandomYLoc = (float)((screenHeight) / 4.4) * controlAdjustRandoms;
+            buttonRandom = UIButton.FromType(UIButtonType.Custom);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonDisabled.png"), UIControlState.Disabled);
+            buttonRandom.Frame = new CGRect(buttonRandomXLoc, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
+            buttonRandom.Enabled = false;
+            buttonRandom.TouchDown += HandleRandomTouchDown;
+
+
+            buttonReverse = UIButton.FromType(UIButtonType.Custom);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
+            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
+            buttonReverse.Frame = new CGRect(screenWidth-buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
+            buttonReverse.Enabled = false;
+            buttonReverse.TouchDown += HandleReverseTouchDown;
+
+            /*
+            buttonRandom = UIButton.FromType(UIButtonType.Custom);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
+            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonDisabled.png"), UIControlState.Disabled);
+            buttonRandom.Frame = new CGRect(screenWidth - buttonSettingsXLoc + buttonSettingsWidth/5, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
+            buttonRandom.TouchDown += HandleRandomTouchDown;
+            buttonRandom.Enabled = false;
+            */
+        }
+
         public void LoadStartButton(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract)
         {
             //Button is half the screen size
@@ -620,6 +655,7 @@ namespace Stimulant
             buttonSettings.Enabled = false;
             buttonSettings.TouchDown += HandleSettingsTouchDown;
 
+            /*
             buttonRandom = UIButton.FromType(UIButtonType.Custom);
             buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
             buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
@@ -627,6 +663,7 @@ namespace Stimulant
             buttonRandom.Frame = new CGRect(screenWidth - buttonSettingsXLoc + buttonSettingsWidth/5, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
             buttonRandom.TouchDown += HandleRandomTouchDown;
             buttonRandom.Enabled = false;
+            */
 
             buttonAutoRate = UIButton.FromType(UIButtonType.Custom);
             buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Normal);
@@ -704,14 +741,16 @@ namespace Stimulant
             buttonBPM.Frame = new CGRect((float)(screenWidth - buttonCCXLoc - buttonCCWidth), buttonCCYLoc, buttonCCWidth, buttonCCHeight);
             buttonBPM.TouchDown += HandleBPMTouchDown;
 
+            /*
             buttonReverse = UIButton.FromType(UIButtonType.Custom);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
             buttonReverse.Frame = new CGRect(buttonCCXLoc - (buttonCCWidth + buttonCCWidth / 5), buttonCCYLoc, buttonCCWidth, buttonCCHeight);
-            //buttonReverse.Hidden = true;
             buttonReverse.Enabled = false;
             buttonReverse.TouchDown += HandleReverseTouchDown;
+            //buttonReverse.Hidden = true;
+            */
 
             buttonAutoPattern = UIButton.FromType(UIButtonType.Custom);
             buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOff.png"), UIControlState.Normal);
@@ -920,21 +959,7 @@ namespace Stimulant
 
 
 
-        public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
-        {
-            /*
-            float buttonRandomWidth = screenWidth / (12 + sizeSubtract);
-            float buttonRandomHeight = buttonRandomWidth;
-            float buttonRandomXLoc = (float)((screenWidth - buttonRandomWidth) * (0.09));
-            float buttonRandomYLoc = (float)((screenHeight - buttonRandomHeight) / 1.415) * controlAdjustRandoms;
-            buttonRandom = UIButton.FromType(UIButtonType.Custom);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Disabled);
-            buttonRandom.Frame = new CGRect(buttonRandomXLoc, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
-            buttonRandom.TouchDown += HandleRandomTouchDown;
-            */
-        }
+        
 
 
 
