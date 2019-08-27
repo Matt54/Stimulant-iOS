@@ -482,7 +482,7 @@ namespace Stimulant
                                     }
                                     labelMode.Text = " Ext Clock Mode   ";
                                     labelDetails.Text = " Midi Clock Adjusts Rate ";
-                                    timerAuto.Stop(joinThread: false);
+                                    //timerAuto.Stop(joinThread: false);
                                     if (myMidiModulation.IsAuto)
                                     {
                                         myMidiModulation.IsAuto = false;
@@ -502,7 +502,7 @@ namespace Stimulant
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
-                                    timerAuto.Start();
+                                    
                                     if (myMidiModulation.BPMOn)
                                     {
                                         myMidiModulation.BPMOn = false;
@@ -511,6 +511,7 @@ namespace Stimulant
                                     labelDetails.Text = "Rate Based On Frequency";
                                     if (myMidiModulation.IsAuto)
                                     {
+                                        //timerAuto.Start();
                                         myMidiModulation.IsAuto = false;
                                         //timerAuto.Start();
                                         //myMidiModulation.AutoCutoff = 64;
