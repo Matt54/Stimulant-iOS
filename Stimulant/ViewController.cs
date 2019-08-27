@@ -468,8 +468,7 @@ namespace Stimulant
                                     timerHighRes.Stop(joinThread: false);
                                     //if (myMidiModulation.IsAuto)
                                     //{
-                                    timerAuto.Stop(joinThread: false);
-                                    myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
+                                    
                                     //}
 
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
@@ -483,31 +482,45 @@ namespace Stimulant
                                     }
                                     labelMode.Text = " Ext Clock Mode   ";
                                     labelDetails.Text = " Midi Clock Adjusts Rate ";
-                                    break;
-                                case 2:
+                                    timerAuto.Stop(joinThread: false);
                                     if (myMidiModulation.IsAuto)
                                     {
-                                        timerAuto.Start();
-                                        myMidiModulation.AutoCutoff = 64;
+                                        myMidiModulation.IsAuto = false;
+                                        /*
+                                        double tempVal;
+                                        tempVal = myMidiModulation.AutoCutoff * 128 / 1728;
+                                        sliderRate.Value = ((float)tempVal - 3); //(oddly enough, this subtraction fixes a weird drifting bug..)
+                                        */
+                                        //myMidiModulation.SettingsOn = true;
                                     }
+                                    break;
+                                case 2:
+                                    
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
+                                    timerAuto.Start();
                                     if (myMidiModulation.BPMOn)
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
                                     labelMode.Text = "Free Timing Mode";
                                     labelDetails.Text = "Rate Based On Frequency";
+                                    if (myMidiModulation.IsAuto)
+                                    {
+                                        myMidiModulation.IsAuto = false;
+                                        //timerAuto.Start();
+                                        //myMidiModulation.AutoCutoff = 64;
+                                        //myMidiModulation.SettingsOn = true;
+                                    }
                                     break;
                                 case 3:
                                     //if (myMidiModulation.IsAuto)
                                     //{
-                                    timerAuto.Start();
-                                    myMidiModulation.AutoCutoff = (int)(64 * (1728 / 127));
+                                    
                                     //}
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
@@ -518,6 +531,15 @@ namespace Stimulant
                                     labelMode.Text = " Int Clock Mode   ";
                                     labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
                                     myMidiModulation.ClockCutoff = 1;
+                                    if (myMidiModulation.IsAuto)
+                                    {
+                                        myMidiModulation.IsAuto = false;
+                                        /*timerAuto.Start();
+                                        double tempVal;
+                                        tempVal = myMidiModulation.AutoCutoff * 128 / 1728;
+                                        sliderRate.Value = ((float)tempVal - 3);*/ //(oddly enough, this subtraction fixes a weird drifting bug..)
+                                        //myMidiModulation.SettingsOn = true;
+                                    }
                                     break;
                                 default:
                                     break;

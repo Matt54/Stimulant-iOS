@@ -366,6 +366,12 @@ namespace Stimulant
                         {
                             LastCC = CurrentCC;
                             CurrentCC -= StepSize;
+                            //Here was the error - it's possible to step below 0
+                            if (CurrentCC < Minimum)
+                            {
+                                LastCC = Minimum;
+                                CurrentCC = Minimum;
+                            }
                         }
                         else
                         {
@@ -392,7 +398,7 @@ namespace Stimulant
                         OppositeHelper = true;
                     }
                 }
-
+                /*
                 else
                 {
                     if ((CurrentCC < Maximum) && (CurrentCC < LastCC))
@@ -429,6 +435,7 @@ namespace Stimulant
                         LastCC = CurrentCC;
                     }
                 }
+                */
             }
             // ==============================================================================================
 
@@ -511,6 +518,76 @@ namespace Stimulant
             if (PatternNumber == 3)
             {
 
+                // Big Step 
+                if (EveryOther)
+                {
+                    if (Opposite == false)
+                    {
+                        if (CurrentCC + StepSize == Maximum)
+                        {
+                            CurrentCC = Minimum;
+                        }
+
+                        CurrentCC += StepSize * 2;
+
+                        if (CurrentCC > Maximum)
+                        {
+                            CurrentCC = Maximum;
+                            LastCC = Maximum;
+                        }
+
+                    }
+                    else
+                    {
+                        if (CurrentCC - StepSize == Minimum)
+                        {
+                            CurrentCC = Maximum;
+                        }
+
+                        CurrentCC -= StepSize * 2;
+
+                        if (CurrentCC < Minimum)
+                        {
+                            CurrentCC = Minimum;
+                            LastCC = Minimum;
+                        }
+
+                    }
+                    EveryOther = false;
+                }
+
+                // Small Step 
+                else
+                {
+                    EveryOther = true;
+                    if (Opposite == false)
+                    {
+                        CurrentCC -= StepSize;
+
+                        if (CurrentCC <= Minimum)
+                        {
+                            CurrentCC = Minimum;
+                            LastCC = Minimum;
+                        }
+
+                    }
+                    if (Opposite)
+                    {
+
+                        CurrentCC += StepSize;
+
+                        if (CurrentCC >= Maximum)
+                        {
+                            //was min before
+                            CurrentCC = Maximum;
+                            LastCC = Maximum;
+
+                        }
+                    }
+                }
+
+                /*
+                 
                 if (EveryOther)
                 {
                     if (Opposite == false)
@@ -563,6 +640,7 @@ namespace Stimulant
                         LastCC = Maximum;
                     }
                 }
+                */
             }
             // ==============================================================================================
 
@@ -570,6 +648,27 @@ namespace Stimulant
             // "Pattern 4: Crisscross" - back and forth between up/down patterns moving in opposite direction
             if (PatternNumber == 4)
             {
+                if (EveryOther)
+                {
+                    EveryOther = false;
+                    CurrentCC = LastCC + StepSize;
+                    if (CurrentCC > Maximum)
+                    {
+                        CurrentCC = Minimum;
+                    }
+                }
+                else
+                {
+                    EveryOther = true;
+                    LastCC = CurrentCC;
+                    CurrentCC = Maximum - CurrentCC;
+                    if (CurrentCC < Minimum)
+                    {
+                        CurrentCC = Maximum;
+                    }
+                }
+
+                /*
                 if (EveryOther)
                 {
                     EveryOther = false;
@@ -589,6 +688,7 @@ namespace Stimulant
                 {
                     CurrentCC = Maximum;
                 }
+                */
             }
             // ==============================================================================================
 
@@ -602,6 +702,48 @@ namespace Stimulant
                     EveryOther = false;
                     CurrentCC = Minimum;
                 }
+                else
+                {
+                    EveryOther = true;
+                    if (Opposite == false)
+                    {
+
+                        if (LastCC == Maximum)
+                        {
+                            CurrentCC = Minimum;
+                            LastCC = Minimum;
+                        }
+                        else
+                        {
+                            CurrentCC = LastCC + StepSize;
+
+                            if (CurrentCC > Maximum)
+                            {
+                                CurrentCC = Maximum;
+                                LastCC = Maximum;
+                            }
+                        }
+                    }
+                    if (Opposite)
+                    {
+                        if (LastCC == Minimum)
+                        {
+                            CurrentCC = Maximum;
+                            LastCC = Maximum;
+                        }
+                        else
+                        {
+                            CurrentCC = LastCC - StepSize;
+
+                            if (CurrentCC < Minimum)
+                            {
+                                CurrentCC = Minimum;
+                                LastCC = Minimum;
+                            }
+                        }
+                    }
+                }
+                /*
                 else
                 {
                     EveryOther = true;
@@ -625,6 +767,8 @@ namespace Stimulant
                     CurrentCC = Maximum;
                     LastCC = Maximum;
                 }
+                }
+                */
             }
             // ==============================================================================================
 
@@ -632,6 +776,57 @@ namespace Stimulant
             // "Pattern 6:  Max Jumper" - back and forth between maximum and an upward or downward pattern
             if (PatternNumber == 6)
             {
+
+                if (EveryOther)
+                {
+                    LastCC = CurrentCC;
+                    EveryOther = false;
+                    CurrentCC = Maximum;
+                }
+                else
+                {
+                    EveryOther = true;
+                    if (Opposite == false)
+                    {
+
+                        if (LastCC == Maximum)
+                        {
+                            CurrentCC = Minimum;
+                            LastCC = Minimum;
+                        }
+                        else
+                        {
+                            CurrentCC = LastCC + StepSize;
+
+                            if (CurrentCC > Maximum)
+                            {
+                                CurrentCC = Maximum;
+                                LastCC = Maximum;
+                            }
+                        }
+                    }
+                    if (Opposite)
+                    {
+                        if (LastCC == Minimum)
+                        {
+                            CurrentCC = Maximum;
+                            LastCC = Maximum;
+                        }
+                        else
+                        {
+                            CurrentCC = LastCC - StepSize;
+
+                            if (CurrentCC < Minimum)
+                            {
+                                CurrentCC = Minimum;
+                                LastCC = Minimum;
+                            }
+                        }
+                    }
+                }
+
+                /*
+                 
                 if (EveryOther)
                 {
                     LastCC = CurrentCC;
@@ -663,6 +858,7 @@ namespace Stimulant
                         LastCC = Minimum;
                     }
                 }
+                */
             }
             // ==============================================================================================
 
@@ -1098,7 +1294,7 @@ namespace Stimulant
                 ModeNumber = 3;
             }
             */
-        }
+            }
 
         // enables or disables auto range
         public void RestartToggle()
