@@ -187,7 +187,7 @@ namespace Stimulant
                     controlAdjustBPM = 1f;
                     controlAdjustTrigger = 1f;
                     controlAdjustTap = 1f;
-                    controlAdjustHidden = 1.006f;
+                    controlAdjustHidden = 0.9825f;
                     buttonYAdjust = 1.005f;
                     controlAdjustProgress = 1.0f;
                     sizeIncrease = 1f;
@@ -768,7 +768,19 @@ namespace Stimulant
             float segXLoc = (float)((screenWidth - segWidth) / 2);
             float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
             segmentedPattern = new UISegmentedControl("1", "2", "3", "4", "5", "6", "7", "8");
+            //segmentedPattern = new UISegmentedControl("1");
+            //segmentedPattern = new UISegmentedControl(UIImage.FromFile("graphicP1NOff.png").Scale(new CGSize(segWidth,segHeight)));
+            //UIImageView.AppearanceWhenContainedIn().;//.segmentedPattern
+            //segmentedPattern.SizeToFit();
+            //segmentedPattern.SetImage(UIImage.FromFile("graphicP1NOff.png").Scale(new nfloat(0.5f),0);
             segmentedPattern.Frame = new CGRect(segXLoc, segYLoc, segWidth, segHeight);
+            /*
+            foreach (UIView image in segmentedPattern.Subviews)
+            {
+                image.SizeToFit();
+            }
+            */
+            //segmentedPattern.TintColor = UIColor.Clear;
             segmentedPattern.TintColor = UIColor.Black;
             segmentedPattern.SelectedSegment = 0;
             segmentedPattern.ValueChanged += HandlePatternSegmentChange;

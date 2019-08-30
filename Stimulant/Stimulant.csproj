@@ -366,6 +366,78 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Backgrounds\BackiPadPro.png">
         <Link>Resources\BackiPadPro.png</Link>
       </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP1NOff.png">
+        <Link>Resources\graphicP1NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP1NOn.png">
+        <Link>Resources\graphicP1NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP2NOff.png">
+        <Link>Resources\graphicP2NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP2NOn.png">
+        <Link>Resources\graphicP2NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP2ROff.png">
+        <Link>Resources\graphicP2ROff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP2ROn.png">
+        <Link>Resources\graphicP2ROn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP3NOff.png">
+        <Link>Resources\graphicP3NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP3NOn.png">
+        <Link>Resources\graphicP3NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP3ROff.png">
+        <Link>Resources\graphicP3ROff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP3ROn.png">
+        <Link>Resources\graphicP3ROn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP4NOff.png">
+        <Link>Resources\graphicP4NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP4NOn.png">
+        <Link>Resources\graphicP4NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP5NOff.png">
+        <Link>Resources\graphicP5NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP5NOn.png">
+        <Link>Resources\graphicP5NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP5ROff.png">
+        <Link>Resources\graphicP5ROff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP5ROn.png">
+        <Link>Resources\graphicP5ROn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP6NOff.png">
+        <Link>Resources\graphicP6NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP6NOn.png">
+        <Link>Resources\graphicP6NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP6ROff.png">
+        <Link>Resources\graphicP6ROff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP6ROn.png">
+        <Link>Resources\graphicP6ROn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP7NOff.png">
+        <Link>Resources\graphicP7NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP7NOn.png">
+        <Link>Resources\graphicP7NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP8NOff.png">
+        <Link>Resources\graphicP8NOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP8NOn.png">
+        <Link>Resources\graphicP8NOn.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
