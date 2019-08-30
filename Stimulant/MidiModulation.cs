@@ -90,6 +90,7 @@ namespace Stimulant
         // values influence how often steps are taken
         public int ClockCount { get; set; }
         public int ClockCutoff { get; set; }
+        public int CutoffFactor { get; set; }
 
         // Is this unused?
         public int RateRemember { get; set; }
@@ -221,6 +222,7 @@ namespace Stimulant
             ModeNumber = 0;
             ClockCount = 0;
             ClockCutoff = 1;
+            CutoffFactor = 1;
             FireModulation = false;
             IsRunning = false;
             SettingsOn = false;
@@ -246,6 +248,7 @@ namespace Stimulant
         public string UpdatePattern(nint patternIndex)
         {
             string labelText;
+            
             switch (patternIndex)
             {
                 case 0:
@@ -910,82 +913,173 @@ namespace Stimulant
         {
             if (!SettingsOn)
             {
-                bool stepBack = false, stepForward = false;
-                switch (RateCatch)
-                {
-                    case 1:
-                    case 3:
-                    case 5:
-                    case 7:
-                        StepSize = 1;
-                        stepForward = true;
-                        break;
-                    case 2:
-                    case 4:
-                    case 6:
-                        StepSize = 1;
-                        break;
-                    case 8:
-                        StepSize = 2;
-                        break;
-                    case 9:
-                        StepSize = 3;
-                        stepBack = true;
-                        break;
-                    case 10:
-                        StepSize = 4;
-                        break;
-                    case 11:
-                        StepSize = 5;
-                        stepForward = true;
-                        break;
-                    case 12:
-                        StepSize = 8;
-                        break;
-                    case 13:
-                        StepSize = 11;
-                        stepBack = true;
-                        break;
-                    case 14:
-                        StepSize = 16;
-                        break;
-                    case 15:
-                        StepSize = 21;
-                        stepForward = true;
-                        break;
-                    case 16:
-                        StepSize = 32;
-                        break;
-                    case 17:
-                        StepSize = 43;
-                        stepBack = true;
-                        break;
-                    case 18:
-                        StepSize = 64;
-                        break;
-                }
-                if (stepBack)
-                {
-                    if (StepComma == 2)
+                
+
+                    CutoffFactor = 1;
+                    bool stepBack = false, stepForward = false;
+                    switch (RateCatch)
                     {
-                        StepSize--;
+                        case 1:
+                        case 3:
+                        case 5:
+                        case 7:
+                            StepSize = 1;
+                            stepForward = true;
+                            if (PatternNumber > 2)
+                            {
+                                StepSize = StepSize * 8;
+                                CutoffFactor = 8;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                            break;
+                        case 2:
+                        case 4:
+                        case 6:
+                            StepSize = 1;
+                            if (PatternNumber > 2)
+                            {
+                                StepSize = StepSize * 8;
+                                CutoffFactor = 8;
+                                CheckCutoff();
+                                //fullModSteps = 8;
+                            }
+                            break;
+                        case 8:
+                            StepSize = 2;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 4;
+                            CutoffFactor = 4;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+                        case 9:
+                            StepSize = 3;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 4;
+                            CutoffFactor = 4;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        stepBack = true;
+                            break;
+                        case 10:
+                            StepSize = 4;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 2;
+                            CutoffFactor = 2;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+                        case 11:
+                            StepSize = 5;
+                            stepForward = true;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 2;
+                            CutoffFactor = 2;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+                        case 12:
+                            StepSize = 8;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 2;
+                            CutoffFactor = 2;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+
+                        case 13:
+                            StepSize = 11;
+                            stepBack = true;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 2;
+                            CutoffFactor = 2;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+                        case 14:
+                            StepSize = 16;
+                        if (PatternNumber > 2)
+                        {
+                            StepSize = StepSize * 2;
+                            CutoffFactor = 2;
+                            CheckCutoff();
+                            //fullModSteps = 8;
+                        }
+                        break;
+                        case 15:
+                            StepSize = 21;
+                            stepForward = true;
+                            break;
+                        case 16:
+                            StepSize = 32;
+                            break;
+                        case 17:
+                            StepSize = 43;
+                            stepBack = true;
+                            break;
+                        case 18:
+                            StepSize = 64;
+                            break;
                     }
-                }
-                if (stepForward)
-                {
-                    if (StepComma == 2)
+                    if (stepBack)
                     {
-                        StepSize++;
+                        if (StepComma == 2)
+                        {
+                            StepSize--;
+                        }
                     }
-                }
+                    if (stepForward)
+                    {
+                        if (StepComma == 2)
+                        {
+                            StepSize++;
+                        }
+                    }
+                
+
             }
         }
+
+        public void CheckCutoff()
+        {
+            if (RateCatch > 5)
+            {
+                ClockCutoff = 1 * CutoffFactor;
+            }
+            else if (RateCatch > 3)
+            {
+                ClockCutoff = 2 * CutoffFactor;
+            }
+            else if (RateCatch > 1)
+            {
+                ClockCutoff = 4 * CutoffFactor;
+            }
+            else
+            {
+                ClockCutoff = 8 * CutoffFactor;
+            }
+        }
+
+        
 
 
         // determines StepSize from a sliderValue and PatternNumber
         public void TimeSet(float sliderValue)
         {
-            if (PatternNumber > 6)
+            if (PatternNumber > 2)
             {
                 StepSize = 1;
             }
