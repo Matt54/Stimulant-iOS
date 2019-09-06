@@ -142,6 +142,7 @@
         <Compile Include="CircularProgressBar.cs" />
         <Compile Include="UIDisplayLogic.cs" />
         <Compile Include="HighResolutionTimer.cs" />
+        <Compile Include="Scene.cs" />
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\slider-default7-track.png" />
@@ -437,6 +438,12 @@
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\Patterns\graphicP8NOn.png">
         <Link>Resources\graphicP8NOn.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicArrangeButtonOff.png">
+        <Link>Resources\graphicArrangeButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicArrangeButtonOn.png">
+        <Link>Resources\graphicArrangeButtonOn.png</Link>
       </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

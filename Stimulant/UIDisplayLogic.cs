@@ -62,6 +62,22 @@ namespace Stimulant
         UITextField textFieldBPM;
         UIButton buttonInfo;
 
+        UIButton buttonArrange;
+
+        /*
+        UIButton buttonScene0;
+        UIButton buttonScene1;
+        UIButton buttonScene2;
+        UIButton buttonScene3;
+        UIButton buttonScene4;
+        UIButton buttonScene5;
+        UIButton buttonScene6;
+        UIButton buttonScene7;
+        */
+
+        UIButton[] buttonArray = new UIButton[8];
+        int sceneSelected;
+
         public void LoadDisplay()
         {
             CGRect screenBound = UIScreen.MainScreen.Bounds;
@@ -90,6 +106,7 @@ namespace Stimulant
             float controlAdjustBPM;
             float controlAdjustTap;
             float controlAdjustTrigger;
+            float controlAdjustArrange;
             //float controlAdjustTap;
             float controlAdjustHidden;
             float controlAdjustProgress;
@@ -140,6 +157,7 @@ namespace Stimulant
                     controlAdjustHidden = 0.475f;
                     buttonYAdjust = 0.975f;
                     controlAdjustProgress=1.01f;
+                    controlAdjustArrange = 1f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1.0f;
                     break;
@@ -165,6 +183,7 @@ namespace Stimulant
                     controlAdjustHidden = 0.475f;
                     buttonYAdjust = 0.975f;
                     controlAdjustProgress = 1.01f;
+                    controlAdjustArrange = 1f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1.0f;
                     break;
@@ -190,6 +209,7 @@ namespace Stimulant
                     controlAdjustHidden = 0.9825f;
                     buttonYAdjust = 1.005f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     sizeIncrease = 1f;
                     sizeSubtract = 1f;
                     highRes = true;
@@ -215,6 +235,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
 
@@ -240,6 +261,7 @@ namespace Stimulant
                     controlAdjustTap = 1.01f;
                     controlAdjustHidden = 0.615f;
                     controlAdjustProgress = 1.01f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 0.99f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1.335f;
@@ -265,6 +287,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1f;
@@ -290,6 +313,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1f;
@@ -315,6 +339,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 1.0f;
                     sizeIncrease = 1.0f;
                     sizeSubtract = 1f;
@@ -340,6 +365,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 1f;
                     controlAdjustProgress = 1.0f;
+                    controlAdjustArrange = 1f;
                     buttonYAdjust = 1.005f;
                     sizeIncrease = 1.0f;
                     break;
@@ -369,7 +395,7 @@ namespace Stimulant
             //LoadClockButton(screenWidth, screenHeight, sizeSubtract);
             //LoadBPMButton(screenWidth, screenHeight, sizeSubtract, controlAdjustBPM);
             LoadTriggerButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTrigger);
-            LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
+            LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms,controlAdjustArrange);
             //LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
             LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
@@ -384,6 +410,8 @@ namespace Stimulant
             LoadTapButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTap);
             LoadHiddenSlider(screenWidth, screenHeight, controlAdjustHidden, sliderHeight);
             LoadBPMTextField(screenWidth, screenHeight);
+
+            LoadSceneButtons(screenWidth, screenHeight);
 
             AddSubviewsToMainview();
 
@@ -530,7 +558,7 @@ namespace Stimulant
 
         }
 
-        public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms)
+        public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms, float controlAdjustArrange)
         {
 
             float buttonRandomWidth = screenWidth / (4 + sizeSubtract);
@@ -545,14 +573,22 @@ namespace Stimulant
             buttonRandom.Enabled = false;
             buttonRandom.TouchDown += HandleRandomTouchDown;
 
-
             buttonReverse = UIButton.FromType(UIButtonType.Custom);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
-            buttonReverse.Frame = new CGRect(screenWidth-buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
+            buttonReverse.Frame = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
             buttonReverse.Enabled = false;
             buttonReverse.TouchDown += HandleReverseTouchDown;
+
+            buttonArrange = UIButton.FromType(UIButtonType.Custom);
+            buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Normal);
+            buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Highlighted);
+            buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Disabled);
+            buttonArrange.Frame = new CGRect(buttonRandomXLoc, buttonRandomYLoc*1.8*controlAdjustArrange, buttonRandomWidth, buttonRandomHeight);
+            buttonArrange.TouchDown += HandleArrangeTouchDown;
+
+
 
             /*
             buttonRandom = UIButton.FromType(UIButtonType.Custom);
@@ -620,6 +656,24 @@ namespace Stimulant
 
             //Declare progress bar object (Instantiating my CircularProgressBar class)
             myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, 0.0f, barColor);
+        }
+
+        public void LoadSceneButtons(float screenWidth, float screenHeight)
+        {
+            float buttonSceneWidth = (float)(screenWidth / 8);
+            float buttonSceneHeight = buttonSceneWidth;
+            float buttonSceneXLoc = (float)0;
+            float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 2.8);
+
+            for (int ii = 0; ii < 8; ii++)
+            {
+                buttonArray[ii] = UIButton.FromType(UIButtonType.Custom);
+                buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Normal);
+                buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Highlighted);
+                buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Disabled);
+                buttonArray[ii].Frame = new CGRect(buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
+                buttonArray[ii].TouchDown += HandleSceneTouchDown;
+            }
         }
 
         public void LoadRateLabel(float screenWidth, float screenHeight, float textAdjustRate, float sliderHeight)
@@ -971,7 +1025,7 @@ namespace Stimulant
 
 
 
-        
+
 
 
 
@@ -1018,6 +1072,7 @@ namespace Stimulant
             View.AddSubview(rangeSlider);
             View.AddSubview(sliderHidden);
             View.AddSubview(buttonReverse);
+            View.AddSubview(buttonArrange);
             View.AddSubview(buttonCC);
             View.AddSubview(buttonSettings);
             //View.AddSubview(buttonInfo);
@@ -1035,7 +1090,23 @@ namespace Stimulant
             View.AddSubview(buttonMinus1);
             View.AddSubview(buttonMinus10);
             //View.AddSubview(textFieldBPM);
-        }
 
+            /*
+            View.AddSubview(buttonScene0);
+            View.AddSubview(buttonScene1);
+            View.AddSubview(buttonScene2);
+            View.AddSubview(buttonScene3);
+            View.AddSubview(buttonScene4);
+            View.AddSubview(buttonScene5);
+            View.AddSubview(buttonScene6);
+            View.AddSubview(buttonScene7);
+            
+
+            for (int ii = 0; ii < 8; ii++)
+            {
+                View.AddSubview(buttonArray[ii]);
+            }
+            */
+        }
     }
 }

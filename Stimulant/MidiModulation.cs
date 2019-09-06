@@ -11,6 +11,13 @@ namespace Stimulant
         // flag that allows modulation to occur if true
         public bool IsRunning { get; set; }
 
+        private bool _IsSceneMode;
+        public bool IsSceneMode
+        {
+            get { return _IsSceneMode; }
+            set { _IsSceneMode = value; OnPropertyChanged("IsSceneMode"); }
+        }
+
         // trigger for the modulation to take a step
         private bool _FireModulation;
         public bool FireModulation
@@ -241,6 +248,7 @@ namespace Stimulant
             IsAutoRate = false;
             IsAutoPattern = false;
             BPM = 120;
+            //IsSceneMode = true;
         }
 
 
@@ -248,7 +256,6 @@ namespace Stimulant
         public string UpdatePattern(nint patternIndex)
         {
             string labelText;
-            
             switch (patternIndex)
             {
                 case 0:
@@ -1403,6 +1410,19 @@ namespace Stimulant
             }
         }
 
+        // enables or disables Scene Mode
+        public void ArrangeToggle()
+        {
+            if (IsSceneMode)
+            {
+                IsSceneMode = false;
+            }
+            else
+            {
+                IsSceneMode = true;
+            }
+        }
+
 
         // enables or disables the ability to adjust the auto mode frequency
         public void SettingsToggle()
@@ -1426,6 +1446,29 @@ namespace Stimulant
             }
         }
 
+        public void setParameters(float sliderRateVal, Scene scene)
+        {
+            scene.RateSliderValue = sliderRateVal;
+            scene.PatternNumber = PatternNumber;
+            scene.Opposite = Opposite;
+            scene.Maximum = Maximum;
+            scene.Minimum = Minimum;
+            scene.IsTriggerOnly = IsTriggerOnly;
+            scene.IsRestartEachNote = IsRestartEachNote;
+            scene.StartingLocation = StartingLocation;
+        }
+
+        public void getParameters(Scene scene)
+        {
+            PatternNumber = scene.PatternNumber;
+            Opposite = scene.Opposite;
+            Maximum = scene.Maximum;
+            Minimum = scene.Minimum;
+            IsTriggerOnly = scene.IsTriggerOnly;
+            IsRestartEachNote = scene.IsRestartEachNote;
+            StartingLocation = scene.StartingLocation;
+            //Still need a way to update rate
+        }
 
     }
 }
