@@ -139,7 +139,7 @@ namespace Stimulant
                             {
                                 myCircularProgressBar.RemoveFromSuperview();
                                 buttonOnOff.RemoveFromSuperview();
-                                buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOn"), UIControlState.Normal);
+                                buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
                                 for (int ii = 0; ii< 8; ii++){
                                     myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
                                     //UpdateSceneGraphic(buttonArray[ii]);
@@ -154,13 +154,26 @@ namespace Stimulant
                             {
                                 View.AddSubview(myCircularProgressBar);
                                 View.AddSubview(buttonOnOff);
-                                buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
+                                buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 for (int ii = 0; ii < 8; ii++)
                                 {
                                     buttonArray[ii].RemoveFromSuperview();
                                 }
                             }
                             break;
+                        }
+
+                    case "IsArrangementMode":
+                        {
+                            if (myMidiModulation.IsArrangementMode)
+                            {
+                                buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOn"), UIControlState.Normal);
+                            }
+                            else
+                            {
+                                buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
+                            }
+                                break;
                         }
 
                     case "Opposite":
@@ -829,6 +842,11 @@ namespace Stimulant
             }
             myCircularProgressBar.Hidden = true;
             buttonOnOff.Frame = smallStartSize;
+        }
+
+        private void HandleScenesTouchDown(object sender, System.EventArgs e)
+        {
+            myMidiModulation.ScenesToggle();
         }
 
         private void HandleArrangeTouchDown(object sender, System.EventArgs e)

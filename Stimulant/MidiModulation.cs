@@ -11,6 +11,13 @@ namespace Stimulant
         // flag that allows modulation to occur if true
         public bool IsRunning { get; set; }
 
+        private bool _IsArrangementMode;
+        public bool IsArrangementMode
+        {
+            get { return _IsArrangementMode; }
+            set { _IsArrangementMode = value; OnPropertyChanged("IsArrangementMode"); }
+        }
+
         private bool _IsSceneMode;
         public bool IsSceneMode
         {
@@ -1411,7 +1418,7 @@ namespace Stimulant
         }
 
         // enables or disables Scene Mode
-        public void ArrangeToggle()
+        public void ScenesToggle()
         {
             if (IsSceneMode)
             {
@@ -1420,6 +1427,19 @@ namespace Stimulant
             else
             {
                 IsSceneMode = true;
+            }
+        }
+
+        // enables or disables Scene Mode
+        public void ArrangeToggle()
+        {
+            if (IsArrangementMode)
+            {
+                IsArrangementMode = false;
+            }
+            else
+            {
+                IsArrangementMode = true;
             }
         }
 
