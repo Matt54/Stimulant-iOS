@@ -30,7 +30,7 @@ namespace Stimulant
 
         //Scenes myScenes = new Scenes();
         Scene[] sceneArray = new Scene[8];
-        
+
 
         // Controls how fast the time-based modulation steps
         HighResolutionTimer timerHighRes;
@@ -139,8 +139,10 @@ namespace Stimulant
                             {
                                 myCircularProgressBar.RemoveFromSuperview();
                                 buttonOnOff.RemoveFromSuperview();
+
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
-                                for (int ii = 0; ii< 8; ii++){
+                                for (int ii = 0; ii < 8; ii++)
+                                {
                                     myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
                                     //UpdateSceneGraphic(buttonArray[ii]);
                                     UpdateSceneGraphic();
@@ -149,11 +151,13 @@ namespace Stimulant
                                 {
                                     View.AddSubview(buttonArray[ii]);
                                 }
+                                View.AddSubview(myHorizontalProgressBar);
                             }
                             else
                             {
                                 View.AddSubview(myCircularProgressBar);
                                 View.AddSubview(buttonOnOff);
+                                myHorizontalProgressBar.RemoveFromSuperview();
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 for (int ii = 0; ii < 8; ii++)
                                 {
@@ -173,7 +177,7 @@ namespace Stimulant
                             {
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
                             }
-                                break;
+                            break;
                         }
 
                     case "Opposite":
@@ -290,7 +294,7 @@ namespace Stimulant
                                 ResetDisplay();
 
 
-                                if((!myMidiModulation.IsAR) && (!myMidiModulation.IsAutoPattern) && (!myMidiModulation.IsAR))
+                                if ((!myMidiModulation.IsAR) && (!myMidiModulation.IsAutoPattern) && (!myMidiModulation.IsAR))
                                 {
                                     buttonRandom.Enabled = false;
                                 }
@@ -496,7 +500,7 @@ namespace Stimulant
                                 {
                                     double tempVal;
                                     tempVal = myMidiModulation.AutoCutoff * 128 / 1728;
-                                    sliderRate.Value = ((float)tempVal-3); //(oddly enough, this subtraction fixes a weird drifting bug..)
+                                    sliderRate.Value = ((float)tempVal - 3); //(oddly enough, this subtraction fixes a weird drifting bug..)
                                 }
                                 ReadSlider(sliderRate.Value);
                                 labelMode.Text = "Auto Rate Setting";
@@ -520,7 +524,7 @@ namespace Stimulant
                                     timerHighRes.Stop(joinThread: false);
                                     //if (myMidiModulation.IsAuto)
                                     //{
-                                    
+
                                     //}
 
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
@@ -547,14 +551,14 @@ namespace Stimulant
                                     }
                                     break;
                                 case 2:
-                                    
+
                                     timerHighRes.Start();
                                     buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
                                     buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
                                     buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
-                                    
+
                                     if (myMidiModulation.BPMOn)
                                     {
                                         myMidiModulation.BPMOn = false;
@@ -585,7 +589,7 @@ namespace Stimulant
                                     ReadSlider(sliderRate.Value);
                                     labelMode.Text = " Int Clock Mode   ";
                                     labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
-                                    
+
                                     if (myMidiModulation.IsAuto)
                                     {
                                         myMidiModulation.IsAuto = false;
@@ -675,20 +679,6 @@ namespace Stimulant
 
                                     updateProgressBar();
 
-                                    /*
-                                    var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-
-                                    //Momentarily remove from superview so that it can be on top of progress bar
-                                    myCircularProgressBar.RemoveFromSuperview();
-                                    //Declare progress bar object (Instantiating my CircularProgressBar class)
-                                    myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, pi_mult, barColor);
-                                    buttonOnOff.RemoveFromSuperview();
-
-                                    //Add Views
-                                    View.AddSubview(myCircularProgressBar);
-                                    View.AddSubview(buttonOnOff);
-                                    */
-
                                     myMidiModulation.FireModulation = false;
                                 }
                             }
@@ -725,15 +715,22 @@ namespace Stimulant
             {
                 var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
 
-                //Momentarily remove from superview so that it can be on top of progress bar
+                //Momentarily remove from superview so that the start button can be on top of progress bar
                 myCircularProgressBar.RemoveFromSuperview();
                 //Declare progress bar object (Instantiating my CircularProgressBar class)
-                myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, pi_mult, barColor);
+                myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
                 buttonOnOff.RemoveFromSuperview();
 
                 //Add Views
                 View.AddSubview(myCircularProgressBar);
                 View.AddSubview(buttonOnOff);
+            }
+            else
+            {
+                var progressPercent = (myMidiModulation.CurrentCC * 1.0f / 127);
+                myHorizontalProgressBar.RemoveFromSuperview();
+                myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, progressPercent, barColor);
+                View.AddSubview(myHorizontalProgressBar);
             }
         }
 
@@ -812,11 +809,15 @@ namespace Stimulant
             //Control Logic: switches between program ON and program OFF states when button is pressed
             if (UIHelper)
             {
+
+
                 buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Normal);
                 buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOn.png"), UIControlState.Highlighted);
                 myMidiModulation.IsRunning = false;
                 var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-                myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, pi_mult, barColor);
+                myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
+
+                //TODO: need different logic for scene mode here
 
                 UIHelper = false;
             }
@@ -945,8 +946,8 @@ namespace Stimulant
                 {
                     sceneArray[ii].IsSelected = false;
                 }
-                if (ii==0)
-                { 
+                if (ii == 0)
+                {
                     sceneArray[0].IsSelected = true;
                 }
                 string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
@@ -954,7 +955,7 @@ namespace Stimulant
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
             }
-            
+
         }
 
         protected void HandleLocationTouchDown(object sender, System.EventArgs e)
@@ -1326,13 +1327,13 @@ namespace Stimulant
                     fullModSteps = 128;
                 }
                 */
-                
+
                 if (myMidiModulation.PatternNumber > 6)
                 {
                     myMidiModulation.StepSize = 1;
                     fullModSteps = 4;
                 }
-                
+
             }
             else
             {
@@ -1420,11 +1421,11 @@ namespace Stimulant
             labelPattern.Text = labelText;
         }
 
-        
+
 
         string LookUpStringForGraphic(bool Opp, int Pattern, bool selected)
         {
-            string myFile="";
+            string myFile = "";
 
             switch (Pattern)
             {
@@ -1779,7 +1780,7 @@ namespace Stimulant
                     if (StatusByte == midi_clock)
                     {
                         if (myMidiModulation.ModeNumber == 1)
-                        { 
+                        {
                             myMidiModulation.ClockCounter();
                             if (myMidiModulation.StepComma == 2)
                             {

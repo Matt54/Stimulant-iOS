@@ -15,8 +15,10 @@ namespace Stimulant
         //These variables are used consistently to update the 
         CGRect bigStartSize;
         CGRect smallStartSize;
-        CGRect progressSize;
-        int lineWidth;
+        CGRect C_progressSize;
+        CGRect H_progressSize;
+        int C_lineWidth;
+        int H_lineWidth;
         UIColor barColor;
         bool UIHelper;
         bool highRes;
@@ -656,38 +658,38 @@ namespace Stimulant
         public void LoadProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlAdjustProgress)
         {
             //Set progress bar size based on screen width (it will fit exactly around the button)
-            lineWidth = (int)(screenWidth / 33);
-            float progressWidth = (float)((screenWidth / (2.219 * sizeSubtract)) + 3 * lineWidth);
+            C_lineWidth = (int)(screenWidth / 33);
+            float progressWidth = (float)((screenWidth / (2.219 * sizeSubtract)) + 3 * C_lineWidth);
             float progressHeight = progressWidth;
 
             //Centers the progress bar on the screen
             float progressXLoc = (screenWidth - progressWidth) / 2;
-            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.05 - 0.55 * lineWidth - (1 - buttonYAdjust) * screenHeight)) * controlAdjustProgress;
+            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.05 - 0.55 * C_lineWidth - (1 - buttonYAdjust) * screenHeight)) * controlAdjustProgress;
 
             //Declare rectangle object (Instantiating the CGRect class)
-            progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
+            C_progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
 
             //Declare color object (Instantiating the UIColor class)
             barColor = UIColor.FromRGB(0,0,0); //black
 
             //Declare progress bar object (Instantiating my CircularProgressBar class)
-            myCircularProgressBar = new CircularProgressBar(progressSize, lineWidth, 0.0f, barColor);
+            myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, 0.0f, barColor);
         }
 
         public void LoadHorizontalProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlHorizontalAdjustProgress)
         {
-            lineWidth = (int)(screenWidth / 33);
-            float progressWidth = (float)((screenWidth / (2.219 * sizeSubtract)) + 3 * lineWidth);
-            float progressHeight = progressWidth;
+            H_lineWidth = (int)(screenWidth / 33);
+            float progressWidth = (float)((screenWidth / (2.219 * sizeSubtract)) + 3 * H_lineWidth);
+            float progressHeight = H_lineWidth;
 
             float progressXLoc = (screenWidth - progressWidth) / 2;
-            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.05 - 0.55 * lineWidth - (1 - buttonYAdjust) * screenHeight)) * controlHorizontalAdjustProgress;
+            float progressYLoc = (float)(((screenHeight - progressHeight) / 3.5 * controlHorizontalAdjustProgress));
 
-            progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
+            H_progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
 
             barColor = UIColor.FromRGB(0, 0, 0); //black
 
-            myHorizontalProgressBar = new HorizontalProgressBar(progressSize, lineWidth, 0.5f, barColor);
+            myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, 0.5f, barColor);
         }
 
         public void LoadSceneButtons(float screenWidth, float screenHeight)
