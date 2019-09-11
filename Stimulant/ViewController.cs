@@ -152,12 +152,14 @@ namespace Stimulant
                                     View.AddSubview(buttonArray[ii]);
                                 }
                                 View.AddSubview(myHorizontalProgressBar);
+                                sliderCC.Hidden = false;
                             }
                             else
                             {
                                 View.AddSubview(myCircularProgressBar);
                                 View.AddSubview(buttonOnOff);
                                 myHorizontalProgressBar.RemoveFromSuperview();
+                                sliderCC.Hidden = true;
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 for (int ii = 0; ii < 8; ii++)
                                 {
@@ -679,6 +681,7 @@ namespace Stimulant
 
                                     updateProgressBar();
 
+
                                     myMidiModulation.FireModulation = false;
                                 }
                             }
@@ -731,6 +734,7 @@ namespace Stimulant
                 myHorizontalProgressBar.RemoveFromSuperview();
                 myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, progressPercent, barColor);
                 View.AddSubview(myHorizontalProgressBar);
+                sliderCC.Value = myMidiModulation.CurrentCC;
             }
         }
 

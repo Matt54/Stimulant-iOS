@@ -29,6 +29,7 @@ namespace Stimulant
         UIButton buttonAR;
         UIButton buttonLocation;
         UISlider sliderHidden;
+        UISlider sliderCC;
         RangeSliderControl rangeSlider;
 
         CircularProgressBar myCircularProgressBar;
@@ -161,7 +162,7 @@ namespace Stimulant
                     controlAdjustTap = 1f;
                     controlAdjustHidden = 0.475f;
                     buttonYAdjust = 0.975f;
-                    controlAdjustProgress=1.01f;
+                    controlAdjustProgress = 1.01f;
                     controlAdjustHorizontalProgress = 1f;
                     controlAdjustScenes = 1f;
                     sizeIncrease = 1.0f;
@@ -410,7 +411,7 @@ namespace Stimulant
             //LoadClockButton(screenWidth, screenHeight, sizeSubtract);
             //LoadBPMButton(screenWidth, screenHeight, sizeSubtract, controlAdjustBPM);
             LoadTriggerButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTrigger);
-            LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms,controlAdjustScenes);
+            LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms, controlAdjustScenes);
             //LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
             LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
             LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
@@ -487,13 +488,13 @@ namespace Stimulant
             labelRange.Frame = new CGRect(labelRangeXLoc, labelRangeYLoc, labelRangeWidth, labelRangeHeight);
             labelRange.Text = "Modulation Range";
             labelRange.TextAlignment = UITextAlignment.Center;
-            
+
             labelRange.TextColor = UIColor.Black;
             //labelRange.BackgroundColor = UIColor.Green;
             labelRange.Font = UIFont.SystemFontOfSize(100);
-            
+
             labelRange.AdjustsFontSizeToFitWidth = true;
-            labelRange.Font = UIFont.SystemFontOfSize((float)(rangeFontSize*1.3));
+            labelRange.Font = UIFont.SystemFontOfSize((float)(rangeFontSize * 1.3));
             //labelRange.Frame = new CGRect(labelRangeXLoc, labelRangeYLoc, labelRangeWidth, labelRangeHeight/2);
             //labelRange.SizeToFit();
         }
@@ -570,6 +571,29 @@ namespace Stimulant
             {
                 sliderHidden.SetThumbImage(UIImage.FromFile("graphicLocationThumb.png"), UIControlState.Normal);
             }
+
+            sliderCC = new UISlider();
+            sliderCC.Frame = new CGRect(sliderXLoc, sliderYLoc, sliderWidth, sliderHeight);
+            sliderCC.MinValue = 0;
+            sliderCC.MaxValue = 127;
+            sliderCC.Value = 63;
+            sliderCC.TintColor = UIColor.Clear;
+            sliderCC.Hidden = true;
+            sliderCC.UserInteractionEnabled = false;
+            //sliderCC.Enabled = false;
+            //sliderHidden.MinimumTrackTintColor = UIColor.Clear;
+            sliderCC.SetMinTrackImage(new UIImage(), UIControlState.Normal);
+            sliderCC.SetMaxTrackImage(new UIImage(), UIControlState.Normal);
+
+            if (highRes)
+            {
+                sliderCC.SetThumbImage(UIImage.FromFile("graphicValueThumb@2x.png"), UIControlState.Normal);
+            }
+            else
+            {
+                sliderCC.SetThumbImage(UIImage.FromFile("graphicValueThumb.png"), UIControlState.Normal);
+            }
+            //sliderCC.ValueChanged += HandleCCSliderChange;
 
         }
 
@@ -670,7 +694,7 @@ namespace Stimulant
             C_progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
 
             //Declare color object (Instantiating the UIColor class)
-            barColor = UIColor.FromRGB(0,0,0); //black
+            barColor = UIColor.FromRGB(0, 0, 0); //black
 
             //Declare progress bar object (Instantiating my CircularProgressBar class)
             myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, 0.0f, barColor);
@@ -730,7 +754,7 @@ namespace Stimulant
 
             float buttonSettingsWidth = screenWidth / (12 * sizeSubtract);
             float buttonSettingsHeight = buttonSettingsWidth;
-            float buttonSettingsXLoc = (float)((screenWidth- buttonSettingsWidth)*.98);
+            float buttonSettingsXLoc = (float)((screenWidth - buttonSettingsWidth) * .98);
             float buttonSettingsYLoc = (float)((screenHeight - buttonSettingsHeight) / 1.85) * controlAdjustSettings;
 
             buttonSettings = UIButton.FromType(UIButtonType.Custom);
@@ -919,7 +943,7 @@ namespace Stimulant
             float buttonTapWidth = (float)(screenWidth / (9 * sizeSubtract));
             float buttonTapHeight = buttonTapWidth;// * 3 / 5;
             float buttonTapXLoc = (float)((screenWidth - buttonTapWidth) * 0.5);
-            float buttonTapYLoc = (float)(((screenHeight - buttonTapHeight) / 1.35)*controlAdjustTap);
+            float buttonTapYLoc = (float)(((screenHeight - buttonTapHeight) / 1.35) * controlAdjustTap);
             buttonTap = UIButton.FromType(UIButtonType.Custom);
             buttonTap.Hidden = true;
             buttonTap.SetImage(UIImage.FromFile("graphicTapButtonOff.png"), UIControlState.Normal);
@@ -984,7 +1008,7 @@ namespace Stimulant
         {
             float buttonTimeWidth = (float)(screenWidth / (3 * sizeSubtract));
             float buttonTimeHeight = (float)(buttonTimeWidth / 1.68);
-            float buttonTimeXLoc = (float)((screenWidth/2)-buttonTimeWidth/2);
+            float buttonTimeXLoc = (float)((screenWidth / 2) - buttonTimeWidth / 2);
             float buttonTimeYLoc = (float)(screenHeight - buttonTimeHeight) * controlAdjustMode;
             buttonTime = UIButton.FromType(UIButtonType.Custom);
             buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
@@ -1092,7 +1116,7 @@ namespace Stimulant
         {
             //Add Subviews to main view
             View.AddSubview(myCircularProgressBar);
-            
+
             View.AddSubview(buttonOnOff);
             View.AddSubview(buttonTime);
             View.AddSubview(segmentedPattern);
@@ -1106,6 +1130,7 @@ namespace Stimulant
             View.AddSubview(labelRange);
             View.AddSubview(rangeSlider);
             View.AddSubview(sliderHidden);
+            View.AddSubview(sliderCC);
             View.AddSubview(buttonReverse);
             View.AddSubview(buttonScenes);
             View.AddSubview(buttonArrange);

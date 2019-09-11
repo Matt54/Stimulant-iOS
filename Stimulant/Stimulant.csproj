@@ -452,6 +452,12 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicScenesButtonOn.png">
         <Link>Resources\graphicScenesButtonOn.png</Link>
       </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicValueThumb.png">
+        <Link>Resources\graphicValueThumb.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicValueThumb%402x.png">
+        <Link>Resources\graphicValueThumb%402x.png</Link>
+      </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
