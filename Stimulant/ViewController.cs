@@ -54,10 +54,7 @@ namespace Stimulant
             MakeDevices();
             //ReloadDevices();
 
-            for (int ii = 0; ii < 8; ii++)
-            {
-                sceneArray[ii] = new Scene();
-            }
+            
 
             timerHighRes = new HighResolutionTimer(100.0f);
             // UseHighPriorityThread = true, sets the execution thread 
@@ -129,6 +126,56 @@ namespace Stimulant
                 return true;
             };
 
+            for (int ii = 0; ii < 8; ii++)
+            {
+                sceneArray[ii] = new Scene();
+            }
+
+            sceneArray[0].IsSelected = true;
+
+            for (int ii = 0; ii < 8; ii++)
+            {
+                myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
+                UpdateSceneGraphic();
+            }
+
+            
+
+
+            sceneArray[0].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName,0);
+            };
+            sceneArray[1].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 1);
+            };
+            sceneArray[2].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 2);
+            };
+            sceneArray[3].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 3);
+            };
+            sceneArray[4].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 4);
+            };
+            sceneArray[5].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 5);
+            };
+            sceneArray[6].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 6);
+            };
+            sceneArray[7].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
+            {
+                CombinedSceneProperty(e2.PropertyName, 7);
+            };
+
+
             myMidiModulation.PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
             {
                 switch (e2.PropertyName)
@@ -141,18 +188,28 @@ namespace Stimulant
                                 buttonOnOff.RemoveFromSuperview();
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
+
+                                /*
                                 for (int ii = 0; ii < 8; ii++)
                                 {
                                     myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
-                                    //UpdateSceneGraphic(buttonArray[ii]);
                                     UpdateSceneGraphic();
                                 }
+                                */
+
                                 for (int ii = 0; ii < 8; ii++)
                                 {
                                     View.AddSubview(buttonArray[ii]);
+                                    if (sceneArray[ii].IsSelected)
+                                    {
+                                        myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
+                                    }
                                 }
                                 View.AddSubview(myHorizontalProgressBar);
                                 sliderCC.Hidden = false;
+                                //sceneArray[0].IsSelected = true;
+                                UpdateSceneGraphic();
+                                //UpdateSceneGraphic();
                             }
                             else
                             {
@@ -693,6 +750,68 @@ namespace Stimulant
             myMidiModulation.ModeNumber = 2;
         }
 
+
+        private void CombinedSceneProperty(string propertyName,int index)
+        {
+            switch (propertyName)
+            {
+                case "IsRunning":
+                    {
+                        if (sceneArray[index].IsRunning)
+                        {
+                            InvokeOnMainThread(() =>
+                            {
+                                
+                                myMidiModulation.getParameters(sceneArray[index]);
+                                
+                                segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                                ReadPattern(sceneArray[index].PatternNumber - 1);
+                                ReadSlider(sceneArray[index].RateSliderValue);
+                                sliderRate.Value = sceneArray[index].RateSliderValue;
+                                //string labelText = myMidiModulation.UpdatePattern(patternIndex);
+                                //labelPattern.Text = labelText;
+                            });
+                        }
+                        break;
+                    }
+                case "IsSelected":
+                    {
+                        if (sceneArray[index].IsSelected)
+                        {
+                            if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
+                            {
+                                sceneArray[index].IsRunning = true;
+                            }
+                        }
+                        else
+                        {
+                            if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
+                            {
+                                sceneArray[index].IsRunning = false;
+                            }
+                        }
+                        break;
+                    }
+                case "PatternNumber":
+                    {
+                        ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
+                        UpdateSceneGraphic();
+                        break;
+                    }
+                case "Opposite":
+                    {
+                        myMidiModulation.Opposite = sceneArray[index].Opposite;
+                        UpdateSceneGraphic();
+                        break;
+                    }
+                case "RateSliderValue":
+                    {
+                        ReadSlider(sceneArray[index].RateSliderValue);
+                        break;
+                    }
+            }
+        }
+
         private void ResetDisplay()
         {
             switch (myMidiModulation.ModeNumber)
@@ -943,9 +1062,9 @@ namespace Stimulant
 
         void UpdateSceneGraphic()
         {
-
             for (int ii = 0; ii < 8; ii++)
             {
+                /*
                 if (sceneArray[ii].IsSelected)
                 {
                     sceneArray[ii].IsSelected = false;
@@ -954,12 +1073,12 @@ namespace Stimulant
                 {
                     sceneArray[0].IsSelected = true;
                 }
+                */
                 string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
             }
-
         }
 
         protected void HandleLocationTouchDown(object sender, System.EventArgs e)
@@ -980,7 +1099,20 @@ namespace Stimulant
 
         protected void HandleReverseTouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.ReversePattern();
+            if (!myMidiModulation.IsSceneMode)
+            {
+                myMidiModulation.ReversePattern();
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].ReverseToggle();
+                    }
+                }
+            }
         }
 
         protected void HandleCCTouchDown(object sender, System.EventArgs e)
@@ -1052,7 +1184,20 @@ namespace Stimulant
         protected void HandleRateSliderChange(object sender, System.EventArgs e)
         {
             var myObject = (UISlider)sender;
-            ReadSlider(myObject.Value);
+            if (!myMidiModulation.IsSceneMode)
+            {
+                ReadSlider(myObject.Value);
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].RateSliderValue = myObject.Value;
+                    }
+                }
+            }
         }
 
         void ReadSlider(float sliderValue)
@@ -1414,9 +1559,19 @@ namespace Stimulant
         protected void HandlePatternSegmentChange(object sender, System.EventArgs e)
         {
             var seg = sender as UISegmentedControl;
-            //var index = seg.SelectedSegment;
-            //ReadPattern(index);
-            ReadPattern(seg.SelectedSegment);
+            if (!myMidiModulation.IsSceneMode)
+            {
+                ReadPattern(seg.SelectedSegment);
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected) {
+                        sceneArray[ii].PatternNumber = (int)seg.SelectedSegment+1;
+                    }
+                }
+            }
         }
 
         void ReadPattern(nint patternIndex)

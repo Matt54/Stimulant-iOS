@@ -1,28 +1,110 @@
 ﻿using System;
+using System.Globalization;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Collections.Generic;
+
 namespace Stimulant
 {
 
-    public class Scene
+    public class Scene : INotifyPropertyChanged
     {
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
         //Current scene running the modulations parameters
-        public bool IsRunning { get; set; }
+        private bool _IsRunning;
+        public bool IsRunning
+        {
+            get { return _IsRunning; }
+            set { _IsRunning = value; OnPropertyChanged("IsRunning"); }
+        }
 
         //Current scene selected (for adjusting the scenes parameters)
-        public bool IsSelected { get; set; }
+        private bool _IsSelected;
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set { _IsSelected = value; OnPropertyChanged("IsSelected"); }
+        }
 
         //By using the rate slider we can hopefully stay mode number agnostic
-        public float RateSliderValue { get; set; }
+        private float _RateSliderValue;
+        public float RateSliderValue
+        {
+            get { return _RateSliderValue; }
+            set { _RateSliderValue = value; OnPropertyChanged("RateSliderValue"); }
+        }
 
-        public int PatternNumber { get; set; }
-        public bool Opposite { get; set; }
+        private int _PatternNumber;
+        public int PatternNumber
+        {
+            get { return _PatternNumber; }
+            set { _PatternNumber = value; OnPropertyChanged("PatternNumber"); }
+        }
 
-        public int Minimum { get; set; }
-        public int Maximum { get; set; }
+        private bool _Opposite;
+        public bool Opposite
+        {
+            get { return _Opposite; }
+            set { _Opposite = value; OnPropertyChanged("Opposite"); }
+        }
 
-        public bool IsTriggerOnly { get; set; }
-        public bool IsRestartEachNote { get; set; }
-        public int StartingLocation { get; set; }
+        private int _Minimum;
+        public int Minimum
+        {
+            get { return _Minimum; }
+            set { _Minimum = value; OnPropertyChanged("Minimum"); }
+        }
+
+        private int _Maximum;
+        public int Maximum
+        {
+            get { return _Maximum; }
+            set { _Maximum = value; OnPropertyChanged("Maximum"); }
+        }
+
+        private bool _IsTriggerOnly;
+        public bool IsTriggerOnly
+        {
+            get { return _IsTriggerOnly; }
+            set { _IsTriggerOnly = value; OnPropertyChanged("IsTriggerOnly"); }
+        }
+
+        private bool _IsRestartEachNote;
+        public bool IsRestartEachNote
+        {
+            get { return _IsRestartEachNote; }
+            set { _IsRestartEachNote = value; OnPropertyChanged("IsRestartEachNote"); }
+        }
+
+        private int _StartingLocation;
+        public int StartingLocation
+        {
+            get { return _StartingLocation; }
+            set { _StartingLocation = value; OnPropertyChanged("StartingLocation"); }
+        }
+
+        // Reverse
+        public void ReverseToggle()
+        {
+            if (Opposite)
+            {
+                Opposite = false;
+            }
+            else
+            {
+                Opposite = true;
+            }
+        }
 
         public Scene()
         {

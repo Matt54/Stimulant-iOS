@@ -1480,7 +1480,7 @@ namespace Stimulant
 
         public void getParameters(Scene scene)
         {
-            PatternNumber = scene.PatternNumber;
+            //PatternNumber = scene.PatternNumber;
             Opposite = scene.Opposite;
             Maximum = scene.Maximum;
             Minimum = scene.Minimum;
