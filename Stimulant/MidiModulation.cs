@@ -1222,14 +1222,7 @@ namespace Stimulant
         // enables or disables trigger mode
         public void TriggerToggle()
         {
-            if (IsTriggerOnly)
-            {
-                IsTriggerOnly = false;
-            }
-            else
-            {
-                IsTriggerOnly = true;
-            }
+            IsTriggerOnly = !IsTriggerOnly;
         }
 
 
@@ -1407,6 +1400,8 @@ namespace Stimulant
         // enables or disables auto range
         public void RestartToggle()
         {
+            IsRestartEachNote = !IsRestartEachNote;
+            /*
             if (IsRestartEachNote)
             {
                 IsRestartEachNote = false;
@@ -1415,6 +1410,7 @@ namespace Stimulant
             {
                 IsRestartEachNote = true;
             }
+            */
         }
 
         // enables or disables Scene Mode

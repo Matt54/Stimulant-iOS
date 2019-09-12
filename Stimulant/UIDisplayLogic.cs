@@ -542,8 +542,22 @@ namespace Stimulant
             rangeSlider.DragCompleted += (object sender, EventArgs e) =>
             {
                 var myObj = (RangeSliderControl)sender;
-                myMidiModulation.Maximum = (int)myObj.UpperValue;
-                myMidiModulation.Minimum = (int)myObj.LowerValue;
+                if (!myMidiModulation.IsSceneMode)
+                {
+                    myMidiModulation.Maximum = (int)myObj.UpperValue;
+                    myMidiModulation.Minimum = (int)myObj.LowerValue;
+                }
+                else
+                {
+                    for(int ii = 0; ii < 8; ii++)
+                    {
+                        if (sceneArray[ii].IsSelected)
+                        {
+                            sceneArray[ii].Maximum = (int)myObj.UpperValue;
+                            sceneArray[ii].Minimum = (int)myObj.LowerValue;
+                        }
+                    }
+                }
             };
         }
 
@@ -633,16 +647,6 @@ namespace Stimulant
             buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Disabled);
             buttonArrange.Frame = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc * 1.795 * controlAdjustScenes, buttonRandomWidth, buttonRandomHeight);
             buttonArrange.TouchDown += HandleArrangeTouchDown;
-
-            /*
-            buttonRandom = UIButton.FromType(UIButtonType.Custom);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonDisabled.png"), UIControlState.Disabled);
-            buttonRandom.Frame = new CGRect(screenWidth - buttonSettingsXLoc + buttonSettingsWidth/5, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
-            buttonRandom.TouchDown += HandleRandomTouchDown;
-            buttonRandom.Enabled = false;
-            */
         }
 
         public void LoadStartButton(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract)
@@ -767,23 +771,11 @@ namespace Stimulant
             buttonSettings.Enabled = false;
             buttonSettings.TouchDown += HandleSettingsTouchDown;
 
-            /*
-            buttonRandom = UIButton.FromType(UIButtonType.Custom);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOff.png"), UIControlState.Normal);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonOn.png"), UIControlState.Highlighted);
-            buttonRandom.SetImage(UIImage.FromFile("graphicRandomButtonDisabled.png"), UIControlState.Disabled);
-            buttonRandom.Frame = new CGRect(screenWidth - buttonSettingsXLoc + buttonSettingsWidth/5, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
-            buttonRandom.TouchDown += HandleRandomTouchDown;
-            buttonRandom.Enabled = false;
-            */
-
             buttonAutoRate = UIButton.FromType(UIButtonType.Custom);
             buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Normal);
             buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOff.png"), UIControlState.Highlighted);
             buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonDisabled.png"), UIControlState.Disabled);
             buttonAutoRate.Frame = new CGRect(buttonSettingsXLoc, buttonSettingsYLoc, buttonSettingsWidth, buttonSettingsHeight);
-            //buttonAutoRate.Hidden = true;
-            //buttonAutoRate.Enabled = false;
             buttonAutoRate.TouchDown += HandleAutoRateTouchDown;
 
         }

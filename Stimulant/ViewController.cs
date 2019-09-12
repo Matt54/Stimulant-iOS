@@ -761,15 +761,15 @@ namespace Stimulant
                         {
                             InvokeOnMainThread(() =>
                             {
-                                
+
                                 myMidiModulation.getParameters(sceneArray[index]);
-                                
+
                                 segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
                                 ReadPattern(sceneArray[index].PatternNumber - 1);
                                 ReadSlider(sceneArray[index].RateSliderValue);
                                 sliderRate.Value = sceneArray[index].RateSliderValue;
-                                //string labelText = myMidiModulation.UpdatePattern(patternIndex);
-                                //labelPattern.Text = labelText;
+                                rangeSlider.LowerValue = myMidiModulation.Minimum;
+                                rangeSlider.UpperValue = myMidiModulation.Maximum;
                             });
                         }
                         break;
@@ -792,23 +792,78 @@ namespace Stimulant
                         }
                         break;
                     }
+                  
                 case "PatternNumber":
                     {
-                        ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
-                        UpdateSceneGraphic();
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
+                            UpdateSceneGraphic();
+                        }
                         break;
                     }
                 case "Opposite":
                     {
-                        myMidiModulation.Opposite = sceneArray[index].Opposite;
-                        UpdateSceneGraphic();
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.Opposite = sceneArray[index].Opposite;
+                            UpdateSceneGraphic();
+                        }
                         break;
                     }
                 case "RateSliderValue":
                     {
-                        ReadSlider(sceneArray[index].RateSliderValue);
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            ReadSlider(sceneArray[index].RateSliderValue);
+                        }
                         break;
                     }
+                case "IsTriggerOnly":
+                    {
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
+                        }
+                        break;
+                    }
+                case "IsRestartEachNote":
+                    {
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
+                        }
+                        break;
+                    }
+                case "StartingLocation":
+                    {
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
+                        }
+                        break;
+                    }
+                case "Maximum":
+                    {
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.Maximum = sceneArray[index].Maximum;
+                        }
+                        break;
+                    }
+                case "Minimum":
+                    {
+                        if (!myMidiModulation.IsArrangementMode)
+                        {
+                            myMidiModulation.Minimum = sceneArray[index].Minimum;
+                        }
+                        else
+                        {
+                            rangeSlider.LowerValue = sceneArray[index].Minimum;
+                        }
+                        break;
+                    }
+            
             }
         }
 
@@ -1064,16 +1119,6 @@ namespace Stimulant
         {
             for (int ii = 0; ii < 8; ii++)
             {
-                /*
-                if (sceneArray[ii].IsSelected)
-                {
-                    sceneArray[ii].IsSelected = false;
-                }
-                if (ii == 0)
-                {
-                    sceneArray[0].IsSelected = true;
-                }
-                */
                 string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
@@ -1083,13 +1128,46 @@ namespace Stimulant
 
         protected void HandleLocationTouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.RestartToggle();
+            
+
+            if (!myMidiModulation.IsSceneMode)
+            {
+                myMidiModulation.RestartToggle();
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].RestartToggle();
+                    }
+                }
+            }
         }
 
         protected void HandleHiddenSliderChange(object sender, System.EventArgs e)
         {
+            //var myObject = (UISlider)sender;
+            //ReadHiddenSlider(myObject.Value);
+
+
             var myObject = (UISlider)sender;
-            ReadHiddenSlider(myObject.Value);
+
+            if (!myMidiModulation.IsSceneMode)
+            {
+                ReadHiddenSlider(myObject.Value);
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].StartingLocation = (int)myObject.Value;
+                    }
+                }
+            }
         }
 
         void ReadHiddenSlider(float sliderValue)
@@ -1156,8 +1234,6 @@ namespace Stimulant
 
         protected void HandleRandomTouchDown(object sender, System.EventArgs e)
         {
-            //labelPattern.Text = myMidiModulation.RandomRoll();
-            //myMidiModulation.IsRandomRoll = true;
             myMidiModulation.RandomToggle();
         }
 
@@ -1178,7 +1254,21 @@ namespace Stimulant
 
         protected void HandleTriggerTouchDown(object sender, System.EventArgs e)
         {
-            myMidiModulation.TriggerToggle();
+            //myMidiModulation.TriggerToggle();
+            if (!myMidiModulation.IsSceneMode)
+            {
+                myMidiModulation.TriggerToggle();
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].TriggerToggle();
+                    }
+                }
+            }
         }
 
         protected void HandleRateSliderChange(object sender, System.EventArgs e)

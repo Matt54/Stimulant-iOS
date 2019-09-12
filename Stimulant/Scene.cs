@@ -93,7 +93,6 @@ namespace Stimulant
             set { _StartingLocation = value; OnPropertyChanged("StartingLocation"); }
         }
 
-        // Reverse
         public void ReverseToggle()
         {
             if (Opposite)
@@ -104,6 +103,16 @@ namespace Stimulant
             {
                 Opposite = true;
             }
+        }
+
+        public void TriggerToggle()
+        {
+            IsTriggerOnly = !IsTriggerOnly;
+        }
+
+        public void RestartToggle()
+        {
+            IsRestartEachNote = !IsRestartEachNote;
         }
 
         public Scene()
