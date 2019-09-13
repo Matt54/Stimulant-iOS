@@ -132,6 +132,7 @@ namespace Stimulant
             }
 
             sceneArray[0].IsSelected = true;
+            sceneArray[0].IsRunning = true;
 
             for (int ii = 0; ii < 8; ii++)
             {
@@ -757,20 +758,23 @@ namespace Stimulant
             {
                 case "IsRunning":
                     {
-                        if (sceneArray[index].IsRunning)
+                        if (myMidiModulation.IsSceneMode)
                         {
-                            InvokeOnMainThread(() =>
+                            if (sceneArray[index].IsRunning)
                             {
+                                InvokeOnMainThread(() =>
+                                {
 
-                                myMidiModulation.getParameters(sceneArray[index]);
+                                    myMidiModulation.getParameters(sceneArray[index]);
 
-                                segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                ReadPattern(sceneArray[index].PatternNumber - 1);
-                                ReadSlider(sceneArray[index].RateSliderValue);
-                                sliderRate.Value = sceneArray[index].RateSliderValue;
-                                rangeSlider.LowerValue = myMidiModulation.Minimum;
-                                rangeSlider.UpperValue = myMidiModulation.Maximum;
-                            });
+                                    segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                                    ReadPattern(sceneArray[index].PatternNumber - 1);
+                                    ReadSlider(sceneArray[index].RateSliderValue);
+                                    sliderRate.Value = sceneArray[index].RateSliderValue;
+                                    rangeSlider.LowerValue = myMidiModulation.Minimum;
+                                    rangeSlider.UpperValue = myMidiModulation.Maximum;
+                                });
+                            }
                         }
                         break;
                     }
@@ -781,6 +785,92 @@ namespace Stimulant
                             if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
                             {
                                 sceneArray[index].IsRunning = true;
+                            }
+                            else if (myMidiModulation.IsArrangementMode) //Update display without effecting myMidiModulation
+                            {
+
+                                //Pattern
+                                segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                                switch (sceneArray[index].PatternNumber)
+                                {
+                                    case 1:
+                                    case 4:
+                                    case 7:
+                                    case 8:
+                                        sceneArray[index].Opposite = false;
+                                        //buttonReverse.Hidden = true;
+                                        buttonReverse.Enabled = false;
+                                        buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                        break;
+                                    default:
+                                        buttonReverse.Hidden = false;
+                                        buttonReverse.Enabled = true;
+                                        break;
+                                }
+                                if (sceneArray[index].PatternNumber > 6)
+                                {
+                                    sceneArray[index].IsRestartEachNote = false;
+                                    buttonLocation.Enabled = false;
+                                }
+                                else
+                                {
+                                    if (sceneArray[index].IsTriggerOnly)
+                                    {
+                                        buttonLocation.Enabled = true;
+                                    }
+                                }
+                                string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
+                                labelPattern.Text = labelText;
+
+
+                                //Opposite
+                                if (sceneArray[index].Opposite)
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                                }
+                                else
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                }
+
+                                //Min&Max
+                                rangeSlider.LowerValue = sceneArray[index].Minimum;
+                                rangeSlider.UpperValue = sceneArray[index].Maximum;
+
+                                //Trigger
+                                if (sceneArray[index].IsTriggerOnly)
+                                {
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
+                                    buttonLocation.Enabled = true;
+                                }
+                                else
+                                {
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+                                    buttonLocation.Enabled = false;
+                                }
+
+                                //Restart
+                                if (sceneArray[index].IsRestartEachNote)
+                                {
+                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
+                                    sliderHidden.Hidden = false;
+                                    rangeSlider.Enabled = false;
+                                    labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                    sliderHidden.Value = sceneArray[index].StartingLocation;
+                                }
+                                else
+                                {
+                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
+                                    sliderHidden.Hidden = true;
+                                    rangeSlider.Enabled = true;
+                                    labelRange.Text = "Modulation Range";
+                                }
+
+                                //Rate
+                                labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
+                                sliderRate.Value = sceneArray[index].RateSliderValue;
                             }
                         }
                         else
@@ -800,6 +890,50 @@ namespace Stimulant
                             ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
                             UpdateSceneGraphic();
                         }
+                        else
+                        {
+                            segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber-1;
+
+                            switch (sceneArray[index].PatternNumber)
+                            {
+                                case 1:
+                                case 4:
+                                case 7:
+                                case 8:
+                                    sceneArray[index].Opposite = false;
+                                    //buttonReverse.Hidden = true;
+                                    buttonReverse.Enabled = false;
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                    break;
+                                default:
+                                    buttonReverse.Hidden = false;
+                                    buttonReverse.Enabled = true;
+                                    break;
+                            }
+
+
+                            if (sceneArray[index].PatternNumber > 6)
+                            {
+                                sceneArray[index].IsRestartEachNote = false;
+                                buttonLocation.Enabled = false;
+                            }
+                            else
+                            {
+                                if (sceneArray[index].IsTriggerOnly)
+                                {
+                                    buttonLocation.Enabled = true;
+                                }
+                            }
+
+                            string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber-1);
+                            labelPattern.Text = labelText;
+                            UpdateSceneGraphic();
+
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.PatternNumber = sceneArray[index].PatternNumber;
+                            }
+                        }
                         break;
                     }
                 case "Opposite":
@@ -807,8 +941,23 @@ namespace Stimulant
                         if (!myMidiModulation.IsArrangementMode)
                         {
                             myMidiModulation.Opposite = sceneArray[index].Opposite;
-                            UpdateSceneGraphic();
                         }
+                        else
+                        {
+                            if (sceneArray[index].Opposite)
+                            {
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                            }
+                            else
+                            {
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                            }
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.Opposite = sceneArray[index].Opposite;
+                            }
+                        }
+                        UpdateSceneGraphic();
                         break;
                     }
                 case "RateSliderValue":
@@ -816,6 +965,16 @@ namespace Stimulant
                         if (!myMidiModulation.IsArrangementMode)
                         {
                             ReadSlider(sceneArray[index].RateSliderValue);
+                        }
+                        else
+                        {
+
+                            labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
+
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                ReadSlider(sceneArray[index].RateSliderValue);
+                            }
                         }
                         break;
                     }
@@ -825,6 +984,26 @@ namespace Stimulant
                         {
                             myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
                         }
+                        else
+                        {
+                            if (sceneArray[index].IsTriggerOnly)
+                            {
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
+                                buttonLocation.Enabled = true;
+                            }
+                            else
+                            {
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+                                buttonLocation.Enabled = false;
+                            }
+
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
+                            }
+                        }
                         break;
                     }
                 case "IsRestartEachNote":
@@ -832,6 +1011,30 @@ namespace Stimulant
                         if (!myMidiModulation.IsArrangementMode)
                         {
                             myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
+                        }
+                        else
+                        {
+                            if (sceneArray[index].IsRestartEachNote)
+                            {
+                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
+                                sliderHidden.Hidden = false;
+                                rangeSlider.Enabled = false;
+                                labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                sliderHidden.Value = sceneArray[index].StartingLocation;
+                            }
+                            else
+                            {
+
+                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
+                                sliderHidden.Hidden = true;
+                                rangeSlider.Enabled = true;
+                                labelRange.Text = "Modulation Range";
+                            }
+
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
+                            }
                         }
                         break;
                     }
@@ -841,6 +1044,15 @@ namespace Stimulant
                         {
                             myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
                         }
+                        else
+                        {
+                            labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
+                            }
+                        }
                         break;
                     }
                 case "Maximum":
@@ -848,6 +1060,13 @@ namespace Stimulant
                         if (!myMidiModulation.IsArrangementMode)
                         {
                             myMidiModulation.Maximum = sceneArray[index].Maximum;
+                        }
+                        else
+                        {
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.Maximum = sceneArray[index].Maximum;
+                            }
                         }
                         break;
                     }
@@ -859,7 +1078,10 @@ namespace Stimulant
                         }
                         else
                         {
-                            rangeSlider.LowerValue = sceneArray[index].Minimum;
+                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            {
+                                myMidiModulation.Minimum = sceneArray[index].Minimum;
+                            }
                         }
                         break;
                     }
@@ -1310,7 +1532,6 @@ namespace Stimulant
             }
             else
             {
-
                 string displayText = "";
                 // Conditionals determine the correct rate based on sliderValue
                 if (sliderValue >= (128 * 17 / 18))
@@ -1404,27 +1625,10 @@ namespace Stimulant
                     myMidiModulation.RateCatch = 1;
                 }
 
+                //Cutoff for??
                 if (!myMidiModulation.SettingsOn)
                 {
                     myMidiModulation.CheckCutoff();
-                    /*
-                    if (myMidiModulation.RateCatch > 5)
-                    {
-                        myMidiModulation.ClockCutoff = 1 * myMidiModulation.CutoffFactor;
-                    }
-                    else if (myMidiModulation.RateCatch > 3)
-                    {
-                        myMidiModulation.ClockCutoff = 2 * myMidiModulation.CutoffFactor;
-                    }
-                    else if (myMidiModulation.RateCatch > 1)
-                    {
-                        myMidiModulation.ClockCutoff = 4 * myMidiModulation.CutoffFactor;
-                    }
-                    else
-                    {
-                        myMidiModulation.ClockCutoff = 8 * myMidiModulation.CutoffFactor;
-                    }
-                    */
                 }
 
                 if (myMidiModulation.SettingsOn)

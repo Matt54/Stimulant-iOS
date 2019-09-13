@@ -255,6 +255,7 @@ namespace Stimulant
             IsAutoRate = false;
             IsAutoPattern = false;
             BPM = 120;
+            StartingLocation = 63;
             //IsSceneMode = true;
         }
 
