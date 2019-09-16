@@ -185,8 +185,23 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsSceneMode)
                             {
+                                //myCircularProgressBar.RemoveFromSuperview();
+                                //buttonOnOff.RemoveFromSuperview();
+                                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+
+                                //Momentarily remove from superview so that the start button can be on top of progress bar
                                 myCircularProgressBar.RemoveFromSuperview();
+                                //Declare progress bar object (Instantiating my CircularProgressBar class)
+                                myCircularProgressBar = new CircularProgressBar(C_progressSceneSize, C_lineWidthSmall, pi_mult, barColor);
                                 buttonOnOff.RemoveFromSuperview();
+                                buttonOnOff.Frame = sceneStartSize;
+
+                                //Add Views
+                                View.AddSubview(myCircularProgressBar);
+                                View.AddSubview(buttonOnOff);
+                                buttonRandom.Hidden = true;
+                                buttonReverse.Frame = frameReverseScene;
+
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
 
@@ -206,7 +221,12 @@ namespace Stimulant
                                         myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
                                     }
                                 }
-                                View.AddSubview(myHorizontalProgressBar);
+                                View.AddSubview(buttonArrange);
+                                
+                                
+
+                                //View.AddSubview(myHorizontalProgressBar);
+
                                 sliderCC.Hidden = false;
                                 //sceneArray[0].IsSelected = true;
                                 UpdateSceneGraphic();
@@ -214,10 +234,25 @@ namespace Stimulant
                             }
                             else
                             {
+                                buttonArrange.RemoveFromSuperview();
+                                myMidiModulation.IsArrangementMode = false;
+                                buttonOnOff.Frame = bigStartSize;
+                                
+
+                                myCircularProgressBar.RemoveFromSuperview();
+                                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                                myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
+
                                 View.AddSubview(myCircularProgressBar);
                                 View.AddSubview(buttonOnOff);
-                                myHorizontalProgressBar.RemoveFromSuperview();
+                                buttonRandom.Hidden = false;
+                                buttonReverse.Frame = frameReverseOrig;
+
+                                //myHorizontalProgressBar.RemoveFromSuperview();
+
+
                                 sliderCC.Hidden = true;
+
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 for (int ii = 0; ii < 8; ii++)
                                 {
@@ -739,7 +774,6 @@ namespace Stimulant
 
                                     updateProgressBar();
 
-
                                     myMidiModulation.FireModulation = false;
                                 }
                             }
@@ -1126,11 +1160,26 @@ namespace Stimulant
             }
             else
             {
+
+                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+
+                //Momentarily remove from superview so that the start button can be on top of progress bar
+                myCircularProgressBar.RemoveFromSuperview();
+                //Declare progress bar object (Instantiating my CircularProgressBar class)
+                myCircularProgressBar = new CircularProgressBar(C_progressSceneSize, C_lineWidthSmall, pi_mult, barColor);
+                buttonOnOff.RemoveFromSuperview();
+
+                //Add Views
+                View.AddSubview(myCircularProgressBar);
+                View.AddSubview(buttonOnOff);
+
+                /*
                 var progressPercent = (myMidiModulation.CurrentCC * 1.0f / 127);
                 myHorizontalProgressBar.RemoveFromSuperview();
                 myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, progressPercent, barColor);
                 View.AddSubview(myHorizontalProgressBar);
                 sliderCC.Value = myMidiModulation.CurrentCC;
+                */
             }
         }
 
@@ -1201,25 +1250,33 @@ namespace Stimulant
         private void FlipPower()
         {
             myCircularProgressBar.Hidden = false;
-            buttonOnOff.Frame = bigStartSize;
+            if (!myMidiModulation.IsSceneMode)
+            {
+                buttonOnOff.Frame = bigStartSize;
+            }
 
             //Declare color object (Instantiating the UIColor class)
             //UIColor barColor = UIColor.FromRGB(0, 255, 0);
 
-            //Control Logic: switches between program ON and program OFF states when button is pressed
+            
+                //Control Logic: switches between program ON and program OFF states when button is pressed
             if (UIHelper)
             {
+                
 
+                    buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Normal);
+                    buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOn.png"), UIControlState.Highlighted);
+                    myMidiModulation.IsRunning = false;
 
-                buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Normal);
-                buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOn.png"), UIControlState.Highlighted);
-                myMidiModulation.IsRunning = false;
-                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-                myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
+                if (!myMidiModulation.IsSceneMode)
+                {
+                    var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                    myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
 
-                //TODO: need different logic for scene mode here
+                    //TODO: need different logic for scene mode here
+                }
 
-                UIHelper = false;
+                    UIHelper = false;
             }
             else
             {
@@ -1227,10 +1284,16 @@ namespace Stimulant
                 buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Highlighted);
                 myMidiModulation.IsRunning = true;
             }
+            
 
             //Add Views
             View.AddSubview(myCircularProgressBar);
             View.AddSubview(buttonOnOff);
+            if (!myMidiModulation.IsSceneMode)
+            {
+                
+                
+            }
         }
 
         private void PowerPushed()
@@ -1239,10 +1302,15 @@ namespace Stimulant
             {
                 myMidiModulation.IsRunning = false;
                 UIHelper = true;
-                myCircularProgressBar.RemoveFromSuperview();
             }
+            myCircularProgressBar.RemoveFromSuperview();
             myCircularProgressBar.Hidden = true;
-            buttonOnOff.Frame = smallStartSize;
+
+            if (!myMidiModulation.IsSceneMode)
+            {
+                buttonOnOff.Frame = smallStartSize;
+            }
+
         }
 
         private void HandleScenesTouchDown(object sender, System.EventArgs e)

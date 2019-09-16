@@ -12,13 +12,26 @@ namespace Stimulant
     public partial class ViewController
     {
 
-        //These variables are used consistently to update the 
+        //These variables are used to update the display during runtime
         CGRect bigStartSize;
         CGRect smallStartSize;
+        CGRect sceneStartSize;
+
         CGRect C_progressSize;
+        CGRect C_progressSceneSize;
+
         CGRect H_progressSize;
+
+        CGRect frameReverseOrig;
+        CGRect frameReverseScene;
+
         int C_lineWidth;
+        int C_lineWidthSmall;
         int H_lineWidth;
+
+        float widthScenes;
+        float marginScenes;
+
         UIColor barColor;
         bool UIHelper;
         bool highRes;
@@ -31,6 +44,7 @@ namespace Stimulant
         UISlider sliderHidden;
         UISlider sliderCC;
         RangeSliderControl rangeSlider;
+        
 
         CircularProgressBar myCircularProgressBar;
         HorizontalProgressBar myHorizontalProgressBar;
@@ -68,6 +82,8 @@ namespace Stimulant
 
         UIButton buttonScenes;
         UIButton buttonArrange;
+
+        RunningSymbol myRunningSymbol;
 
         /*
         UIButton buttonScene0;
@@ -613,7 +629,6 @@ namespace Stimulant
 
         public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms, float controlAdjustScenes)
         {
-
             float buttonRandomWidth = screenWidth / (4 + sizeSubtract);
             float buttonRandomHeight = buttonRandomWidth;
             float buttonRandomXLoc = 0; //(float)((screenWidth - buttonRandomWidth) * (0.09));
@@ -626,13 +641,18 @@ namespace Stimulant
             buttonRandom.Enabled = false;
             buttonRandom.TouchDown += HandleRandomTouchDown;
 
+            frameReverseOrig = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
+            frameReverseScene = new CGRect(2 * buttonRandomWidth, buttonRandomYLoc * 1.795 * controlAdjustScenes, buttonRandomWidth, buttonRandomHeight);
+
             buttonReverse = UIButton.FromType(UIButtonType.Custom);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
-            buttonReverse.Frame = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
+            buttonReverse.Frame = frameReverseOrig;
             buttonReverse.Enabled = false;
             buttonReverse.TouchDown += HandleReverseTouchDown;
+
+
 
             buttonScenes = UIButton.FromType(UIButtonType.Custom);
             buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff.png"), UIControlState.Normal);
@@ -645,12 +665,19 @@ namespace Stimulant
             buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Normal);
             buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Highlighted);
             buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff.png"), UIControlState.Disabled);
-            buttonArrange.Frame = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc * 1.795 * controlAdjustScenes, buttonRandomWidth, buttonRandomHeight);
+            buttonArrange.Frame = new CGRect(buttonRandomWidth, buttonRandomYLoc * 1.795 * controlAdjustScenes, buttonRandomWidth, buttonRandomHeight);
             buttonArrange.TouchDown += HandleArrangeTouchDown;
         }
 
         public void LoadStartButton(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract)
         {
+            //float buttonRandomWidth = screenWidth / (4 + sizeSubtract);
+            //float buttonRandomHeight = buttonRandomWidth;
+            //float buttonRandomXLoc = 0; //(float)((screenWidth - buttonRandomWidth) * (0.09));
+            //float buttonRandomYLoc = (float)((screenHeight) / 4.4) * controlAdjustRandoms;
+
+            float margin = (float)(screenWidth / 32);
+
             //Button is half the screen size
             float buttonWidth = screenWidth / (2 * sizeSubtract);
             float buttonHeight = (float)(buttonWidth / 1.061);
@@ -667,8 +694,13 @@ namespace Stimulant
             float buttonXLocSmaller = (screenWidth - buttonWidthSmaller) / 2;
             float buttonYLocSmaller = (float)((screenHeight - buttonHeightSmaller) / 3.12 - (1 - buttonYAdjust) * screenHeight);
 
+            float buttonWidthScene = screenWidth / (4 + sizeSubtract) - 2 * margin;
+            float buttonHeightScene = (float)(buttonWidthScene / 1.061);
+
+
             bigStartSize = new CGRect(buttonXLoc, buttonYLoc, buttonWidth, buttonHeight);
             smallStartSize = new CGRect(buttonXLocSmaller, buttonYLocSmaller, buttonWidthSmaller, buttonHeightSmaller);
+            sceneStartSize = new CGRect(screenWidth - buttonWidthScene - margin, buttonYLoc * 1.7, buttonWidthScene, buttonHeightScene);
 
             //Declare button object with its graphics, location, and size
             buttonOnOff = UIButton.FromType(UIButtonType.Custom);
@@ -685,6 +717,8 @@ namespace Stimulant
 
         public void LoadProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlAdjustProgress)
         {
+            float margin = (float)(screenWidth / 32);
+
             //Set progress bar size based on screen width (it will fit exactly around the button)
             C_lineWidth = (int)(screenWidth / 33);
             float progressWidth = (float)((screenWidth / (2.219 * sizeSubtract)) + 3 * C_lineWidth);
@@ -696,6 +730,17 @@ namespace Stimulant
 
             //Declare rectangle object (Instantiating the CGRect class)
             C_progressSize = new CGRect(progressXLoc, progressYLoc, progressWidth, progressHeight);
+
+            C_lineWidthSmall = (int)(screenWidth / 66);
+            float progressWidthSmall = (float)(screenWidth / (4+sizeSubtract) - 2 * margin + 2 * C_lineWidthSmall);
+
+
+
+            float progressHeightSmall = (float)progressWidthSmall;
+            float progressSmallXLoc = (float) screenWidth - progressWidthSmall - margin + C_lineWidthSmall;
+            float progressSmallYLoc = (float)(progressYLoc * 1.74);
+            C_progressSceneSize = new CGRect(progressSmallXLoc, progressSmallYLoc, progressWidthSmall, progressHeightSmall);
+
 
             //Declare color object (Instantiating the UIColor class)
             barColor = UIColor.FromRGB(0, 0, 0); //black
@@ -718,14 +763,20 @@ namespace Stimulant
             barColor = UIColor.FromRGB(0, 0, 0); //black
 
             myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, 0.5f, barColor);
+
+            myHorizontalProgressBar.Hidden = true;
         }
 
         public void LoadSceneButtons(float screenWidth, float screenHeight)
         {
-            float buttonSceneWidth = (float)(screenWidth / 8);
+            float margin = (float)(screenWidth / 32);
+
+            float buttonSceneWidth = (float)(screenWidth / 8) - (margin * 9/8);
             float buttonSceneHeight = buttonSceneWidth;
             float buttonSceneXLoc = (float)0;
-            float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 2.8);
+            float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 3.2);
+
+            widthScenes = buttonSceneWidth;
 
             for (int ii = 0; ii < 8; ii++)
             {
@@ -733,9 +784,12 @@ namespace Stimulant
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Normal);
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Highlighted);
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Disabled);
-                buttonArray[ii].Frame = new CGRect(buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
+                buttonArray[ii].Frame = new CGRect(margin * (ii+1) + buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
                 buttonArray[ii].TouchDown += HandleSceneTouchDown;
             }
+
+            //myRunningSymbol.Frame = 
+
         }
 
         public void LoadRateLabel(float screenWidth, float screenHeight, float textAdjustRate, float sliderHeight)
@@ -1125,7 +1179,7 @@ namespace Stimulant
             View.AddSubview(sliderCC);
             View.AddSubview(buttonReverse);
             View.AddSubview(buttonScenes);
-            View.AddSubview(buttonArrange);
+            //View.AddSubview(buttonArrange);
             View.AddSubview(buttonCC);
             View.AddSubview(buttonSettings);
             //View.AddSubview(buttonInfo);
