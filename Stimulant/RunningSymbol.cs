@@ -51,11 +51,19 @@ namespace Stimulant
         public void DrawGraph(CGContext g, nfloat x0, nfloat x1, nfloat y0, nfloat y1)
         {
 
+            nfloat frameWidth = x1 - x0;
+            nfloat frameHeight = y1 - y0;
+
+            nfloat padding = frameWidth / 5;
+
+            nfloat insideWidth = frameWidth - padding * 2;
+            nfloat insideHeight = insideWidth;
+
             g.SetLineWidth(_lineWidth);
             g.SetStrokeColor(UIColor.FromRGB(0, 0, 0).CGColor);
-            g.MoveTo(x0, y0);
-            g.AddLineToPoint(x0+(x1-x0),y1);
-            g.AddLineToPoint(x1, y0);
+            g.MoveTo(x0 + padding, y0 + (frameHeight) / 2);
+            g.AddLineToPoint(x0+(frameWidth)/2,y1 - padding);
+            g.AddLineToPoint(x1 - padding, y0 + (frameHeight) / 2);
             g.StrokePath();
 
 

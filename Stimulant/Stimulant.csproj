@@ -145,6 +145,8 @@
         <Compile Include="Scene.cs" />
         <Compile Include="HorizontalProgressBar.cs" />
         <Compile Include="RunningSymbol.cs" />
+        <Compile Include="MidiConnection.cs" />
+        <Compile Include="ScenesLogic.cs" />
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\slider-default7-track.png" />
@@ -458,6 +460,15 @@
       </BundleResource>
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicValueThumb%402x.png">
         <Link>Resources\graphicValueThumb%402x.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicReverseSceneButtonDisabled.png">
+        <Link>Resources\graphicReverseSceneButtonDisabled.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicReverseSceneButtonOff.png">
+        <Link>Resources\graphicReverseSceneButtonOff.png</Link>
+      </BundleResource>
+      <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicReverseSceneButtonOn.png">
+        <Link>Resources\graphicReverseSceneButtonOn.png</Link>
       </BundleResource>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

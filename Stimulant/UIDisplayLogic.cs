@@ -25,12 +25,17 @@ namespace Stimulant
         CGRect frameReverseOrig;
         CGRect frameReverseScene;
 
+        CGRect frameRunningSymbol;
+
+        int runningSymbol_lineWidth;
+
         int C_lineWidth;
         int C_lineWidthSmall;
         int H_lineWidth;
 
         float widthScenes;
         float marginScenes;
+        float locationScenes;
 
         UIColor barColor;
         bool UIHelper;
@@ -44,6 +49,7 @@ namespace Stimulant
         UISlider sliderHidden;
         UISlider sliderCC;
         RangeSliderControl rangeSlider;
+        RangeSliderControl rangeScenesSlider;
         
 
         CircularProgressBar myCircularProgressBar;
@@ -771,12 +777,12 @@ namespace Stimulant
         {
             float margin = (float)(screenWidth / 32);
 
-            float buttonSceneWidth = (float)(screenWidth / 8) - (margin * 9/8);
+            float buttonSceneWidth = (float)(screenWidth / 8) - (margin * 11/8);
             float buttonSceneHeight = buttonSceneWidth;
             float buttonSceneXLoc = (float)0;
-            float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 3.2);
+            float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 3.5);
 
-            widthScenes = buttonSceneWidth;
+            
 
             for (int ii = 0; ii < 8; ii++)
             {
@@ -784,12 +790,66 @@ namespace Stimulant
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Normal);
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Highlighted);
                 buttonArray[ii].SetImage(UIImage.FromFile("graphicP1NOff.png"), UIControlState.Disabled);
-                buttonArray[ii].Frame = new CGRect(margin * (ii+1) + buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
+                buttonArray[ii].Frame = new CGRect(margin + margin * (ii+1) + buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
                 buttonArray[ii].TouchDown += HandleSceneTouchDown;
             }
 
-            //myRunningSymbol.Frame = 
+            widthScenes = buttonSceneWidth;
+            marginScenes = margin;
+            locationScenes = buttonSceneYLoc;
+            frameRunningSymbol = new CGRect(marginScenes + marginScenes, locationScenes - widthScenes, widthScenes, widthScenes);
+            runningSymbol_lineWidth = (int)(screenWidth / 120);
+            myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
 
+
+            rangeScenesSlider = new RangeSliderControl();
+            rangeScenesSlider.Frame = new CGRect(0, locationScenes+1.5*widthScenes, margin*11 + 8 * widthScenes, widthScenes);
+            rangeScenesSlider.TintColor = UIColor.Black;
+            rangeScenesSlider.MaximumValue = 8;
+            rangeScenesSlider.MinimumValue = 0;
+            rangeScenesSlider.TextColor = UIColor.Black;
+            rangeScenesSlider.StepValue = 1;
+
+            rangeScenesSlider.LowerValue = 0;
+            rangeScenesSlider.UpperValue = 8;
+            
+            rangeScenesSlider.DragCompleted += (object sender, EventArgs e) =>
+            {
+                var myObj = (RangeSliderControl)sender;
+
+                if((int)myObj.LowerValue == (int)myObj.UpperValue)
+                {
+                    if ((int)myObj.UpperValue == (int)myObj.MaximumValue)
+                    {
+                        myObj.LowerValue -= 1;
+                    }
+                    else
+                    {
+                        myObj.UpperValue += 1;
+                    }
+                }
+                myMidiModulation.MinScene = (int)myObj.LowerValue;
+                myMidiModulation.MaxScene = (int)myObj.UpperValue-1;
+                /*
+                var myObj = (RangeSliderControl)sender;
+                if (!myMidiModulation.IsSceneMode)
+                {
+                    myMidiModulation.Maximum = (int)myObj.UpperValue;
+                    myMidiModulation.Minimum = (int)myObj.LowerValue;
+                }
+                else
+                {
+                    for (int ii = 0; ii < 8; ii++)
+                    {
+                        if (sceneArray[ii].IsSelected)
+                        {
+                            sceneArray[ii].Maximum = (int)myObj.UpperValue;
+                            sceneArray[ii].Minimum = (int)myObj.LowerValue;
+                        }
+                    }
+                }
+                */
+            };
         }
 
         public void LoadRateLabel(float screenWidth, float screenHeight, float textAdjustRate, float sliderHeight)
@@ -1179,6 +1239,7 @@ namespace Stimulant
             View.AddSubview(sliderCC);
             View.AddSubview(buttonReverse);
             View.AddSubview(buttonScenes);
+            //View.AddSubview(myRunningSymbol);
             //View.AddSubview(buttonArrange);
             View.AddSubview(buttonCC);
             View.AddSubview(buttonSettings);
@@ -1196,6 +1257,7 @@ namespace Stimulant
             View.AddSubview(buttonPlus10);
             View.AddSubview(buttonMinus1);
             View.AddSubview(buttonMinus10);
+            
 
 
             //View.AddSubview(myHorizontalProgressBar);

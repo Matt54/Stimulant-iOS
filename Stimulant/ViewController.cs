@@ -17,13 +17,6 @@ namespace Stimulant
         {// Note: this .ctor should not contain any initialization logic.
         }
 
-        // Declare MidiClient Object: The MidiClient class is used to communicate with the MIDI subsystem on MacOS and iOS
-        // It exposes various events and creates input and output midi ports using CreateInputPort/CreateOutputPort methods
-        MidiClient client;
-
-        // Simply, the input and output port objects created by calling CreateInputPort/CreateOutputPort methods
-        MidiPort outputPort, inputPort;
-
         // Declare MidiModulation object: MidiModulation class stores all the current modulation parameters
         // I worry that this is a poor way of doing this. It may not be ideal from a memory standpoint
         MidiModulation myMidiModulation = new MidiModulation();
@@ -38,6 +31,7 @@ namespace Stimulant
         // Controls how often the random settings get applied when in automatic mode
         HighResolutionTimer timerAuto;
 
+        HighResolutionTimer timerArrangement;
 
 
         public override void ViewDidLoad()
@@ -106,6 +100,40 @@ namespace Stimulant
                     }
                 });
             };
+
+
+            timerArrangement = new HighResolutionTimer(1000.0f);
+            timerArrangement.UseHighPriorityThread = false;
+            timerArrangement.Elapsed += (s, e) =>
+            {
+                InvokeOnMainThread(() =>
+                {
+                    MoveToNextScene();
+                    /*
+                    int currentSceneRunning=0;
+                    //Do stuff here
+                    for (int ii = 0; ii < 8; ii++)
+                    {
+                        if (sceneArray[ii].IsRunning)
+                        {
+                            currentSceneRunning = ii;
+                        }
+                    }
+
+                    sceneArray[currentSceneRunning].IsRunning = false;
+                    
+                    if (currentSceneRunning < myMidiModulation.MaxScene)
+                    {
+                        sceneArray[currentSceneRunning + 1].IsRunning = true;
+                    }
+                    else
+                    {
+                        sceneArray[myMidiModulation.MinScene].IsRunning = true;
+                    }
+                    */
+                });
+            };
+
 
 
 
@@ -202,6 +230,18 @@ namespace Stimulant
                                 buttonRandom.Hidden = true;
                                 buttonReverse.Frame = frameReverseScene;
 
+                                if (myMidiModulation.Opposite)
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
+                                }
+                                else
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                }
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Highlighted);
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonDisabled.png"), UIControlState.Disabled);
+
+
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
 
@@ -231,6 +271,12 @@ namespace Stimulant
                                 //sceneArray[0].IsSelected = true;
                                 UpdateSceneGraphic();
                                 //UpdateSceneGraphic();
+
+                                labelMode.Text = " Scene Select ";
+                                labelDetails.Text = "Click to Load Settings";
+
+
+
                             }
                             else
                             {
@@ -248,6 +294,19 @@ namespace Stimulant
                                 buttonRandom.Hidden = false;
                                 buttonReverse.Frame = frameReverseOrig;
 
+
+                                if (myMidiModulation.Opposite)
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                                }
+                                else
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                }
+
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
+                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
+
                                 //myHorizontalProgressBar.RemoveFromSuperview();
 
 
@@ -258,6 +317,8 @@ namespace Stimulant
                                 {
                                     buttonArray[ii].RemoveFromSuperview();
                                 }
+
+                                ResetDisplay();
                             }
                             break;
                         }
@@ -266,11 +327,34 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsArrangementMode)
                             {
+                                UpdateSceneRunning();
+                                View.AddSubview(rangeScenesSlider);
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOn"), UIControlState.Normal);
+
+                                if (!(myMidiModulation.ModeNumber == 1))
+                                {
+                                    timerArrangement.Start();
+                                }
                             }
                             else
                             {
+                                myRunningSymbol.RemoveFromSuperview();
+                                rangeScenesSlider.RemoveFromSuperview();
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
+                                if (timerArrangement.IsRunning)
+                                {
+                                    timerArrangement.Stop();
+                                }
+                            }
+                            break;
+                        }
+
+                    case "SceneMove":
+                        {
+                            if (myMidiModulation.SceneMove)
+                            {
+                                MoveToNextScene();
+                                myMidiModulation.SceneMove = false;
                             }
                             break;
                         }
@@ -279,13 +363,29 @@ namespace Stimulant
                         {
                             if (myMidiModulation.Opposite)
                             {
-                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                                if (myMidiModulation.IsSceneMode)
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
+                                }
+                                else
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
+                                }
+                                
                                 labelMode.Text = "Opposite Direction";
                                 labelDetails.Text = "Pattern Is Reversed";
                             }
                             else
                             {
-                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                if (myMidiModulation.IsSceneMode)
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                }
+                                else
+                                {
+                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                }
+                                //buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
                                 ResetDisplay();
                             }
                             break;
@@ -444,32 +544,42 @@ namespace Stimulant
 
                     case "IsRestartEachNote":
                         {
+
                             if (myMidiModulation.IsRestartEachNote)
                             {
-                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = false;
-                                ReadHiddenSlider(sliderHidden.Value);
-                                rangeSlider.Enabled = false;
-                                labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                                if (!myMidiModulation.IsArrangementMode)
+                                {
+                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
+                                    sliderHidden.Hidden = false;
+                                    rangeSlider.Enabled = false;
+                                    labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
 
-                                labelMode.Text = " Restart Pattern   ";
-                                labelDetails.Text = "Begins At Starting Value";
+                                    labelMode.Text = " Restart Pattern   ";
+                                    labelDetails.Text = "Begins At Starting Value";
+                                }
+                                ReadHiddenSlider(sliderHidden.Value);
                             }
                             else
                             {
-
-                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = true;
-                                rangeSlider.Enabled = true;
-                                labelRange.Text = "Modulation Range";
-                                ResetDisplay();
+                                if (!myMidiModulation.IsArrangementMode)
+                                {
+                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
+                                    sliderHidden.Hidden = true;
+                                    rangeSlider.Enabled = true;
+                                    labelRange.Text = "Modulation Range";
+                                    ResetDisplay();
+                                }
                             }
                             break;
                         }
 
                     case "StartingLocation":
                         {
-                            labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                            if (myMidiModulation.IsRestartEachNote)
+                            {
+                                labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                            }
+                            
                             break;
                         }
 
@@ -477,22 +587,29 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsTriggerOnly)
                             {
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
-                                buttonLocation.Enabled = true;
-
-                                labelMode.Text = " Note On Trigger   ";
-                                labelDetails.Text = "Modulation When Playing";
+                                if (!myMidiModulation.IsArrangementMode)
+                                {
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
+                                    buttonLocation.Enabled = true;
+                                    labelMode.Text = " Note On Trigger   ";
+                                    labelDetails.Text = "Modulation When Playing";
+                                }
                             }
                             else
                             {
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+                                if (!myMidiModulation.IsArrangementMode)
+                                {
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
+                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
+                                    buttonLocation.Enabled = false;
+                                    ResetDisplay();
+                                }
                                 myMidiModulation.NumOfNotesOn = 0;
                                 myMidiModulation.IsNoteOn = false;
                                 myMidiModulation.IsRestartEachNote = false;
-                                buttonLocation.Enabled = false;
-                                ResetDisplay();
+                                
+                                
                             }
                             break;
                         }
@@ -615,6 +732,8 @@ namespace Stimulant
                         {
                             switch (myMidiModulation.ModeNumber)
                             {
+
+                                //MODE 1 = MIDI MODE
                                 case 1:
                                     timerHighRes.Stop(joinThread: false);
                                     //if (myMidiModulation.IsAuto)
@@ -644,6 +763,11 @@ namespace Stimulant
                                         */
                                         //myMidiModulation.SettingsOn = true;
                                     }
+
+                                    if (timerArrangement.IsRunning)
+                                    {
+                                        timerArrangement.Stop();
+                                    }
                                     break;
                                 case 2:
 
@@ -667,6 +791,10 @@ namespace Stimulant
                                         //timerAuto.Start();
                                         //myMidiModulation.AutoCutoff = 64;
                                         //myMidiModulation.SettingsOn = true;
+                                    }
+                                    if (myMidiModulation.IsArrangementMode)
+                                    {
+                                        timerArrangement.Start();
                                     }
                                     break;
                                 case 3:
@@ -694,6 +822,10 @@ namespace Stimulant
                                         sliderRate.Value = ((float)tempVal - 3);*/ //(oddly enough, this subtraction fixes a weird drifting bug..)
                                         //myMidiModulation.SettingsOn = true;
                                     }
+                                    if (myMidiModulation.IsArrangementMode)
+                                    {
+                                        timerArrangement.Start();
+                                    }
                                     break;
                                 default:
                                     break;
@@ -703,62 +835,52 @@ namespace Stimulant
 
                     case "PatternNumber":
                         {
-
-                            /*
-
-                            if (myMidiModulation.IsRandomRoll == true)
-                            {
-
-                                sliderRate.Value = myMidiModulation.RandomNumber(1, 127);
-                                segmentedPattern.SelectedSegment = myMidiModulation.PatternNumber - 1;
-
-                                if (myMidiModulation.IsAR)
-                                {
-                                    rangeSlider.UpperValue = myMidiModulation.RandomNumber(1, 127);
-                                    myMidiModulation.Maximum = (int)rangeSlider.UpperValue;
-                                    rangeSlider.LowerValue = myMidiModulation.RandomNumber(1, myMidiModulation.Maximum);
-                                    myMidiModulation.Minimum = (int)rangeSlider.LowerValue;
-                                }
-                                myMidiModulation.IsRandomRoll = false;
-                            }
-                            */
-
-                            //if (myMidiModulation.ModeNumber == 2)
-                            //{
                             ReadSlider(sliderRate.Value);
-                            //}
 
-                            switch (myMidiModulation.PatternNumber)
+                            if (!myMidiModulation.IsArrangementMode)
                             {
-                                case 1:
-                                case 4:
-                                case 7:
-                                case 8:
-                                    myMidiModulation.Opposite = false;
-                                    //buttonReverse.Hidden = true;
-                                    buttonReverse.Enabled = false;
-                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-                                    break;
-                                default:
-                                    buttonReverse.Hidden = false;
-                                    buttonReverse.Enabled = true;
-                                    break;
-                            }
 
-
-                            if (myMidiModulation.PatternNumber > 6)
-                            {
-                                myMidiModulation.IsRestartEachNote = false;
-                                buttonLocation.Enabled = false;
-                            }
-                            else
-                            {
-                                if (myMidiModulation.IsTriggerOnly)
+                                switch (myMidiModulation.PatternNumber)
                                 {
-                                    buttonLocation.Enabled = true;
+                                    case 1:
+                                    case 4:
+                                    case 7:
+                                    case 8:
+                                        myMidiModulation.Opposite = false;
+                                        //buttonReverse.Hidden = true;
+                                        buttonReverse.Enabled = false;
+
+                                        if (myMidiModulation.IsSceneMode)
+                                        {
+                                            buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                        }
+                                        else
+                                        {
+                                            buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
+                                        }
+
+
+                                        break;
+                                    default:
+                                        buttonReverse.Hidden = false;
+                                        buttonReverse.Enabled = true;
+                                        break;
+                                }
+
+
+                                if (myMidiModulation.PatternNumber > 6)
+                                {
+                                    myMidiModulation.IsRestartEachNote = false;
+                                    buttonLocation.Enabled = false;
+                                }
+                                else
+                                {
+                                    if (myMidiModulation.IsTriggerOnly)
+                                    {
+                                        buttonLocation.Enabled = true;
+                                    }
                                 }
                             }
-
                             break;
                         }
 
@@ -785,344 +907,6 @@ namespace Stimulant
             myMidiModulation.ModeNumber = 2;
         }
 
-
-        private void CombinedSceneProperty(string propertyName,int index)
-        {
-            switch (propertyName)
-            {
-                case "IsRunning":
-                    {
-                        if (myMidiModulation.IsSceneMode)
-                        {
-                            if (sceneArray[index].IsRunning)
-                            {
-                                InvokeOnMainThread(() =>
-                                {
-
-                                    myMidiModulation.getParameters(sceneArray[index]);
-
-                                    segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                    ReadPattern(sceneArray[index].PatternNumber - 1);
-                                    ReadSlider(sceneArray[index].RateSliderValue);
-                                    sliderRate.Value = sceneArray[index].RateSliderValue;
-                                    rangeSlider.LowerValue = myMidiModulation.Minimum;
-                                    rangeSlider.UpperValue = myMidiModulation.Maximum;
-                                });
-                            }
-                        }
-                        break;
-                    }
-                case "IsSelected":
-                    {
-                        if (sceneArray[index].IsSelected)
-                        {
-                            if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
-                            {
-                                sceneArray[index].IsRunning = true;
-                            }
-                            else if (myMidiModulation.IsArrangementMode) //Update display without effecting myMidiModulation
-                            {
-
-                                //Pattern
-                                segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                switch (sceneArray[index].PatternNumber)
-                                {
-                                    case 1:
-                                    case 4:
-                                    case 7:
-                                    case 8:
-                                        sceneArray[index].Opposite = false;
-                                        //buttonReverse.Hidden = true;
-                                        buttonReverse.Enabled = false;
-                                        buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-                                        break;
-                                    default:
-                                        buttonReverse.Hidden = false;
-                                        buttonReverse.Enabled = true;
-                                        break;
-                                }
-                                if (sceneArray[index].PatternNumber > 6)
-                                {
-                                    sceneArray[index].IsRestartEachNote = false;
-                                    buttonLocation.Enabled = false;
-                                }
-                                else
-                                {
-                                    if (sceneArray[index].IsTriggerOnly)
-                                    {
-                                        buttonLocation.Enabled = true;
-                                    }
-                                }
-                                string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
-                                labelPattern.Text = labelText;
-
-
-                                //Opposite
-                                if (sceneArray[index].Opposite)
-                                {
-                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
-                                }
-                                else
-                                {
-                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-                                }
-
-                                //Min&Max
-                                rangeSlider.LowerValue = sceneArray[index].Minimum;
-                                rangeSlider.UpperValue = sceneArray[index].Maximum;
-
-                                //Trigger
-                                if (sceneArray[index].IsTriggerOnly)
-                                {
-                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
-                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
-                                    buttonLocation.Enabled = true;
-                                }
-                                else
-                                {
-                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
-                                    buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
-                                    buttonLocation.Enabled = false;
-                                }
-
-                                //Restart
-                                if (sceneArray[index].IsRestartEachNote)
-                                {
-                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = false;
-                                    rangeSlider.Enabled = false;
-                                    labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-                                    sliderHidden.Value = sceneArray[index].StartingLocation;
-                                }
-                                else
-                                {
-                                    buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = true;
-                                    rangeSlider.Enabled = true;
-                                    labelRange.Text = "Modulation Range";
-                                }
-
-                                //Rate
-                                labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
-                                sliderRate.Value = sceneArray[index].RateSliderValue;
-                            }
-                        }
-                        else
-                        {
-                            if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
-                            {
-                                sceneArray[index].IsRunning = false;
-                            }
-                        }
-                        break;
-                    }
-                  
-                case "PatternNumber":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
-                            UpdateSceneGraphic();
-                        }
-                        else
-                        {
-                            segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber-1;
-
-                            switch (sceneArray[index].PatternNumber)
-                            {
-                                case 1:
-                                case 4:
-                                case 7:
-                                case 8:
-                                    sceneArray[index].Opposite = false;
-                                    //buttonReverse.Hidden = true;
-                                    buttonReverse.Enabled = false;
-                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-                                    break;
-                                default:
-                                    buttonReverse.Hidden = false;
-                                    buttonReverse.Enabled = true;
-                                    break;
-                            }
-
-
-                            if (sceneArray[index].PatternNumber > 6)
-                            {
-                                sceneArray[index].IsRestartEachNote = false;
-                                buttonLocation.Enabled = false;
-                            }
-                            else
-                            {
-                                if (sceneArray[index].IsTriggerOnly)
-                                {
-                                    buttonLocation.Enabled = true;
-                                }
-                            }
-
-                            string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber-1);
-                            labelPattern.Text = labelText;
-                            UpdateSceneGraphic();
-
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.PatternNumber = sceneArray[index].PatternNumber;
-                            }
-                        }
-                        break;
-                    }
-                case "Opposite":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.Opposite = sceneArray[index].Opposite;
-                        }
-                        else
-                        {
-                            if (sceneArray[index].Opposite)
-                            {
-                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
-                            }
-                            else
-                            {
-                                buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
-                            }
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.Opposite = sceneArray[index].Opposite;
-                            }
-                        }
-                        UpdateSceneGraphic();
-                        break;
-                    }
-                case "RateSliderValue":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            ReadSlider(sceneArray[index].RateSliderValue);
-                        }
-                        else
-                        {
-
-                            labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
-
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                ReadSlider(sceneArray[index].RateSliderValue);
-                            }
-                        }
-                        break;
-                    }
-                case "IsTriggerOnly":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
-                        }
-                        else
-                        {
-                            if (sceneArray[index].IsTriggerOnly)
-                            {
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
-                                buttonLocation.Enabled = true;
-                            }
-                            else
-                            {
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Normal);
-                                buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOff.png"), UIControlState.Highlighted);
-                                buttonLocation.Enabled = false;
-                            }
-
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
-                            }
-                        }
-                        break;
-                    }
-                case "IsRestartEachNote":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
-                        }
-                        else
-                        {
-                            if (sceneArray[index].IsRestartEachNote)
-                            {
-                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = false;
-                                rangeSlider.Enabled = false;
-                                labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-                                sliderHidden.Value = sceneArray[index].StartingLocation;
-                            }
-                            else
-                            {
-
-                                buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = true;
-                                rangeSlider.Enabled = true;
-                                labelRange.Text = "Modulation Range";
-                            }
-
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
-                            }
-                        }
-                        break;
-                    }
-                case "StartingLocation":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
-                        }
-                        else
-                        {
-                            labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
-                            }
-                        }
-                        break;
-                    }
-                case "Maximum":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.Maximum = sceneArray[index].Maximum;
-                        }
-                        else
-                        {
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.Maximum = sceneArray[index].Maximum;
-                            }
-                        }
-                        break;
-                    }
-                case "Minimum":
-                    {
-                        if (!myMidiModulation.IsArrangementMode)
-                        {
-                            myMidiModulation.Minimum = sceneArray[index].Minimum;
-                        }
-                        else
-                        {
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
-                            {
-                                myMidiModulation.Minimum = sceneArray[index].Minimum;
-                            }
-                        }
-                        break;
-                    }
-            
-            }
-        }
-
         private void ResetDisplay()
         {
             switch (myMidiModulation.ModeNumber)
@@ -1140,7 +924,15 @@ namespace Stimulant
                     labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
                     break;
             }
+            /*
+            if (!myMidiModulation.IsRestartEachNote)
+            {
+                labelRange.Text = "Modulation Range";
+            }
+            */
         }
+
+        
 
         void updateProgressBar()
         {
@@ -1230,9 +1022,6 @@ namespace Stimulant
                 myMidiModulation.UpdateBPM(-10);
             }
         }
-
-
-
 
         partial void RateSliderChange(UISlider sender) { }
         partial void StartButton_TouchUpInside(UIButton sender) { }
@@ -1326,94 +1115,7 @@ namespace Stimulant
         private void HandleSceneTouchDown(object sender, System.EventArgs e)
         {
             UIButton myButton = (UIButton)sender;
-
             UpdateSceneGraphic(myButton);
-
-            /*
-
-            // loops through all scenes but only changes from old to new selected (does not update unchanging scenes)
-            for (int ii = 0; ii < 8; ii++)
-            {
-
-                // Catches the old selection
-                if (!(myButton == buttonArray[ii]))
-                {
-                    if (sceneArray[ii].IsSelected)
-                    {
-                        sceneArray[ii].IsSelected = false;
-                        string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
-                    }
-                }
-
-                // Selects the new scene if not already selected
-                else
-                {
-                    if (!(sceneArray[ii].IsSelected))
-                    {
-                        sceneSelected = ii; // Might be unnessesary
-                        sceneArray[ii].IsSelected = true;
-                        string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
-                    }
-                }
-                
-            }
-            */
-            // sceneSelected could be used here outside the for loop
-
-        }
-
-        void UpdateSceneGraphic(UIButton myButton)
-        {
-
-            // loops through all scenes but only changes from old to new selected (does not update unchanging scenes)
-            for (int ii = 0; ii < 8; ii++)
-            {
-
-                // Catches the old selection
-                if (!(myButton == buttonArray[ii]))
-                {
-                    if (sceneArray[ii].IsSelected)
-                    {
-                        sceneArray[ii].IsSelected = false;
-                        string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
-                    }
-                }
-
-                // Selects the new scene if not already selected
-                else
-                {
-                    if (!(sceneArray[ii].IsSelected))
-                    {
-                        sceneSelected = ii; // Might be unnessesary
-                        sceneArray[ii].IsSelected = true;
-                        string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
-                        buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
-                    }
-                }
-            }
-            // sceneSelected could be used here outside the for loop
-        }
-
-        void UpdateSceneGraphic()
-        {
-            for (int ii = 0; ii < 8; ii++)
-            {
-                string fileName = LookUpStringForGraphic(sceneArray[ii].Opposite, sceneArray[ii].PatternNumber, sceneArray[ii].IsSelected);
-                buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Normal);
-                buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Focused);
-                buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
-            }
         }
 
         protected void HandleLocationTouchDown(object sender, System.EventArgs e)
@@ -1590,12 +1292,16 @@ namespace Stimulant
                     myMidiModulation.AutoCutoff = (int)sliderValue;
                     timerAuto.Interval = (float)Math.Round(((128 - sliderValue) * 100), 0);
                     labelRate.Text = "Randoms in: " + timerAuto.Interval + " ms";
+                    
                 }
                 else
                 {
                     myMidiModulation.TimeSet(sliderValue); // Determines StepSize from a sliderValue and PatternNumber
                     timerHighRes.Interval = ValueToTimeInterval(sliderValue); // Magic function to get time interval from sliderValue
-                    labelRate.Text = myMidiModulation.TimeIntervalToFrequency(timerHighRes.Interval); // Convert time interval to frequency for label display
+                    if (!myMidiModulation.IsArrangementMode)
+                    {
+                        labelRate.Text = myMidiModulation.TimeIntervalToFrequency(timerHighRes.Interval); // Convert time interval to frequency for label display
+                    }
                 }
             }
             else
@@ -1704,20 +1410,27 @@ namespace Stimulant
                     myMidiModulation.AutoCutoff = myMidiModulation.RateCatch * 24 * 4;
                     timerAuto.Interval = (float)(60000 / myMidiModulation.BPM / 24); // quarter notes
                     labelRate.Text = "Randoms in: " + myMidiModulation.RateCatch + " Beats";
+
                 }
                 else if (myMidiModulation.ModeNumber == 1)
                 {
                     //MIDI
                     myMidiModulation.StepSizeSetter();
                     //EXT Clock Sync
-                    labelRate.Text = "Ext. Clock Sync: " + displayText;
+                    if (!myMidiModulation.IsArrangementMode)
+                    {
+                        labelRate.Text = "Ext. Clock Sync: " + displayText;
+                    }
                 }
                 else
                 {
                     //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
                     timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
                     //INT Clock Sync
-                    labelRate.Text = "Int. Clock Sync: " + displayText;
+                    if (!myMidiModulation.IsArrangementMode)
+                    {
+                        labelRate.Text = "Int. Clock Sync: " + displayText;
+                    }
                 }
 
             }
@@ -1827,18 +1540,6 @@ namespace Stimulant
                 myMidiModulation.StepSize = 8;
                 fullModSteps = 8;
 
-                /*
-                if (myMidiModulation.PatternNumber > 3)
-                {
-                    
-                }
-                else
-                {
-                    myMidiModulation.StepSize = 1;
-                    fullModSteps = 128;
-                }
-                */
-
                 if (myMidiModulation.PatternNumber > 6)
                 {
                     myMidiModulation.StepSize = 1;
@@ -1916,8 +1617,6 @@ namespace Stimulant
             return myTimeInterval;
         }
 
-        //partial void ModeNumChanged(UISegmentedControl sender) { }
-
         protected void HandlePatternSegmentChange(object sender, System.EventArgs e)
         {
             var seg = sender as UISegmentedControl;
@@ -1938,461 +1637,13 @@ namespace Stimulant
 
         void ReadPattern(nint patternIndex)
         {
+
             string labelText = myMidiModulation.UpdatePattern(patternIndex);
             labelPattern.Text = labelText;
+
         }
 
 
-
-        string LookUpStringForGraphic(bool Opp, int Pattern, bool selected)
-        {
-            string myFile = "";
-
-            switch (Pattern)
-            {
-                case 1:
-                    if (selected)
-                    {
-                        myFile = "graphicP1NOn";
-                    }
-                    else
-                    {
-                        myFile = "graphicP1NOff";
-                    }
-                    break;
-                case 2:
-                    if (Opp)
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP2ROn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP2ROff";
-                        }
-                    }
-                    else
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP2NOn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP2NOff";
-                        }
-                    }
-                    break;
-                case 3:
-                    if (Opp)
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP3ROn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP3ROff";
-                        }
-                    }
-                    else
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP3NOn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP3NOff";
-                        }
-                    }
-                    break;
-                case 4:
-                    if (selected)
-                    {
-                        myFile = "graphicP4NOn";
-                    }
-                    else
-                    {
-                        myFile = "graphicP4NOff";
-                    }
-                    break;
-                case 5:
-                    if (Opp)
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP5ROn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP5ROff";
-                        }
-                    }
-                    else
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP5NOn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP5NOff";
-                        }
-                    }
-                    break;
-                case 6:
-                    if (Opp)
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP6ROn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP6ROff";
-                        }
-                    }
-                    else
-                    {
-                        if (selected)
-                        {
-                            myFile = "graphicP6NOn";
-                        }
-                        else
-                        {
-                            myFile = "graphicP6NOff";
-                        }
-                    }
-                    break;
-                case 7:
-                    if (selected)
-                    {
-                        myFile = "graphicP7NOn";
-                    }
-                    else
-                    {
-                        myFile = "graphicP7NOff";
-                    }
-                    break;
-                case 8:
-                    if (selected)
-                    {
-                        myFile = "graphicP8NOn";
-                    }
-                    else
-                    {
-                        myFile = "graphicP8NOff";
-                    }
-                    break;
-            }
-
-            return myFile;
-        }
-
-
-        /*F
-        private void ProgramChange()
-        {
-            var index = segmentedPattern.SelectedSegment;
-            string labelText = myMidiModulation.UpdatePattern(index);
-            labelPattern.Text = labelText;
-        }
-        */
-
-
-        partial void pnumChange(UISegmentedControl sender) { }
-
-        void SendMIDI(byte type, byte channel, byte value)
-        {
-
-            for (int i = 0; i < Midi.DestinationCount; i++)
-            {
-                var endpoint = MidiEndpoint.GetDestination(i);
-                outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { type, channel, value }) });
-
-                //outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { 0xB0, (byte)(myMidiModulation.CCNumber), ccByte }) });
-
-                //var ccVal = (byte)(rand.Next () % 127);
-                // play ccVal then turn off after 300 miliseconds
-                /*
-                outputPort.Send (endpoint, new MidiPacket [] { new MidiPacket (0, new byte [] { 0x90, ccVal, 127 }) });
-                Thread.Sleep (300);
-                outputPort.Send (endpoint, new MidiPacket [] { new MidiPacket (0, new byte [] { 0x80, ccVal, 0 }) });
-                */
-            }
-        }
-
-        // I don't think this is required
-        RootElement MakeHardware()
-        {
-            int sources = (int)Midi.SourceCount;
-            int destinations = (int)Midi.DestinationCount;
-
-            var sourcesSection = new Section("Sources");
-            sourcesSection.AddAll(
-                from x in Enumerable.Range(0, sources)
-                let source = MidiEndpoint.GetSource(x)
-                select (Element)new StringElement(source.DisplayName, source.IsNetworkSession ? "Network" : "Local")
-            );
-            var targetsSection = new Section("Targets");
-            targetsSection.AddAll(
-                from x in Enumerable.Range(0, destinations)
-                let target = MidiEndpoint.GetDestination(x)
-                select (Element)new StringElement(target.DisplayName, target.IsNetworkSession ? "Network" : "Local")
-            );
-            return new RootElement("Endpoints (" + sources + ", " + destinations + ")") {
-                sourcesSection,
-                targetsSection
-            };
-        }
-
-        // I don't think this is required
-        RootElement MakeDevices()
-        {
-            var internalDevices = new Section("Internal Devices");
-            internalDevices.AddAll(
-                from x in Enumerable.Range(0, (int)Midi.DeviceCount)
-                let dev = Midi.GetDevice(x)
-                where dev.EntityCount > 0
-                select MakeDevice(dev)
-            );
-            var externalDevices = new Section("External Devices");
-            externalDevices.AddAll(
-                from x in Enumerable.Range(0, (int)Midi.ExternalDeviceCount)
-                let dev = Midi.GetExternalDevice(x)
-                where dev.EntityCount > 0
-                select (Element)MakeDevice(dev)
-            );
-            return new RootElement("Devices (" + Midi.DeviceCount + ", " + Midi.ExternalDeviceCount + ")") {
-                internalDevices,
-                externalDevices
-            };
-        }
-
-        //I don't think this is required
-        Element MakeDevice(MidiDevice dev)
-        {
-            var entities = new Section("Entities");
-            foreach (var ex in Enumerable.Range(0, (int)dev.EntityCount))
-            {
-                var entity = dev.GetEntity(ex);
-                var sourceSection = new Section("Sources");
-                sourceSection.AddAll(
-                    from sx in Enumerable.Range(0, (int)entity.Sources)
-                    let endpoint = entity.GetSource(sx)
-                    select MakeEndpoint(endpoint)
-                );
-                var destinationSection = new Section("Destinations");
-                destinationSection.AddAll(
-                    from sx in Enumerable.Range(0, (int)entity.Destinations)
-                    let endpoint = entity.GetDestination(sx)
-                    select MakeEndpoint(endpoint)
-                );
-                entities.Add(new RootElement(entity.Name) {
-                    sourceSection,
-                    destinationSection
-                });
-            }
-
-            return new RootElement(String.Format("{2} {0} {1}", dev.Manufacturer, dev.Model, dev.EntityCount)) {
-                entities
-            };
-        }
-
-
-        //I don't think this is required
-        Element MakeEndpoint(MidiEndpoint endpoint)
-        {
-            Section s;
-            var root = new RootElement(endpoint.Name) {
-                (s = new Section ("Properties") {
-                    new StringElement ("Driver Owner", endpoint.DriverOwner),
-                    new StringElement ("Manufacturer", endpoint.Manufacturer),
-                    new StringElement ("MaxSysExSpeed", endpoint.MaxSysExSpeed.ToString ()),
-                    new StringElement ("Network Session", endpoint.IsNetworkSession ? "yes" : "no")
-                })
-            };
-            try
-            {
-                s.Add(new StringElement("Offline", endpoint.Offline ? "yes" : "no"));
-            }
-            catch
-            {
-            }
-            try
-            {
-                s.Add(new StringElement("Receive Channels", endpoint.ReceiveChannels.ToString()));
-            }
-            catch
-            {
-            }
-            try
-            {
-                s.Add(new StringElement("Transmit Channels", endpoint.TransmitChannels.ToString()));
-            }
-            catch
-            {
-            }
-            return root;
-        }
-
-        void SetupMidi()
-        {
-            client = new MidiClient("Stimulant iOS MIDI Client");
-            client.ObjectAdded += delegate (object sender, ObjectAddedOrRemovedEventArgs e) {
-            };
-            client.ObjectAdded += delegate {
-            };
-            client.ObjectRemoved += delegate {
-            };
-            client.PropertyChanged += delegate (object sender, ObjectPropertyChangedEventArgs e) {
-                Console.WriteLine("Changed");
-            };
-            client.ThruConnectionsChanged += delegate {
-                Console.WriteLine("Thru connections changed");
-            };
-            client.SerialPortOwnerChanged += delegate {
-                Console.WriteLine("Serial port changed");
-            };
-
-            outputPort = client.CreateOutputPort("Stimulant iOS Output Port");
-            inputPort = client.CreateInputPort("Stimulant iOS Input Port");
-
-            inputPort.MessageReceived += delegate (object sender, MidiPacketsEventArgs e) {
-                foreach (MidiPacket mPacket in e.Packets)
-                {
-                    //if (myMidiModulation.ModeNumber == 1)
-                    //{
-                    var midiData = new byte[mPacket.Length];
-                    Marshal.Copy(mPacket.Bytes, midiData, 0, mPacket.Length);
-                    //The first four bits of the status byte tell MIDI what command
-                    //The last four bits of the status byte tell MIDI what channel
-                    byte StatusByte = midiData[0];
-                    byte typeData = (byte)((StatusByte & 0xF0) >> 4);
-                    byte channelData = (byte)(StatusByte & 0x0F);
-
-                    //We should check to see if typeData is clock/start/continue/stop/note on/note off
-
-
-                    //-----------defines each midi byte---------------
-                    byte midi_start = 0xfa;         // start byte
-                    byte midi_stop = 0xfc;          // stop byte
-                    byte midi_clock = 0xf8;         // clock byte
-                    byte midi_continue = 0xfb;      // continue byte
-                    byte midi_note_on = 0x90;         // note on
-                    byte midi_note_off = 0x80;         // note off
-                                                       //------------------------------------------------
-
-
-                    if ((StatusByte == midi_start) || (StatusByte == midi_continue))
-                    {
-                        if (!myMidiModulation.IsRunning)
-                        {
-                            InvokeOnMainThread(() => {
-                                PowerPushed();
-                                FlipPower();
-                            });
-                        }
-                        myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
-                    }
-
-                    if (StatusByte == midi_clock)
-                    {
-                        if (myMidiModulation.ModeNumber == 1)
-                        {
-                            myMidiModulation.ClockCounter();
-                            if (myMidiModulation.StepComma == 2)
-                            {
-                                myMidiModulation.StepComma = 0;
-                            }
-                            else
-                            {
-                                myMidiModulation.StepComma = myMidiModulation.StepComma + 1;
-                            }
-                            myMidiModulation.StepSizeSetter();
-                        }
-
-                    }
-
-                    if (StatusByte == midi_stop)
-                    {
-                        if (myMidiModulation.IsRunning)
-                        {
-                            InvokeOnMainThread(() => {
-                                PowerPushed();
-                                FlipPower();
-                            });
-                        }
-                    }
-
-                    if (myMidiModulation.IsTriggerOnly)
-                    {
-                        if (StatusByte == midi_note_on)
-                        {
-                            // handle note on
-                            myMidiModulation.IsNoteOn = true;
-                            myMidiModulation.NumOfNotesOn += 1;
-
-                            // Restart first if in restart mode
-                            if (myMidiModulation.IsRestartEachNote)
-                            {
-                                myMidiModulation.CurrentCC = myMidiModulation.StartingLocation;
-
-                                if (myMidiModulation.PatternNumber == 4)
-                                {
-                                    myMidiModulation.EveryOther = false;
-                                }
-                                else if (myMidiModulation.PatternNumber == 5 || myMidiModulation.PatternNumber == 6)
-                                {
-                                    myMidiModulation.EveryOther = true;
-                                }
-                            }
-                        }
-                        if (StatusByte == midi_note_off)
-                        {
-
-                            if (myMidiModulation.NumOfNotesOn > 0)
-                            {
-                                myMidiModulation.NumOfNotesOn -= 1;
-                            }
-                            if (myMidiModulation.NumOfNotesOn < 1)
-                            {
-                                // handle note off
-                                myMidiModulation.IsNoteOn = false;
-                                myMidiModulation.NumOfNotesOn = 0;
-                            }
-                        }
-                    }
-                    //}
-                }
-            };
-
-            ConnectExistingDevices();
-
-            var session = MidiNetworkSession.DefaultSession;
-            if (session != null)
-            {
-                session.Enabled = true;
-                session.ConnectionPolicy = MidiNetworkConnectionPolicy.Anyone;
-            }
-        }
-
-        void ConnectExistingDevices()
-        {
-            for (int i = 0; i < Midi.SourceCount; i++)
-            {
-                var code = inputPort.ConnectSource(MidiEndpoint.GetSource(i));
-                if (code != MidiError.Ok)
-                    Console.WriteLine("Failed to connect");
-            }
-        }
-
-        public override void DidReceiveMemoryWarning()
-        {
-            base.DidReceiveMemoryWarning();
-            // Release any cached data, images, etc that aren't in use.
-        }
+        
     }
 }

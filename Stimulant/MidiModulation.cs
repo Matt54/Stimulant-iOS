@@ -18,6 +18,19 @@ namespace Stimulant
             set { _IsArrangementMode = value; OnPropertyChanged("IsArrangementMode"); }
         }
 
+        public int MinScene { get; set; }
+        public int MaxScene { get; set; }
+
+        public int ArrangementCounter { get; set; }
+        public int ArrangementCutoff { get; set; }
+
+        private bool _SceneMove;
+        public bool SceneMove
+        {
+            get { return _SceneMove; }
+            set { _SceneMove = value; OnPropertyChanged("SceneMove"); }
+        }
+
         private bool _IsSceneMode;
         public bool IsSceneMode
         {
@@ -216,6 +229,8 @@ namespace Stimulant
         // number of notes currently pressed
         public int NumOfNotesOn { get; set; }
 
+        
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
@@ -256,6 +271,10 @@ namespace Stimulant
             IsAutoPattern = false;
             BPM = 120;
             StartingLocation = 63;
+            MinScene = 0;
+            MaxScene = 7;
+            ArrangementCutoff = 24;
+            ArrangementCounter = 0;
             //IsSceneMode = true;
         }
 
@@ -325,7 +344,19 @@ namespace Stimulant
                             //PatternString = RandomRoll();
                             IsRandomRoll = true;
                         }
+                    }
+                }
 
+                if (IsArrangementMode)
+                {
+                    if(ModeNumber == 1)
+                    {
+                        ArrangementCounter++;
+                        if (ArrangementCounter > ArrangementCutoff)
+                        {
+                            ArrangementCounter = 0;
+                            SceneMove = true;
+                        }
                     }
                 }
 
