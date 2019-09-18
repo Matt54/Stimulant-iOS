@@ -219,13 +219,13 @@ namespace Stimulant
                         if (myMidiModulation.ModeNumber == 1)
                         {
                             myMidiModulation.ClockCounter();
-                            if (myMidiModulation.StepComma == 2)
+                            if (myMidiModulation.StepComma > 1)
                             {
                                 myMidiModulation.StepComma = 0;
                             }
                             else
                             {
-                                myMidiModulation.StepComma = myMidiModulation.StepComma + 1;
+                                myMidiModulation.StepComma++;
                             }
                             myMidiModulation.StepSizeSetter();
                         }
@@ -240,6 +240,7 @@ namespace Stimulant
                                 PowerPushed();
                                 FlipPower();
                             });
+                            //myMidiModulation.Reset();
                         }
                     }
 

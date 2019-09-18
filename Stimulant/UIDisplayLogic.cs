@@ -31,7 +31,7 @@ namespace Stimulant
 
         int C_lineWidth;
         int C_lineWidthSmall;
-        int H_lineWidth;
+        //int H_lineWidth;
 
         float widthScenes;
         float marginScenes;
@@ -53,8 +53,10 @@ namespace Stimulant
         
 
         CircularProgressBar myCircularProgressBar;
-        HorizontalProgressBar myHorizontalProgressBar;
+        //HorizontalProgressBar myHorizontalProgressBar;
         UIButton buttonOnOff;
+
+        bool IsTransposingPowerButton;
 
         UILabel labelRate;
         UISlider sliderRate;
@@ -423,7 +425,7 @@ namespace Stimulant
 
             LoadStartButton(screenWidth, screenHeight, buttonYAdjust, sizeSubtract);
             LoadProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustProgress);
-            LoadHorizontalProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustHorizontalProgress);
+            //LoadHorizontalProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustHorizontalProgress);
             //LoadReverseButton(screenWidth, screenHeight, sizeSubtract);
             LoadCCButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
             LoadSettingsButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
@@ -755,6 +757,7 @@ namespace Stimulant
             myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, 0.0f, barColor);
         }
 
+        /*
         public void LoadHorizontalProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlHorizontalAdjustProgress)
         {
             H_lineWidth = (int)(screenWidth / 33);
@@ -770,8 +773,11 @@ namespace Stimulant
 
             myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, 0.5f, barColor);
 
-            myHorizontalProgressBar.Hidden = true;
+            //myHorizontalProgressBar.Hidden = true;
         }
+
+        */
+        
 
         public void LoadSceneButtons(float screenWidth, float screenHeight)
         {

@@ -351,12 +351,7 @@ namespace Stimulant
                 {
                     if(ModeNumber == 1)
                     {
-                        ArrangementCounter++;
-                        if (ArrangementCounter > ArrangementCutoff)
-                        {
-                            ArrangementCounter = 0;
-                            SceneMove = true;
-                        }
+                        ArrangementCount();
                     }
                 }
 
@@ -374,6 +369,16 @@ namespace Stimulant
                 {
                     FireModulation = true;
                 }
+            }
+        }
+
+        public void ArrangementCount()
+        {
+            ArrangementCounter++;
+            if (ArrangementCounter > ArrangementCutoff)
+            {
+                ArrangementCounter = 0;
+                SceneMove = true;
             }
         }
 
@@ -1082,14 +1087,14 @@ namespace Stimulant
                     }
                     if (stepBack)
                     {
-                        if (StepComma == 2)
+                        if (StepComma > 1)
                         {
                             StepSize--;
                         }
                     }
                     if (stepForward)
                     {
-                        if (StepComma == 2)
+                        if (StepComma > 1)
                         {
                             StepSize++;
                         }
@@ -1492,6 +1497,15 @@ namespace Stimulant
             {
                 SettingsOn = true;
             }
+        }
+
+        public void Reset()
+        {
+            ClockCount = 0;
+            CurrentCC = 0;
+            LastCC = 0;
+            Opposite = false;
+            OppositeHelper = false;
         }
 
         public void setParameters(float sliderRateVal, Scene scene)
