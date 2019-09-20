@@ -31,7 +31,7 @@ namespace Stimulant
         // Controls how often the random settings get applied when in automatic mode
         HighResolutionTimer timerAuto;
 
-        HighResolutionTimer timerArrangement;
+        //HighResolutionTimer timerArrangement;
 
 
         public override void ViewDidLoad()
@@ -101,7 +101,7 @@ namespace Stimulant
                 });
             };
 
-
+            /*
             timerArrangement = new HighResolutionTimer(1000.0f);
             timerArrangement.UseHighPriorityThread = false;
             timerArrangement.Elapsed += (s, e) =>
@@ -121,6 +121,7 @@ namespace Stimulant
                     }
                 });
             };
+            */
 
 
 
@@ -197,6 +198,35 @@ namespace Stimulant
             {
                 switch (e2.PropertyName)
                 {
+                    case "IsRunning":
+                        {
+                            if (myMidiModulation.IsRunning)
+                            {
+                                /*
+                                if (myMidiModulation.IsArrangementMode)
+                                {
+                                    timerArrangement.Start();
+                                }
+                                */
+                            }
+                            break;
+                        }
+
+                    case "IsPatternRestart":
+                        {
+                            if (myMidiModulation.IsPatternRestart)
+                            {
+                                if (myMidiModulation.IsArrangementMode)
+                                {
+                                    MoveToNextScene();
+                                    myMidiModulation.ResetPatternValues();
+                                }
+                                myMidiModulation.HasMoved = false;
+                                myMidiModulation.IsPatternRestart = false;
+                            }
+                            break;
+                        }
+
                     case "IsSceneMode":
                         {
                             if (myMidiModulation.IsSceneMode)
@@ -334,27 +364,39 @@ namespace Stimulant
                             if (myMidiModulation.IsArrangementMode)
                             {
                                 UpdateSceneRunning();
+                                View.AddSubview(myRunningSymbol);
                                 View.AddSubview(rangeScenesSlider);
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOn"), UIControlState.Normal);
 
+                                /*
                                 if (!(myMidiModulation.ModeNumber == 1))
                                 {
                                     if(myMidiModulation.ModeNumber == 3)
                                     {
                                         timerArrangement.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, 11);
                                     }
-                                    timerArrangement.Start();
+                                    if (myMidiModulation.IsRunning)
+                                    {
+                                        timerArrangement.Start();
+                                    }
+                                    
                                 }
+                                */
+
                             }
                             else
                             {
                                 myRunningSymbol.RemoveFromSuperview();
                                 rangeScenesSlider.RemoveFromSuperview();
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
+                                /*
                                 if (timerArrangement.IsRunning)
                                 {
                                     timerArrangement.Stop();
+                                    
                                 }
+                                */
+
                             }
                             break;
                         }
@@ -373,6 +415,8 @@ namespace Stimulant
                         {
                             if (myMidiModulation.Opposite)
                             {
+                                myMidiModulation.EveryOther = !myMidiModulation.EveryOther;
+
                                 if (myMidiModulation.IsSceneMode)
                                 {
                                     buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
@@ -661,11 +705,12 @@ namespace Stimulant
                             {
                                 labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
                                 ReadSlider(sliderRate.Value);
-
+                                /*
                                 if (myMidiModulation.IsArrangementMode)
                                 {
                                     timerArrangement.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, 11);
                                 }
+                                */
                             }
                             break;
                         }
@@ -778,11 +823,12 @@ namespace Stimulant
                                         */
                                         //myMidiModulation.SettingsOn = true;
                                     }
-
+                                    /*
                                     if (timerArrangement.IsRunning)
                                     {
                                         timerArrangement.Stop();
                                     }
+                                    */
                                     break;
 
                                 //MODE 2 = FREE TIMING MODE
@@ -809,11 +855,17 @@ namespace Stimulant
                                         //myMidiModulation.AutoCutoff = 64;
                                         //myMidiModulation.SettingsOn = true;
                                     }
+                                    /*
                                     if (myMidiModulation.IsArrangementMode)
                                     {
                                         timerArrangement.Interval = 1000.0f;
-                                        timerArrangement.Start();
+                                        if (myMidiModulation.IsRunning)
+                                        {
+                                            timerArrangement.Start();
+                                        }
+                                        
                                     }
+                                    */
                                     break;
 
                                 // MODE 3 = INTERNAL CLOCK / BPM TIMING 
@@ -842,11 +894,17 @@ namespace Stimulant
                                         sliderRate.Value = ((float)tempVal - 3);*/ //(oddly enough, this subtraction fixes a weird drifting bug..)
                                         //myMidiModulation.SettingsOn = true;
                                     }
+                                    /*
                                     if (myMidiModulation.IsArrangementMode)
                                     {
                                         timerArrangement.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, 11);
-                                        timerArrangement.Start();
+                                        if (myMidiModulation.IsRunning)
+                                        {
+                                            timerArrangement.Start();
+                                        }
+                                        
                                     }
+                                    */
                                     break;
                                 default:
                                     break;
@@ -978,11 +1036,10 @@ namespace Stimulant
             }
             else
             {
-                if (!IsTransposingPowerButton)
-                {
-                    var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-                    myCircularProgressBar.UpdateGraph(pi_mult);
-                }
+
+                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                myCircularProgressBar.UpdateGraph(pi_mult);
+
 
 
                 /*
@@ -1111,6 +1168,7 @@ namespace Stimulant
                 buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOn.png"), UIControlState.Normal);
                 buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Highlighted);
                 myMidiModulation.IsRunning = true;
+                
             }
             
 

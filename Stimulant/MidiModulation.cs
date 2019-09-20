@@ -9,7 +9,12 @@ namespace Stimulant
     public class MidiModulation : INotifyPropertyChanged
     {
         // flag that allows modulation to occur if true
-        public bool IsRunning { get; set; }
+        private bool _IsRunning;
+        public bool IsRunning
+        {
+            get { return _IsRunning; }
+            set { _IsRunning = value; OnPropertyChanged("IsRunning"); }
+        }
 
         private bool _IsArrangementMode;
         public bool IsArrangementMode
@@ -229,6 +234,16 @@ namespace Stimulant
         // number of notes currently pressed
         public int NumOfNotesOn { get; set; }
 
+
+        private bool _IsPatternRestart;
+        public bool IsPatternRestart
+        {
+            get { return _IsPatternRestart; }
+            set { _IsPatternRestart = value; OnPropertyChanged("IsPatternRestart"); }
+        }
+
+        public bool HasMoved { get; set; }
+
         
 
 
@@ -324,6 +339,19 @@ namespace Stimulant
             return labelText;
         }
 
+        public void ResetPatternValues()
+        {
+            if (Opposite)
+            {
+                CurrentCC = 127;
+                LastCC = 127;
+            }
+            else
+            {
+                CurrentCC = 0;
+                LastCC = 0;
+            }
+        }
 
         // used in MIDI clock mode to limit the rate of the modulation
         public void ClockCounter()
@@ -351,7 +379,7 @@ namespace Stimulant
                 {
                     if(ModeNumber == 1)
                     {
-                        ArrangementCount();
+                        //ArrangementCount();
                     }
                 }
 
@@ -411,6 +439,7 @@ namespace Stimulant
                         {
                             LastCC = Minimum;
                             CurrentCC = Minimum;
+                            IsPatternRestart = true;
                         }
                     }
                     else if (CurrentCC >= Maximum)
@@ -424,13 +453,17 @@ namespace Stimulant
                             if (CurrentCC < Minimum)
                             {
                                 LastCC = Minimum;
-                                CurrentCC = Minimum;
+                                //CurrentCC = Minimum;
+
+                                CurrentCC = Minimum + StepSize;
                             }
                         }
                         else
                         {
                             LastCC = CurrentCC;
-                            CurrentCC = Maximum;
+                            //CurrentCC = Maximum;
+
+                            CurrentCC = Maximum - StepSize;
                         }
 
                     }
@@ -440,12 +473,17 @@ namespace Stimulant
                         {
                             LastCC = CurrentCC;
                             CurrentCC += StepSize;
+                            
                         }
                         else
                         {
                             LastCC = CurrentCC;
                             CurrentCC = Minimum;
+
+                            CurrentCC = Minimum + StepSize;
+                            
                         }
+                        IsPatternRestart = true;
                     }
                     if (OppositeHelper == false)
                     {
@@ -502,27 +540,51 @@ namespace Stimulant
                     if (CurrentCC <= Maximum)
                     {
                         //CurrentCC += StepSize;
-                        
+
                         if (CurrentCC == Maximum)
                         {
-                            CurrentCC = Minimum;
+
+                            //THIS CANT HIT BOTH MAX AND MIN (IT'S SLOWING US DOWN)
+                            //CurrentCC = Minimum;
+
+                            CurrentCC = Minimum + StepSize; //ADDING StepSize FIXED THE ISSUE
+
+                            if (HasMoved)
+                            {
+                                IsPatternRestart = true;
+                            }
+                            else
+                            {
+                                HasMoved = true;
+                            }
                         }
                         else
                         {
                             CurrentCC += StepSize;
                         }
-                        
+
                         if (CurrentCC > Maximum)
                         {
                             //CurrentCC = Minimum;
-                            CurrentCC = Maximum;
                             //CurrentCC = Minimum + (CurrentCC - Maximum);
+
+                            //I THINK THIS IS CAUSING A DRIFT
+                            CurrentCC = Maximum;
+                            
+                        }
+                        else
+                        {
+                            //HasMoved = true;
                         }
                     }
-                    else if(CurrentCC > Maximum)
+                    else if (CurrentCC > Maximum)
                     {
                         CurrentCC = Maximum;
                         //CurrentCC = Minimum + (CurrentCC - Maximum);
+                    }
+                    else
+                    {
+                        HasMoved = true;
                     }
                     /*
                     else
@@ -530,6 +592,7 @@ namespace Stimulant
                         CurrentCC = Minimum;
                     }
                     */
+                    
                 }
                 else
                 {
@@ -538,7 +601,17 @@ namespace Stimulant
                     {
                         if (CurrentCC == Minimum)
                         {
-                            CurrentCC = Maximum;
+
+                            CurrentCC = Maximum - StepSize;
+
+                            if (HasMoved)
+                            {
+                                IsPatternRestart = true;
+                            }
+                            else
+                            {
+                                HasMoved = true;
+                            }
                         }
                         else
                         {
@@ -548,8 +621,13 @@ namespace Stimulant
                         if (CurrentCC < Minimum)
                         {
                             //CurrentCC = Maximum;
-                            CurrentCC = Minimum;
                             //CurrentCC = Maximum - (Minimum-CurrentCC);
+
+                            CurrentCC = Minimum;
+                        }
+                        else
+                        {
+                            //HasMoved = true;
                         }
                     }
                     else if (CurrentCC < Minimum)
@@ -557,12 +635,17 @@ namespace Stimulant
                         CurrentCC = Minimum;
                         //CurrentCC = Maximum - (Minimum - CurrentCC);
                     }
+                    else
+                    {
+                        HasMoved = true;
+                    }
                     /*
                     else
                     {
                         CurrentCC = Maximum;
                     }
                     */
+                    //HasMoved = true;
                 }
             }
             // ==============================================================================================
@@ -580,6 +663,17 @@ namespace Stimulant
                         if (CurrentCC + StepSize == Maximum)
                         {
                             CurrentCC = Minimum;
+
+                            if (HasMoved)
+                            {
+                                IsPatternRestart = true;
+                            }
+                            else
+                            {
+                                HasMoved = true;
+                            }
+
+                            
                         }
 
                         CurrentCC += StepSize * 2;
@@ -596,6 +690,16 @@ namespace Stimulant
                         if (CurrentCC - StepSize == Minimum)
                         {
                             CurrentCC = Maximum;
+
+                            //TODO we need to make this not occur until a couple moves after the last restart
+                            if (HasMoved)
+                            {
+                                IsPatternRestart = true;
+                            }
+                            else
+                            {
+                                HasMoved = true;
+                            }
                         }
 
                         CurrentCC -= StepSize * 2;
@@ -604,6 +708,7 @@ namespace Stimulant
                         {
                             CurrentCC = Minimum;
                             LastCC = Minimum;
+                            
                         }
 
                     }
@@ -622,6 +727,7 @@ namespace Stimulant
                         {
                             CurrentCC = Minimum;
                             LastCC = Minimum;
+                            //IsPatternRestart = true;
                         }
 
                     }
@@ -635,7 +741,7 @@ namespace Stimulant
                             //was min before
                             CurrentCC = Maximum;
                             LastCC = Maximum;
-
+                            //IsPatternRestart = true;
                         }
                     }
                 }
@@ -709,6 +815,7 @@ namespace Stimulant
                     if (CurrentCC > Maximum)
                     {
                         CurrentCC = Minimum;
+                        IsPatternRestart = true;
                     }
                 }
                 else
@@ -766,6 +873,7 @@ namespace Stimulant
                         {
                             CurrentCC = Minimum;
                             LastCC = Minimum;
+                            IsPatternRestart = true;
                         }
                         else
                         {
@@ -784,6 +892,7 @@ namespace Stimulant
                         {
                             CurrentCC = Maximum;
                             LastCC = Maximum;
+                            IsPatternRestart = true;
                         }
                         else
                         {
@@ -847,6 +956,7 @@ namespace Stimulant
                         {
                             CurrentCC = Minimum;
                             LastCC = Minimum;
+                            IsPatternRestart = true;
                         }
                         else
                         {
@@ -865,6 +975,7 @@ namespace Stimulant
                         {
                             CurrentCC = Maximum;
                             LastCC = Maximum;
+                            IsPatternRestart = true;
                         }
                         else
                         {
@@ -923,6 +1034,7 @@ namespace Stimulant
                 if (CurrentCC < Maximum)
                 {
                     CurrentCC = Maximum;
+                    IsPatternRestart = true;
                 }
                 else if (CurrentCC >= Maximum)
                 {
@@ -936,6 +1048,7 @@ namespace Stimulant
             if (PatternNumber == 8)
             {
                 CurrentCC = RandomNumber(Minimum, Maximum);
+                IsPatternRestart = true;
             }
             // ==============================================================================================
         }
@@ -982,7 +1095,7 @@ namespace Stimulant
                                 CutoffFactor = 8;
                             CheckCutoff();
                             //fullModSteps = 8;
-                        }
+                            }
                             break;
                         case 2:
                         case 4:

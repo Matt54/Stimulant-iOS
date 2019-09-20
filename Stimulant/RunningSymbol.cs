@@ -29,12 +29,23 @@ namespace Stimulant
         int _radius;
         int _lineWidth;
 
+        CGRect _frame;
+
+
         public RunningSymbol(CGRect frame, int lineWidth)
         {
+            _frame = frame;
             //UIColor.FromRGB(0, 0, 0).CGColor;
             _lineWidth = lineWidth;
             this.Frame = new CGRect(frame.X, frame.Y, frame.Width, frame.Height);
             this.BackgroundColor = UIColor.Clear;
+        }
+
+        public void UpdateFrame(CGRect frame)
+        {
+            _frame = frame;
+            //_lineWidth = lineWidth;
+            this.Frame = new CGRect(frame.X, frame.Y, frame.Width, frame.Height);
         }
 
         public override void Draw(CoreGraphics.CGRect rect)

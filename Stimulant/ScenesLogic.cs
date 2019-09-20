@@ -88,7 +88,7 @@ namespace Stimulant
 
         void UpdateSceneRunning()
         {
-            myRunningSymbol.RemoveFromSuperview();
+            //myRunningSymbol.RemoveFromSuperview();
             int currentSceneRunning = 0;
             //Do stuff here
             for (int ii = 0; ii < 8; ii++)
@@ -100,8 +100,9 @@ namespace Stimulant
             }
             float xLocation = marginScenes + marginScenes * (currentSceneRunning + 1) + widthScenes * currentSceneRunning;
             frameRunningSymbol = new CGRect(xLocation, locationScenes - widthScenes, widthScenes, widthScenes);
-            myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
-            View.AddSubview(myRunningSymbol);
+            myRunningSymbol.UpdateFrame(frameRunningSymbol);
+            //myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
+            //View.AddSubview(myRunningSymbol);
         }
 
         

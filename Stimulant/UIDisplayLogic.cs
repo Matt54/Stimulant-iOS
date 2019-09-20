@@ -56,8 +56,6 @@ namespace Stimulant
         //HorizontalProgressBar myHorizontalProgressBar;
         UIButton buttonOnOff;
 
-        bool IsTransposingPowerButton;
-
         UILabel labelRate;
         UISlider sliderRate;
         UIButton buttonSettings;
@@ -818,6 +816,8 @@ namespace Stimulant
 
             rangeScenesSlider.LowerValue = 0;
             rangeScenesSlider.UpperValue = 8;
+
+            //rangeScenesSlider.
             
             rangeScenesSlider.DragCompleted += (object sender, EventArgs e) =>
             {

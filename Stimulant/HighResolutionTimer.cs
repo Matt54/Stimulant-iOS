@@ -13,7 +13,7 @@ namespace Stimulant
     /// <remarks>
     /// This implementation guaranteed that Elapsed events 
     /// are not overlapped with different threads. 
-    /// Which is important, because a state of the event handler attached to  Elapsed,
+    /// Which is important, because a state of the event handler attached to Elapsed,
     /// may be left unprotected of multi threaded access
     /// </remarks>
     public class HighResolutionTimer
@@ -137,6 +137,7 @@ namespace Stimulant
                 _thread.Join();
             }
         }
+
 
         private void ExecuteTimer()
         {
