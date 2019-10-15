@@ -74,9 +74,9 @@
         <Reference Include="MonoTouch.Dialog-1" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
+      <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
       <PackageReference Include="Xamarin.RangeSlider">
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
       </PackageReference>
     </ItemGroup>
     <ItemGroup>
@@ -125,7 +125,6 @@
     </ItemGroup>
     <ItemGroup>
         <InterfaceDefinition Include="Main.storyboard" />
-        <InterfaceDefinition Include="LaunchScreen.storyboard" />
     </ItemGroup>
     <ItemGroup>
         <None Include="Info.plist" />
@@ -147,6 +146,7 @@
         <Compile Include="RunningSymbol.cs" />
         <Compile Include="MidiConnection.cs" />
         <Compile Include="ScenesLogic.cs" />
+        <Compile Include="SegmentedButtons.cs" />
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\slider-default7-track.png" />

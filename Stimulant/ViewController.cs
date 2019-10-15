@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Globalization;
 using UIKit;
 using CoreMidi;
-using CoreGraphics;
-using MonoTouch.Dialog;
 using System.ComponentModel;
-using Foundation;
 
 namespace Stimulant
 {

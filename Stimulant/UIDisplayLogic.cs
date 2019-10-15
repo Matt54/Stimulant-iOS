@@ -5,8 +5,6 @@ using Xamarin.RangeSlider;
 using System.Diagnostics;
 using Foundation;
 
-using System.Drawing;
-
 namespace Stimulant
 {
     public partial class ViewController
@@ -64,6 +62,7 @@ namespace Stimulant
 
         UILabel labelPattern;
         UISegmentedControl segmentedPattern;
+        SegmentedButtons segmentedButtons;
         UIButton buttonReverse;
         UIButton buttonCC;
         UIButton buttonBPM;
@@ -1005,9 +1004,14 @@ namespace Stimulant
             }
             */
             //segmentedPattern.TintColor = UIColor.Clear;
-            segmentedPattern.TintColor = UIColor.Black;
+            //segmentedPattern.TintColor = UIColor.Black;
+            segmentedPattern.SelectedSegmentTintColor = UIColor.White;
+            segmentedPattern.BackgroundColor = UIColor.Black;
             segmentedPattern.SelectedSegment = 0;
             segmentedPattern.ValueChanged += HandlePatternSegmentChange;
+
+
+            segmentedButtons = new SegmentedButtons(8,screenWidth,segHeight,0,segYLoc);
         }
 
         public void LoadCCIncButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustCCInc, float sizeIncrease)
@@ -1231,7 +1235,8 @@ namespace Stimulant
 
             View.AddSubview(buttonOnOff);
             View.AddSubview(buttonTime);
-            View.AddSubview(segmentedPattern);
+            //View.AddSubview(segmentedPattern);
+            View.AddSubview(segmentedButtons);
             View.AddSubview(labelPattern);
             View.AddSubview(buttonMidi);
             View.AddSubview(labelMode);

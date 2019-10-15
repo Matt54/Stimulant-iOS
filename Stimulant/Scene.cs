@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace Stimulant
 {

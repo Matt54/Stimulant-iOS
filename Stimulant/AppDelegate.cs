@@ -1,6 +1,5 @@
 ﻿using Foundation;
 using UIKit;
-using Xamarin.RangeSlider;
 
 namespace Stimulant
 {

@@ -288,12 +288,15 @@ namespace Stimulant
 
             ConnectExistingDevices();
 
+            //var session = MidiNetworkSession.DefaultSession;
+            
             var session = MidiNetworkSession.DefaultSession;
             if (session != null)
             {
                 session.Enabled = true;
                 session.ConnectionPolicy = MidiNetworkConnectionPolicy.Anyone;
             }
+            
         }
 
         void ConnectExistingDevices()
