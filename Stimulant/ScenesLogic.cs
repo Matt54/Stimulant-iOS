@@ -242,17 +242,26 @@ namespace Stimulant
                                 if (sceneArray[index].IsRestartEachNote)
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = false;
-                                    rangeSelection.SliderEnabled(false);//rangeSlider.Enabled = false;
+
+                                    //sliderHidden.Hidden = false;
+                                    //rangeSelection.SliderEnabled(false);//rangeSlider.Enabled = false;
+                                    rangeSelection.LocationSelection(true);
+
                                     //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
                                     rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
-                                    sliderHidden.Value = sceneArray[index].StartingLocation;
+
+                                    //sliderHidden.Value = sceneArray[index].StartingLocation;
+                                    rangeSelection.SetStartingLocation(sceneArray[index].StartingLocation);
                                 }
                                 else
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = true;
-                                    rangeSelection.SliderEnabled(true);// rangeSlider.Enabled = true;
+
+                                    //sliderHidden.Hidden = true;
+                                    //rangeSelection.SliderEnabled(true);// rangeSlider.Enabled = true;
+
+                                    rangeSelection.LocationSelection(false);
+
                                     //labelRange.Text = "Modulation Range";
                                     rangeSelection.UpdateLabelText("Modulation Range");
                                 }
@@ -412,18 +421,28 @@ namespace Stimulant
                             if (sceneArray[index].IsRestartEachNote)
                             {
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = false;
-                                rangeSelection.SliderEnabled(false);// rangeSlider.Enabled = false;
+
+
+                                //sliderHidden.Hidden = false;
+                                //rangeSelection.SliderEnabled(false);// rangeSlider.Enabled = false;
+                                rangeSelection.LocationSelection(true);
+
                                 //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
                                 rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
-                                sliderHidden.Value = sceneArray[index].StartingLocation;
+
+                                //sliderHidden.Value = sceneArray[index].StartingLocation;
+                                rangeSelection.SetStartingLocation(sceneArray[index].StartingLocation);
                             }
                             else
                             {
 
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                sliderHidden.Hidden = true;
-                                rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+
+                                //sliderHidden.Hidden = true;
+                                //rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+                                rangeSelection.LocationSelection(false);
+
+
                                 //labelRange.Text = "Modulation Range";
                                 rangeSelection.UpdateLabelText("Modulation Range");
                             }

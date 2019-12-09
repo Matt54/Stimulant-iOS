@@ -15,9 +15,16 @@ namespace Stimulant
             View.Frame = rect;
             //View.BackgroundColor = UIColor.Black;
             CreateLabel(new CGRect(0, rect.Height * 0.1, rect.Width, rect.Height * 0.6 ));
-            CreateRangeSlider(new CGRect(0, rect.Height * 0.6, rect.Width, rect.Height * 0.4));
+
+            CreateSliders(new CGRect(0, rect.Height * 0.6, rect.Width, rect.Height * 0.4));
+
+
+            //CreateRangeSlider(new CGRect(0, rect.Height * 0.6, rect.Width, rect.Height * 0.4));
+            //CreateHiddenSlider(new CGRect(0, rect.Height * 0.73, rect.Width, rect.Height * 0.27));
+
             View.AddSubview(label);
             View.AddSubview(rangeSlider);
+            View.AddSubview(hiddenSlider);
         }
 
         private void CreateLabel(CGRect rect)
@@ -38,13 +45,19 @@ namespace Stimulant
             label.Text = text;
         }
 
-        private void CreateRangeSlider(CGRect rect)
+        private void CreateSliders(CGRect rect)
         {
             rangeSlider = new RangeSliderControl();
             rangeSlider.ShowTextAboveThumbs = true;
-            //rangeSlider.BackgroundColor = UIColor.Black;
-            //rangeSlider.VerticalAlignment = UIControlContentVerticalAlignment.Center;
-            rangeSlider.TextSize = 20;
+
+            float textSize = 20.0f;
+
+            rangeSlider.TextSize = textSize;
+            float someHeight = (float) UIFont.SystemFontOfSize(20).LineHeight;
+            
+            //The vertical offset between the sliders fluctuates with the text size
+            //If we need to dynamically change the text size then we need to adjust this value as well
+            float verticalOffset = (float) (textSize * 0.82);
 
             float padding = 5.0f;
 
@@ -58,6 +71,30 @@ namespace Stimulant
             rangeSlider.UpperValue = 127;
 
             rangeSlider.DragCompleted += HandleSliderChange;
+
+            hiddenSlider = new UISlider();
+            hiddenSlider.Frame = new CGRect(padding, rect.Top + verticalOffset, rect.Width - padding * 2, rect.Height - (verticalOffset * 0.5) );
+            
+            hiddenSlider.MinValue = 0;
+            hiddenSlider.MaxValue = 127;
+            hiddenSlider.Value = startingLocation;
+            hiddenSlider.TintColor = UIColor.Clear;
+            LocationSelection(false);
+            hiddenSlider.SetMinTrackImage(new UIImage(), UIControlState.Normal);
+            hiddenSlider.SetMaxTrackImage(new UIImage(), UIControlState.Normal);
+            hiddenSlider.ValueChanged += HandleHiddenSliderChange;
+
+            bool highRes = false;
+            if (highRes)
+            {
+                hiddenSlider.SetThumbImage(UIImage.FromFile("graphicLocationThumb@2x.png"), UIControlState.Normal);
+            }
+            else
+            {
+                hiddenSlider.SetThumbImage(UIImage.FromFile("graphicLocationThumb.png"), UIControlState.Normal);
+            }
+
+
         }
 
         public event EventHandler SliderMoved;
@@ -70,7 +107,15 @@ namespace Stimulant
             SliderMoved?.Invoke(this, e);
         }
 
-        public void SliderEnabled(bool isEnabled)
+        public event EventHandler HiddenSliderMoved;
+        void HandleHiddenSliderChange(object sender, System.EventArgs e)
+        {
+            var myObj = (UISlider)sender;
+            startingLocation = (int) myObj.Value;
+            HiddenSliderMoved?.Invoke(this, e);
+        }
+
+        void SliderEnabled(bool isEnabled)
         {
             if(isEnabled)
             {
@@ -79,6 +124,32 @@ namespace Stimulant
             else
             {
                 rangeSlider.Enabled = false;
+            }
+        }
+
+        void SliderHidden(bool isHidden)
+        {
+            if (isHidden)
+            {
+                hiddenSlider.Hidden = true;
+            }
+            else
+            {
+                hiddenSlider.Hidden = false;
+            }
+        }
+
+        public void LocationSelection(bool isLocationSelection)
+        {
+            if(isLocationSelection)
+            {
+                SliderEnabled(false);
+                SliderHidden(false);
+            }
+            else
+            {
+                SliderEnabled(true);
+                SliderHidden(true);
             }
         }
 
@@ -94,6 +165,17 @@ namespace Stimulant
             rangeSlider.UpperValue = max;
         }
 
+        public void SetStartingLocation(int loc)
+        {
+            startingLocation = loc;
+            hiddenSlider.Value = startingLocation;
+        }
+
+        public int GetStartingLocation()
+        {
+            return startingLocation;
+        }
+
         public int GetMinimum()
         {
             return minimum;
@@ -104,9 +186,11 @@ namespace Stimulant
             return maximum;
         }
 
+        private int startingLocation = 63;
         private int minimum;
         private int maximum = 127;
-        private UILabel label = new UILabel();
-        private RangeSliderControl rangeSlider = new RangeSliderControl();
+        private UILabel label;
+        private RangeSliderControl rangeSlider;
+        private UISlider hiddenSlider;
     }
 }

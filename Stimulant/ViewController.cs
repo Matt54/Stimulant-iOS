@@ -293,7 +293,8 @@ namespace Stimulant
 
                                 //View.AddSubview(myHorizontalProgressBar);
 
-                                sliderCC.Hidden = false;
+                                //sliderCC.Hidden = false;
+
                                 //sceneArray[0].IsSelected = true;
                                 UpdateSceneGraphic();
                                 //UpdateSceneGraphic();
@@ -342,7 +343,7 @@ namespace Stimulant
                                 //myHorizontalProgressBar.RemoveFromSuperview();
 
 
-                                sliderCC.Hidden = true;
+                                //sliderCC.Hidden = true;
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 for (int ii = 0; ii < 8; ii++)
@@ -609,8 +610,10 @@ namespace Stimulant
                                 if (!myMidiModulation.IsArrangementMode)
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = false;
-                                    rangeSelection.SliderEnabled(false); //rangeSlider.Enabled = false;
+
+                                    //sliderHidden.Hidden = false;
+                                    //rangeSelection.SliderEnabled(false); //rangeSlider.Enabled = false;
+                                    rangeSelection.LocationSelection(true);
 
                                     //labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
                                     rangeSelection.UpdateLabelText("Starting Value: " + myMidiModulation.StartingLocation.ToString());
@@ -618,15 +621,19 @@ namespace Stimulant
                                     labelMode.Text = " Restart Pattern   ";
                                     labelDetails.Text = "Begins At Starting Value";
                                 }
-                                ReadHiddenSlider(sliderHidden.Value);
+                                //ReadHiddenSlider(sliderHidden.Value);
+                                myMidiModulation.StartingLocation = rangeSelection.GetStartingLocation();
                             }
                             else
                             {
                                 if (!myMidiModulation.IsArrangementMode)
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
-                                    sliderHidden.Hidden = true;
-                                    rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+
+                                    //sliderHidden.Hidden = true;
+                                    //rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+                                    rangeSelection.LocationSelection(false);
+
                                     rangeSelection.UpdateLabelText("Modulation Range");//labelRange.Text = "Modulation Range";
                                     ResetDisplay();
                                 }
@@ -1103,7 +1110,7 @@ namespace Stimulant
                 //myHorizontalProgressBar.UpdateProgressAndDraw();
                 //myHorizontalProgressBar.UpdateGraph(progressPercent);
                 //View.AddSubview(myHorizontalProgressBar);
-                sliderCC.Value = myMidiModulation.CurrentCC;
+                //sliderCC.Value = myMidiModulation.CurrentCC;
                 
             }
         }
@@ -1327,11 +1334,12 @@ namespace Stimulant
             //ReadHiddenSlider(myObject.Value);
 
 
-            var myObject = (UISlider)sender;
+            //var myObject = (UISlider)sender;
 
             if (!myMidiModulation.IsSceneMode)
             {
-                ReadHiddenSlider(myObject.Value);
+                //ReadHiddenSlider(myObject.Value);
+                myMidiModulation.StartingLocation = rangeSelection.GetStartingLocation();
             }
             else
             {
@@ -1339,16 +1347,18 @@ namespace Stimulant
                 {
                     if (sceneArray[ii].IsSelected)
                     {
-                        sceneArray[ii].StartingLocation = (int)myObject.Value;
+                        sceneArray[ii].StartingLocation = rangeSelection.GetStartingLocation();//(int)myObject.Value;
                     }
                 }
             }
         }
 
+        /*
         void ReadHiddenSlider(float sliderValue)
         {
             myMidiModulation.StartingLocation = (int)sliderValue;
         }
+        */
 
         protected void HandleReverseTouchDown(object sender, System.EventArgs e)
         {

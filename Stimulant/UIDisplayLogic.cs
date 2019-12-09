@@ -45,8 +45,8 @@ namespace Stimulant
 
         UIButton buttonAR;
         UIButton buttonLocation;
-        UISlider sliderHidden;
-        UISlider sliderCC;
+        //UISlider sliderHidden;
+        //UISlider sliderCC;
         //RangeSliderControl rangeSlider;
         RangeSliderControl rangeScenesSlider;
         
@@ -464,7 +464,7 @@ namespace Stimulant
             
             LoadCCIncButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustCCInc, sizeIncrease);
             LoadTapButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTap);
-            LoadHiddenSlider(screenWidth, screenHeight, controlAdjustHidden, sliderHeight);
+            //LoadHiddenSlider(screenWidth, screenHeight, controlAdjustHidden, sliderHeight);
             LoadBPMTextField(screenWidth, screenHeight);
 
             LoadSceneButtons(screenWidth, screenHeight);
@@ -605,6 +605,7 @@ namespace Stimulant
         }
         */
 
+            /*
         public void LoadHiddenSlider(float screenWidth, float screenHeight, float controlAdjustHidden, float sliderHeight)
         {
             float sliderWidth = (float)(screenWidth / 1.09);
@@ -654,6 +655,7 @@ namespace Stimulant
             //sliderCC.ValueChanged += HandleCCSliderChange;
 
         }
+        */
 
         public void LoadRandomButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustRandoms, float controlAdjustScenes)
         {
@@ -1262,6 +1264,7 @@ namespace Stimulant
             View.AddSubview(rangeSelection.View);
             AddChildViewController(rangeSelection);
             rangeSelection.SliderMoved += HandleRangeSliderChange;
+            rangeSelection.HiddenSliderMoved += HandleHiddenSliderChange;
 
             View.AddSubview(patternSelection.View);
             AddChildViewController(patternSelection);
@@ -1280,8 +1283,8 @@ namespace Stimulant
             View.AddSubview(buttonAutoRate);
             //View.AddSubview(labelRange);
             //View.AddSubview(rangeSlider);
-            View.AddSubview(sliderHidden);
-            View.AddSubview(sliderCC);
+            //View.AddSubview(sliderHidden);
+            //View.AddSubview(sliderCC);
             View.AddSubview(buttonReverse);
             View.AddSubview(buttonScenes);
             //View.AddSubview(myRunningSymbol);
