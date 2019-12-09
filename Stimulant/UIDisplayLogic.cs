@@ -41,12 +41,13 @@ namespace Stimulant
 
         //Declare View References
 
-        UILabel labelRange;
+        //UILabel labelRange;
+
         UIButton buttonAR;
         UIButton buttonLocation;
         UISlider sliderHidden;
         UISlider sliderCC;
-        RangeSliderControl rangeSlider;
+        //RangeSliderControl rangeSlider;
         RangeSliderControl rangeScenesSlider;
         
 
@@ -60,9 +61,15 @@ namespace Stimulant
         UIButton buttonRandom;
         UIButton buttonAutoRate;
 
-        UILabel labelPattern;
-        UISegmentedControl segmentedPattern;
-        SegmentedButtons segmentedButtons;
+        //UILabel labelPattern;
+
+        //UISegmentedControl segmentedPattern;
+
+        RangeSelection rangeSelection;
+        PatternSelection patternSelection;
+        TimingModeSelection timingModeSelection;
+
+
         UIButton buttonReverse;
         UIButton buttonCC;
         UIButton buttonBPM;
@@ -78,9 +85,9 @@ namespace Stimulant
         UILabel labelMode;
         UILabel labelDetails;
 
-        UIButton buttonTime;
-        UIButton buttonMidi;
-        UIButton buttonClock;
+        //UIButton buttonTime;
+        //UIButton buttonMidi;
+        //UIButton buttonClock;
 
         UITextField textFieldBPM;
         UIButton buttonInfo;
@@ -420,29 +427,41 @@ namespace Stimulant
                 View.BackgroundColor = UIColor.FromPatternImage(UIImage.FromFile(background));
             }
 
+            //LoadRangeLabel(screenWidth, screenHeight, textAdjustRange, rangeFontSize);
+            //LoadRangeSlider(screenWidth, screenHeight, controlAdjustRange, rangeFontSize);
+
+            
+
             LoadStartButton(screenWidth, screenHeight, buttonYAdjust, sizeSubtract);
             LoadProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustProgress);
-            //LoadHorizontalProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustHorizontalProgress);
-            //LoadReverseButton(screenWidth, screenHeight, sizeSubtract);
             LoadCCButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
             LoadSettingsButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
             LoadARButton(screenWidth, screenHeight, sizeSubtract, controlAdjustAR);
-            //LoadLocationButton(screenWidth, screenHeight, sizeSubtract, controlAdjustAR);
             LoadInfoButton(screenWidth, screenHeight, sizeSubtract);
-            //LoadClockButton(screenWidth, screenHeight, sizeSubtract);
-            //LoadBPMButton(screenWidth, screenHeight, sizeSubtract, controlAdjustBPM);
             LoadTriggerButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTrigger);
             LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms, controlAdjustScenes);
-            //LoadAutoButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms);
-            LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
+            
             LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
             LoadDetailsLabel(screenWidth, screenHeight, textAdjustDetails);
-            LoadSegmented(screenWidth, screenHeight, controlAdjustPattern, segHeight);
+
+
+            //LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
+            //LoadSegmented(screenWidth, screenHeight, controlAdjustPattern, segHeight);
+
+            rangeSelection = new RangeSelection(new CGRect(0, 0, screenWidth, screenHeight * 0.23));
+
+            float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
+            patternSelection = new PatternSelection(new CGRect(0, segYLoc - segHeight, screenWidth, segHeight * 2));
+
+
+            timingModeSelection = new TimingModeSelection(new CGRect(0, (float)(screenHeight * 0.87), screenWidth, (float)(screenHeight * 0.1) ));
+
+
             LoadRateSlider(screenWidth, screenHeight, controlAdjustRate, sliderHeight);
-            LoadPatternLabel(screenWidth, screenHeight, textAdjustPattern, segHeight);
+            //LoadPatternLabel(screenWidth, screenHeight, textAdjustPattern, segHeight);
             LoadRateLabel(screenWidth, screenHeight, textAdjustRate, sliderHeight);
-            LoadRangeLabel(screenWidth, screenHeight, textAdjustRange, rangeFontSize);
-            LoadRangeSlider(screenWidth, screenHeight, controlAdjustRange, rangeFontSize);
+            
+            
             LoadCCIncButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustCCInc, sizeIncrease);
             LoadTapButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTap);
             LoadHiddenSlider(screenWidth, screenHeight, controlAdjustHidden, sliderHeight);
@@ -499,6 +518,7 @@ namespace Stimulant
         }
         */
 
+        /*
         public void LoadRangeLabel(float screenWidth, float screenHeight, float textAdjustRange, float rangeFontSize)
         {
             float labelRangeWidth = (float)(screenWidth / 1.6);
@@ -519,6 +539,7 @@ namespace Stimulant
             //labelRange.Frame = new CGRect(labelRangeXLoc, labelRangeYLoc, labelRangeWidth, labelRangeHeight/2);
             //labelRange.SizeToFit();
         }
+        */
 
         public void LoadARButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustAR)
         {
@@ -543,6 +564,7 @@ namespace Stimulant
             buttonLocation.TouchDown += HandleLocationTouchDown;
         }
 
+        /*
         public void LoadRangeSlider(float screenWidth, float screenHeight, float controlAdjustRange, float rangeFontSize)
         {
             float rangeWidth = (float)(screenWidth / 1.09);
@@ -581,6 +603,7 @@ namespace Stimulant
                 }
             };
         }
+        */
 
         public void LoadHiddenSlider(float screenWidth, float screenHeight, float controlAdjustHidden, float sliderHeight)
         {
@@ -926,6 +949,7 @@ namespace Stimulant
             }
         }
 
+        /*
         public void LoadPatternLabel(float screenWidth, float screenHeight, float textAdjustPattern, float segHeight)
         {
             float labelPatternWidth = (float)(screenWidth / 1.8);
@@ -940,6 +964,7 @@ namespace Stimulant
             labelPattern.Font = UIFont.SystemFontOfSize(100);
             labelPattern.AdjustsFontSizeToFitWidth = true;
         }
+        */
 
         public void LoadCCButton(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustSettings)
         {
@@ -985,34 +1010,26 @@ namespace Stimulant
             buttonAutoPattern.TouchDown += HandleAutoPatternTouchDown;
         }
 
+        /*
         public void LoadSegmented(float screenWidth, float screenHeight, float controlAdjustPattern, float segHeight)
         {
             float segWidth = (float)(screenWidth / 1.07);
             float segXLoc = (float)((screenWidth - segWidth) / 2);
             float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
             segmentedPattern = new UISegmentedControl("1", "2", "3", "4", "5", "6", "7", "8");
-            //segmentedPattern = new UISegmentedControl("1");
-            //segmentedPattern = new UISegmentedControl(UIImage.FromFile("graphicP1NOff.png").Scale(new CGSize(segWidth,segHeight)));
-            //UIImageView.AppearanceWhenContainedIn().;//.segmentedPattern
-            //segmentedPattern.SizeToFit();
-            //segmentedPattern.SetImage(UIImage.FromFile("graphicP1NOff.png").Scale(new nfloat(0.5f),0);
+
+
             segmentedPattern.Frame = new CGRect(segXLoc, segYLoc, segWidth, segHeight);
-            /*
-            foreach (UIView image in segmentedPattern.Subviews)
-            {
-                image.SizeToFit();
-            }
-            */
-            //segmentedPattern.TintColor = UIColor.Clear;
-            //segmentedPattern.TintColor = UIColor.Black;
+            //patternSelection = new PatternSelection(new CGRect(segXLoc, segYLoc - segHeight, segWidth, segHeight * 2));
+
+
             segmentedPattern.SelectedSegmentTintColor = UIColor.White;
             segmentedPattern.BackgroundColor = UIColor.Black;
             segmentedPattern.SelectedSegment = 0;
             segmentedPattern.ValueChanged += HandlePatternSegmentChange;
 
-
-            segmentedButtons = new SegmentedButtons(8,screenWidth,segHeight,0,segYLoc);
         }
+        */
 
         public void LoadCCIncButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustCCInc, float sizeIncrease)
         {
@@ -1120,12 +1137,16 @@ namespace Stimulant
             labelDetails.AdjustsFontSizeToFitWidth = true;
         }
 
+        /*
         public void LoadTimeandMidiButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustMode)
         {
             float buttonTimeWidth = (float)(screenWidth / (3 * sizeSubtract));
             float buttonTimeHeight = (float)(buttonTimeWidth / 1.68);
             float buttonTimeXLoc = (float)((screenWidth / 2) - buttonTimeWidth / 2);
             float buttonTimeYLoc = (float)(screenHeight - buttonTimeHeight) * controlAdjustMode;
+
+            //timingModeSelection = new TimingModeSelection(new CGRect(0, buttonTimeYLoc, screenWidth, buttonTimeWidth / 1.68));
+
             buttonTime = UIButton.FromType(UIButtonType.Custom);
             buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
             buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Highlighted);
@@ -1149,12 +1170,13 @@ namespace Stimulant
             buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Highlighted);
             buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Disabled);
             buttonClock.Frame = new CGRect(buttonClockXLoc, buttonTimeYLoc, buttonTimeWidth, buttonTimeHeight);
-            buttonClock.TouchDown += HandleClockTouchDown;
 
             //Button Event Handler Delegates
             buttonTime.TouchDown += HandleTimeTouchDown;
             buttonMidi.TouchDown += HandleMidiTouchDown;
+            buttonClock.TouchDown += HandleClockTouchDown;
         }
+        */
 
         public void LoadBPMTextField(float screenWidth, float screenHeight)
         {
@@ -1234,18 +1256,30 @@ namespace Stimulant
             View.AddSubview(myCircularProgressBar);
 
             View.AddSubview(buttonOnOff);
-            View.AddSubview(buttonTime);
+
             //View.AddSubview(segmentedPattern);
-            View.AddSubview(segmentedButtons);
-            View.AddSubview(labelPattern);
-            View.AddSubview(buttonMidi);
+
+            View.AddSubview(rangeSelection.View);
+            AddChildViewController(rangeSelection);
+            rangeSelection.SliderMoved += HandleRangeSliderChange;
+
+            View.AddSubview(patternSelection.View);
+            AddChildViewController(patternSelection);
+            patternSelection.ButtonPressed += HandlePatternChange;
+
+            View.AddSubview(timingModeSelection.View);
+            AddChildViewController(timingModeSelection);
+            timingModeSelection.ButtonPressed += HandleModeChange;
+
+            //View.AddSubview(labelPattern);
+
             View.AddSubview(labelMode);
             View.AddSubview(labelDetails);
             View.AddSubview(sliderRate);
             View.AddSubview(labelRate);
             View.AddSubview(buttonAutoRate);
-            View.AddSubview(labelRange);
-            View.AddSubview(rangeSlider);
+            //View.AddSubview(labelRange);
+            //View.AddSubview(rangeSlider);
             View.AddSubview(sliderHidden);
             View.AddSubview(sliderCC);
             View.AddSubview(buttonReverse);
@@ -1259,7 +1293,7 @@ namespace Stimulant
             View.AddSubview(buttonAutoPattern);
             View.AddSubview(buttonTap);
             View.AddSubview(buttonTrigger);
-            View.AddSubview(buttonClock);
+            
             View.AddSubview(buttonRandom);
             View.AddSubview(buttonAuto);
             View.AddSubview(buttonAR);
@@ -1268,7 +1302,10 @@ namespace Stimulant
             View.AddSubview(buttonPlus10);
             View.AddSubview(buttonMinus1);
             View.AddSubview(buttonMinus10);
-            
+
+            //View.AddSubview(buttonTime);
+            //View.AddSubview(buttonMidi);
+            //View.AddSubview(buttonClock);
 
 
             //View.AddSubview(myHorizontalProgressBar);

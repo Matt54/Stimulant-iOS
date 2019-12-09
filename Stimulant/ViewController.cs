@@ -12,7 +12,6 @@ namespace Stimulant
         }
 
         // Declare MidiModulation object: MidiModulation class stores all the current modulation parameters
-        // I worry that this is a poor way of doing this. It may not be ideal from a memory standpoint
         MidiModulation myMidiModulation = new MidiModulation();
 
         //Scenes myScenes = new Scenes();
@@ -129,6 +128,9 @@ namespace Stimulant
             UIHelper = false;
 
             LoadDisplay();
+
+            
+
             myMidiModulation.ModeNumber = 2;
             ReadSlider(sliderRate.Value);
 
@@ -443,7 +445,8 @@ namespace Stimulant
                         {
                             InvokeOnMainThread(() =>
                             {
-                                labelPattern.Text = myMidiModulation.PatternString;
+                                //labelPattern.Text = myMidiModulation.PatternString;
+                                patternSelection.UpdateLabelText(myMidiModulation.PatternString);
                             });
                             break;
                         }
@@ -498,8 +501,11 @@ namespace Stimulant
                                 {
                                     if (myMidiModulation.IsAutoPattern)
                                     {
-                                        labelPattern.Text = myMidiModulation.RandomRoll();
-                                        segmentedPattern.SelectedSegment = myMidiModulation.PatternNumber - 1;
+                                        //labelPattern.Text = myMidiModulation.RandomRoll();
+                                        patternSelection.UpdateLabelText( myMidiModulation.RandomRoll() );
+
+                                        //segmentedPattern.SelectedSegment = myMidiModulation.PatternNumber - 1;
+                                        patternSelection.SetPattern(myMidiModulation.PatternNumber - 1);
                                     }
 
                                     if (myMidiModulation.IsAutoRate)
@@ -510,10 +516,15 @@ namespace Stimulant
 
                                     if (myMidiModulation.IsAR)
                                     {
-                                        rangeSlider.UpperValue = myMidiModulation.RandomNumber(1, 127);
-                                        myMidiModulation.Maximum = (int)rangeSlider.UpperValue;
-                                        rangeSlider.LowerValue = myMidiModulation.RandomNumber(1, myMidiModulation.Maximum);
-                                        myMidiModulation.Minimum = (int)rangeSlider.LowerValue;
+                                        //rangeSlider.UpperValue = myMidiModulation.RandomNumber(1, 127);
+                                        rangeSelection.SetMaximum(myMidiModulation.RandomNumber(1, 127));
+                                        myMidiModulation.Maximum = rangeSelection.GetMaximum(); //(int)rangeSlider.UpperValue;
+
+
+                                        //rangeSlider.LowerValue = myMidiModulation.RandomNumber(1, myMidiModulation.Maximum);
+                                        rangeSelection.SetMinimum( myMidiModulation.RandomNumber( 1, rangeSelection.GetMaximum() ) );
+
+                                        myMidiModulation.Minimum = rangeSelection.GetMinimum();//(int)rangeSlider.LowerValue;
                                     }
                                     myMidiModulation.IsRandomRoll = false;
                                     //labelMode.Text = "Hello World";
@@ -599,8 +610,10 @@ namespace Stimulant
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
                                     sliderHidden.Hidden = false;
-                                    rangeSlider.Enabled = false;
-                                    labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                                    rangeSelection.SliderEnabled(false); //rangeSlider.Enabled = false;
+
+                                    //labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                                    rangeSelection.UpdateLabelText("Starting Value: " + myMidiModulation.StartingLocation.ToString());
 
                                     labelMode.Text = " Restart Pattern   ";
                                     labelDetails.Text = "Begins At Starting Value";
@@ -613,8 +626,8 @@ namespace Stimulant
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                     sliderHidden.Hidden = true;
-                                    rangeSlider.Enabled = true;
-                                    labelRange.Text = "Modulation Range";
+                                    rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+                                    rangeSelection.UpdateLabelText("Modulation Range");//labelRange.Text = "Modulation Range";
                                     ResetDisplay();
                                 }
                             }
@@ -625,7 +638,8 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsRestartEachNote)
                             {
-                                labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                                //labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
+                                rangeSelection.UpdateLabelText("Starting Value: " + myMidiModulation.StartingLocation.ToString());
                             }
                             
                             break;
@@ -667,12 +681,18 @@ namespace Stimulant
                             if (myMidiModulation.BPMOn)
                             {
                                 buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOn.png"), UIControlState.Normal);
-                                segmentedPattern.Hidden = true;
+
+                                //segmentedPattern.Hidden = true;
+                                patternSelection.SetVisibility(true);
+
                                 buttonPlus1.Hidden = false;
                                 buttonPlus10.Hidden = false;
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
-                                labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+
+                                //labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                                patternSelection.UpdateLabelText("Current Tempo: " + myMidiModulation.BPM + "BPM");
+
                                 buttonTap.Hidden = false;
 
                                 labelMode.Text = "Tempo Adjustment";
@@ -681,12 +701,19 @@ namespace Stimulant
                             else
                             {
                                 buttonBPM.SetImage(UIImage.FromFile("graphicBPMButtonOff.png"), UIControlState.Normal);
-                                segmentedPattern.Hidden = false;
+
+
+                                //segmentedPattern.Hidden = false;
+                                patternSelection.SetVisibility(false);
+
                                 buttonPlus1.Hidden = true;
                                 buttonPlus10.Hidden = true;
                                 buttonMinus1.Hidden = true;
                                 buttonMinus10.Hidden = true;
-                                ReadPattern(segmentedPattern.SelectedSegment);
+
+                                //ReadPattern(segmentedPattern.SelectedSegment);
+                                ReadPattern( patternSelection.GetPatternNumber() );
+
                                 buttonTap.Hidden = true;
                                 ResetDisplay();
                             }
@@ -697,7 +724,9 @@ namespace Stimulant
                         {
                             if (myMidiModulation.BPMOn)
                             {
-                                labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                                //labelPattern.Text = "Current Tempo: " + myMidiModulation.BPM + "BPM";
+                                patternSelection.UpdateLabelText("Current Tempo: " + myMidiModulation.BPM + "BPM");
+
                                 ReadSlider(sliderRate.Value);
                                 /*
                                 if (myMidiModulation.IsArrangementMode)
@@ -714,14 +743,19 @@ namespace Stimulant
                             if (myMidiModulation.CCOn)
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOn.png"), UIControlState.Normal);
-                                segmentedPattern.Hidden = true;
+
+                                //segmentedPattern.Hidden = true;
+                                patternSelection.SetVisibility(true);
+
                                 buttonPlus1.Hidden = false;
                                 buttonPlus10.Hidden = false;
                                 buttonMinus1.Hidden = false;
                                 buttonMinus10.Hidden = false;
                                 buttonTap.Hidden = false;
                                 buttonTap.Enabled = false;
-                                labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+
+                                //labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                patternSelection.UpdateLabelText("Current Channel: CC" + myMidiModulation.CCNumber);
 
                                 labelMode.Text = "CC Number Setting";
                                 labelDetails.Text = "Value Adjusted By Arrows";
@@ -729,14 +763,20 @@ namespace Stimulant
                             else
                             {
                                 buttonCC.SetImage(UIImage.FromFile("graphicCCButtonOff.png"), UIControlState.Normal);
-                                segmentedPattern.Hidden = false;
+
+                                //segmentedPattern.Hidden = false;
+                                patternSelection.SetVisibility(false);
+
                                 buttonPlus1.Hidden = true;
                                 buttonPlus10.Hidden = true;
                                 buttonMinus1.Hidden = true;
                                 buttonMinus10.Hidden = true;
                                 buttonTap.Hidden = true;
                                 buttonTap.Enabled = true;
-                                ReadPattern(segmentedPattern.SelectedSegment);
+
+                                //ReadPattern(segmentedPattern.SelectedSegment);
+                                ReadPattern(patternSelection.GetPatternNumber());
+
                                 ResetDisplay();
                             }
                             break;
@@ -746,7 +786,8 @@ namespace Stimulant
                         {
                             if (myMidiModulation.CCOn)
                             {
-                                labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                //labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
+                                patternSelection.UpdateLabelText("Current Channel: CC" + myMidiModulation.CCNumber);
                             }
                             break;
                         }
@@ -795,9 +836,10 @@ namespace Stimulant
 
                                     //}
 
-                                    buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
-                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
-                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
+                                    //buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOn.png"), UIControlState.Normal);
+                                    //buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
+                                    //buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
+
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
                                     if (myMidiModulation.BPMOn)
@@ -829,9 +871,9 @@ namespace Stimulant
                                 case 2:
 
                                     timerHighRes.Start();
-                                    buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
-                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
-                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
+                                    //buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
+                                    //buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOn.png"), UIControlState.Normal);
+                                    //buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOff.png"), UIControlState.Normal);
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
 
@@ -871,9 +913,9 @@ namespace Stimulant
                                     myMidiModulation.CutoffFactor = 1;
                                     myMidiModulation.ClockCutoff = 1;
                                     timerHighRes.Start();
-                                    buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
-                                    buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
-                                    buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
+                                    //buttonMidi.SetImage(UIImage.FromFile("graphicMidiButtonOff.png"), UIControlState.Normal);
+                                    //buttonTime.SetImage(UIImage.FromFile("graphicTimeButtonOff.png"), UIControlState.Normal);
+                                    //buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
                                     labelMode.Text = " Int Clock Mode   ";
@@ -953,6 +995,8 @@ namespace Stimulant
                                         buttonLocation.Enabled = true;
                                     }
                                 }
+
+                                patternSelection.UpdateLabelText( myMidiModulation.GetPatternText() );
                             }
                             break;
                         }
@@ -978,6 +1022,8 @@ namespace Stimulant
             };
 
             myMidiModulation.ModeNumber = 2;
+            myMidiModulation.PatternNumber = 1;
+
         }
 
         private void ResetDisplay()
@@ -1061,6 +1107,32 @@ namespace Stimulant
                 
             }
         }
+
+        private void HandlePatternChange(object sender, System.EventArgs e)
+        {
+            //myMidiModulation.SetPatternNumber( patternSelection.GetPatternNumber() );
+            if (!myMidiModulation.IsSceneMode)
+            {
+                myMidiModulation.SetPatternNumber(patternSelection.GetPatternNumber());
+                //ReadPattern(seg.SelectedSegment);
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].PatternNumber = patternSelection.GetPatternNumber();
+
+                        if (myMidiModulation.IsArrangementMode) patternSelection.UpdateLabelText( myMidiModulation.GetPatternText(patternSelection.GetPatternNumber()));
+
+                    }
+                }
+                
+            }
+
+        }
+        
 
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
         {
@@ -1229,6 +1301,26 @@ namespace Stimulant
             }
         }
 
+        protected void HandleRangeSliderChange(object sender, System.EventArgs e)
+        {
+            if (!myMidiModulation.IsSceneMode)
+            {
+                myMidiModulation.Maximum = rangeSelection.GetMaximum();
+                myMidiModulation.Minimum = rangeSelection.GetMinimum();
+            }
+            else
+            {
+                for (int ii = 0; ii < 8; ii++)
+                {
+                    if (sceneArray[ii].IsSelected)
+                    {
+                        sceneArray[ii].Maximum = rangeSelection.GetMaximum();
+                        sceneArray[ii].Minimum = rangeSelection.GetMinimum();
+                    }
+                }
+            }
+        }
+
         protected void HandleHiddenSliderChange(object sender, System.EventArgs e)
         {
             //var myObject = (UISlider)sender;
@@ -1304,6 +1396,11 @@ namespace Stimulant
         protected void HandleARTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.ARToggle();
+        }
+
+        protected void HandleModeChange(object sender, System.EventArgs e)
+        {
+            myMidiModulation.ModeNumber = timingModeSelection.GetModeNumber();
         }
 
         protected void HandleMidiTouchDown(object sender, System.EventArgs e)
@@ -1729,9 +1826,11 @@ namespace Stimulant
         void ReadPattern(nint patternIndex)
         {
 
-            string labelText = myMidiModulation.UpdatePattern(patternIndex);
-            labelPattern.Text = labelText;
+            //This sets the pattern and then gets the String
+            //string labelText = myMidiModulation.UpdatePattern(patternIndex);
+            //labelPattern.Text = labelText;
 
+            myMidiModulation.SetPatternNumber((int)patternIndex);
         }
 
 

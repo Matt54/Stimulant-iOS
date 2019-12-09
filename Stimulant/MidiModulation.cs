@@ -339,6 +339,52 @@ namespace Stimulant
             return labelText;
         }
 
+        public void SetPatternNumber(int pNum)
+        {
+            PatternNumber = pNum;
+        }
+
+        public string GetPatternText()
+        {
+            return GetPatternText(PatternNumber);
+        }
+
+        public string GetPatternText(int num)
+        {
+            string labelText;
+            switch (num - 1)
+            {
+                case 0:
+                    labelText = "Pattern 1: Up && Down";
+                    break;
+                case 1:
+                    labelText = "Pattern 2: Up || Down";
+                    break;
+                case 2:
+                    labelText = "Pattern 3: Fwd 2 Back 1";
+                    break;
+                case 3:
+                    labelText = "Pattern 4: Crisscrossed";
+                    break;
+                case 4:
+                    labelText = "Pattern 5: Min Jumper";
+                    break;
+                case 5:
+                    labelText = "Pattern 6:  Max Jumper";
+                    break;
+                case 6:
+                    labelText = "Pattern 7:  Min && Max";
+                    break;
+                case 7:
+                    labelText = "Pattern 8:  Random #'s";
+                    break;
+                default:
+                    labelText = "error";
+                    break;
+            }
+            return labelText;
+        }
+
         public void ResetPatternValues()
         {
             if (Opposite)

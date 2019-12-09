@@ -146,7 +146,9 @@
         <Compile Include="RunningSymbol.cs" />
         <Compile Include="MidiConnection.cs" />
         <Compile Include="ScenesLogic.cs" />
-        <Compile Include="SegmentedButtons.cs" />
+        <Compile Include="PatternSelection.cs" />
+        <Compile Include="TimingModeSelection.cs" />
+        <Compile Include="RangeSelection.cs" />
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\slider-default7-track.png" />
@@ -470,6 +472,13 @@
       <BundleResource Include="..\..\..\Sync\Simulant Stuff\Black and White Icons\graphicReverseSceneButtonOn.png">
         <Link>Resources\graphicReverseSceneButtonOn.png</Link>
       </BundleResource>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\StimulantAUv3\StimulantAUv3.csproj">
+        <IsAppExtension>true</IsAppExtension>
+        <Project>{E25A9F9D-320D-4AFF-BB4D-60E5ECC49069}</Project>
+        <Name>StimulantAUv3</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

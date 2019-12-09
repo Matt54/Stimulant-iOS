@@ -123,19 +123,31 @@ namespace Stimulant
                                     if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
                                     {
                                         myMidiModulation.getParameters(sceneArray[index]);
-                                        segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                        ReadPattern(sceneArray[index].PatternNumber - 1);
+
+                                        //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                                        patternSelection.SetPattern(sceneArray[index].PatternNumber);
+
+                                        //ReadPattern(sceneArray[index].PatternNumber - 1);
+                                        ReadPattern(sceneArray[index].PatternNumber);
+
                                         ReadSlider(sceneArray[index].RateSliderValue);
                                         sliderRate.Value = sceneArray[index].RateSliderValue;
-                                        rangeSlider.LowerValue = myMidiModulation.Minimum;
-                                        rangeSlider.UpperValue = myMidiModulation.Maximum;
+
+                                        //rangeSlider.LowerValue = myMidiModulation.Minimum;
+                                        //rangeSlider.UpperValue = myMidiModulation.Maximum;
+                                        rangeSelection.SetMinimum(myMidiModulation.Minimum);
+                                        rangeSelection.SetMaximum(myMidiModulation.Maximum);
+
+
                                     }
                                     else
                                     {
                                         myMidiModulation.getParameters(sceneArray[index]);
                                         UpdateSceneRunning();
+
                                         //ReadPattern(sceneArray[index].PatternNumber - 1);
                                         myMidiModulation.PatternNumber = sceneArray[index].PatternNumber;
+
                                         ReadSlider(sceneArray[index].RateSliderValue);
                                     }
 
@@ -156,7 +168,10 @@ namespace Stimulant
                             {
 
                                 //Pattern
-                                segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+
+                                //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                                //patternSelection.SetPattern(sceneArray[index].PatternNumber);
+
                                 switch (sceneArray[index].PatternNumber)
                                 {
                                     case 1:
@@ -185,8 +200,11 @@ namespace Stimulant
                                         buttonLocation.Enabled = true;
                                     }
                                 }
+
                                 string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
-                                labelPattern.Text = labelText;
+                                patternSelection.UpdateLabelText(labelText);
+
+                                //labelPattern.Text = labelText;
 
 
                                 //Opposite
@@ -200,8 +218,11 @@ namespace Stimulant
                                 }
 
                                 //Min&Max
-                                rangeSlider.LowerValue = sceneArray[index].Minimum;
-                                rangeSlider.UpperValue = sceneArray[index].Maximum;
+                                //rangeSlider.LowerValue = sceneArray[index].Minimum;
+                                //rangeSlider.UpperValue = sceneArray[index].Maximum;
+                                rangeSelection.SetMinimum(sceneArray[index].Minimum);
+                                rangeSelection.SetMaximum(sceneArray[index].Maximum);
+
 
                                 //Trigger
                                 if (sceneArray[index].IsTriggerOnly)
@@ -222,16 +243,18 @@ namespace Stimulant
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
                                     sliderHidden.Hidden = false;
-                                    rangeSlider.Enabled = false;
-                                    labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                    rangeSelection.SliderEnabled(false);//rangeSlider.Enabled = false;
+                                    //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                    rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
                                     sliderHidden.Value = sceneArray[index].StartingLocation;
                                 }
                                 else
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                     sliderHidden.Hidden = true;
-                                    rangeSlider.Enabled = true;
-                                    labelRange.Text = "Modulation Range";
+                                    rangeSelection.SliderEnabled(true);// rangeSlider.Enabled = true;
+                                    //labelRange.Text = "Modulation Range";
+                                    rangeSelection.UpdateLabelText("Modulation Range");
                                 }
 
                                 //Rate
@@ -253,12 +276,16 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
+                            //ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
+                            ReadPattern((nint)sceneArray[index].PatternNumber);
                             UpdateSceneGraphic();
+
+
                         }
                         else
                         {
-                            segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                            //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
+                            patternSelection.SetPattern(sceneArray[index].PatternNumber);
 
                             switch (sceneArray[index].PatternNumber)
                             {
@@ -292,7 +319,9 @@ namespace Stimulant
                             }
 
                             string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
-                            labelPattern.Text = labelText;
+                            //labelPattern.Text = labelText;
+                            patternSelection.UpdateLabelText(labelText);
+
                             UpdateSceneGraphic();
 
                             if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
@@ -384,8 +413,9 @@ namespace Stimulant
                             {
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = false;
-                                rangeSlider.Enabled = false;
-                                labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                rangeSelection.SliderEnabled(false);// rangeSlider.Enabled = false;
+                                //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                                rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
                                 sliderHidden.Value = sceneArray[index].StartingLocation;
                             }
                             else
@@ -393,8 +423,9 @@ namespace Stimulant
 
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOff.png"), UIControlState.Normal);
                                 sliderHidden.Hidden = true;
-                                rangeSlider.Enabled = true;
-                                labelRange.Text = "Modulation Range";
+                                rangeSelection.SliderEnabled(true); //rangeSlider.Enabled = true;
+                                //labelRange.Text = "Modulation Range";
+                                rangeSelection.UpdateLabelText("Modulation Range");
                             }
 
                             if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
@@ -412,7 +443,8 @@ namespace Stimulant
                         }
                         else
                         {
-                            labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                            //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
+                            rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
 
                             if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
                             {
