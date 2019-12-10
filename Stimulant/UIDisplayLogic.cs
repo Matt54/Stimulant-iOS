@@ -67,6 +67,7 @@ namespace Stimulant
 
         RangeSelection rangeSelection;
         PatternSelection patternSelection;
+        InfoDisplay infoDisplay;
         TimingModeSelection timingModeSelection;
 
 
@@ -82,8 +83,8 @@ namespace Stimulant
 
         UIButton buttonTrigger;
         UIButton buttonAuto;
-        UILabel labelMode;
-        UILabel labelDetails;
+        //UILabel labelMode;
+        //UILabel labelDetails;
 
         //UIButton buttonTime;
         //UIButton buttonMidi;
@@ -441,8 +442,8 @@ namespace Stimulant
             LoadTriggerButton(screenWidth, screenHeight, sizeSubtract, controlAdjustTrigger);
             LoadRandomButton(screenWidth, screenHeight, sizeSubtract, controlAdjustRandoms, controlAdjustScenes);
             
-            LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
-            LoadDetailsLabel(screenWidth, screenHeight, textAdjustDetails);
+            //LoadModeLabel(screenWidth, screenHeight, textAdjustMode);
+            //LoadDetailsLabel(screenWidth, screenHeight, textAdjustDetails);
 
 
             //LoadTimeandMidiButtons(screenWidth, screenHeight, sizeSubtract, controlAdjustMode);
@@ -450,9 +451,13 @@ namespace Stimulant
 
             rangeSelection = new RangeSelection(new CGRect(0, 0, screenWidth, screenHeight * 0.23));
 
-            float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
-            patternSelection = new PatternSelection(new CGRect(0, segYLoc - segHeight, screenWidth, segHeight * 2));
 
+            //this should be based only on screen height and width
+            //float segHeight = (float)(screenHeight / 18);
+            //float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
+            patternSelection = new PatternSelection(new CGRect(0, (float)(screenHeight * 0.63), screenWidth, screenHeight * 0.14));
+
+            infoDisplay = new InfoDisplay(new CGRect(0, (float)(screenHeight * 0.77), screenWidth, screenHeight * 0.1));
 
             timingModeSelection = new TimingModeSelection(new CGRect(0, (float)(screenHeight * 0.87), screenWidth, (float)(screenHeight * 0.1) ));
 
@@ -1109,6 +1114,7 @@ namespace Stimulant
             buttonAuto.TouchDown += HandleAutoTouchDown;
         }
 
+        /*
         public void LoadModeLabel(float screenWidth, float screenHeight, float textAdjustMode)
         {
             float labelModeWidth = (float)(screenWidth / 2);
@@ -1138,6 +1144,7 @@ namespace Stimulant
             labelDetails.Font = UIFont.SystemFontOfSize(100);
             labelDetails.AdjustsFontSizeToFitWidth = true;
         }
+        */
 
         /*
         public void LoadTimeandMidiButtons(float screenWidth, float screenHeight, float sizeSubtract, float controlAdjustMode)
@@ -1270,14 +1277,17 @@ namespace Stimulant
             AddChildViewController(patternSelection);
             patternSelection.ButtonPressed += HandlePatternChange;
 
+            View.AddSubview(infoDisplay.View);
+            AddChildViewController(infoDisplay);
+
             View.AddSubview(timingModeSelection.View);
             AddChildViewController(timingModeSelection);
             timingModeSelection.ButtonPressed += HandleModeChange;
 
             //View.AddSubview(labelPattern);
 
-            View.AddSubview(labelMode);
-            View.AddSubview(labelDetails);
+            //View.AddSubview(labelMode);
+            //View.AddSubview(labelDetails);
             View.AddSubview(sliderRate);
             View.AddSubview(labelRate);
             View.AddSubview(buttonAutoRate);

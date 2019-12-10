@@ -299,9 +299,10 @@ namespace Stimulant
                                 UpdateSceneGraphic();
                                 //UpdateSceneGraphic();
 
-                                labelMode.Text = " Scene Select ";
-                                labelDetails.Text = "Click to Load Settings";
-
+                                //labelMode.Text = " Scene Select ";
+                                //labelDetails.Text = "Click to Load Settings";
+                                infoDisplay.UpdateTitle(" Scene Select ");
+                                infoDisplay.UpdateDesc("Click to Load Settings");
 
 
                             }
@@ -423,8 +424,10 @@ namespace Stimulant
                                     buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
                                 }
                                 
-                                labelMode.Text = "Opposite Direction";
-                                labelDetails.Text = "Pattern Is Reversed";
+                                //labelMode.Text = "Opposite Direction";
+                                //labelDetails.Text = "Pattern Is Reversed";
+                                infoDisplay.UpdateTitle("Opposite Direction");
+                                infoDisplay.UpdateDesc("Pattern Is Reversed");
                             }
                             else
                             {
@@ -471,8 +474,10 @@ namespace Stimulant
                                 buttonSettings.Enabled = true;
                                 //buttonAR.Enabled = true;
 
-                                labelMode.Text = " Automatic Mode ";
-                                labelDetails.Text = "Randoms At A Set Rate";
+                                //labelMode.Text = " Automatic Mode ";
+                                //labelDetails.Text = "Randoms At A Set Rate";
+                                infoDisplay.UpdateTitle(" Automatic Mode ");
+                                infoDisplay.UpdateDesc("Randoms At A Set Rate");
                             }
                             else
                             {
@@ -539,8 +544,14 @@ namespace Stimulant
                             if (myMidiModulation.IsAR)
                             {
                                 buttonAR.SetImage(UIImage.FromFile("graphicARButtonOn.png"), UIControlState.Normal);
-                                labelMode.Text = "Automatic Range";
-                                labelDetails.Text = "Randoms Change Range";
+
+
+                                //labelMode.Text = "Automatic Range";
+                                //labelDetails.Text = "Randoms Change Range";
+                                infoDisplay.UpdateTitle("Automatic Range");
+                                infoDisplay.UpdateDesc("Randoms Change Range");
+
+
                                 buttonRandom.Enabled = true;
                             }
                             else
@@ -563,8 +574,10 @@ namespace Stimulant
                             if (myMidiModulation.IsAutoPattern)
                             {
                                 buttonAutoPattern.SetImage(UIImage.FromFile("graphicAutoPatternButtonOn.png"), UIControlState.Normal);
-                                labelMode.Text = "Automatic Pattern";
-                                labelDetails.Text = "Randoms Change Pattern";
+                                //labelMode.Text = "Automatic Pattern";
+                                //labelDetails.Text = "Randoms Change Pattern";
+                                infoDisplay.UpdateTitle("Automatic Pattern");
+                                infoDisplay.UpdateDesc("Randoms Change Pattern");
                                 buttonRandom.Enabled = true;
                             }
                             else
@@ -585,8 +598,10 @@ namespace Stimulant
                             if (myMidiModulation.IsAutoRate)
                             {
                                 buttonAutoRate.SetImage(UIImage.FromFile("graphicAutoRateButtonOn.png"), UIControlState.Normal);
-                                labelMode.Text = "Automatic Rate";
-                                labelDetails.Text = "Randoms Change Rate";
+                                //labelMode.Text = "Automatic Rate";
+                                //labelDetails.Text = "Randoms Change Rate";
+                                infoDisplay.UpdateTitle("Automatic Rate");
+                                infoDisplay.UpdateDesc("Randoms Change Rate");
                                 buttonRandom.Enabled = true;
                             }
                             else
@@ -618,8 +633,10 @@ namespace Stimulant
                                     //labelRange.Text = "Starting Value: " + myMidiModulation.StartingLocation.ToString();
                                     rangeSelection.UpdateLabelText("Starting Value: " + myMidiModulation.StartingLocation.ToString());
 
-                                    labelMode.Text = " Restart Pattern   ";
-                                    labelDetails.Text = "Begins At Starting Value";
+                                    //labelMode.Text = " Restart Pattern   ";
+                                    //labelDetails.Text = "Begins At Starting Value";
+                                    infoDisplay.UpdateTitle(" Restart Pattern   ");
+                                    infoDisplay.UpdateDesc("Begins At Starting Value");
                                 }
                                 //ReadHiddenSlider(sliderHidden.Value);
                                 myMidiModulation.StartingLocation = rangeSelection.GetStartingLocation();
@@ -661,8 +678,10 @@ namespace Stimulant
                                     buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
                                     buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
                                     buttonLocation.Enabled = true;
-                                    labelMode.Text = " Note On Trigger   ";
-                                    labelDetails.Text = "Modulation When Playing";
+                                    //labelMode.Text = " Note On Trigger   ";
+                                    //labelDetails.Text = "Modulation When Playing";
+                                    infoDisplay.UpdateTitle(" Note On Trigger   ");
+                                    infoDisplay.UpdateDesc("Modulation When Playing");
                                 }
                             }
                             else
@@ -702,8 +721,10 @@ namespace Stimulant
 
                                 buttonTap.Hidden = false;
 
-                                labelMode.Text = "Tempo Adjustment";
-                                labelDetails.Text = "Tap Or Use Arrows To Set";
+                                //labelMode.Text = "Tempo Adjustment";
+                                //labelDetails.Text = "Tap Or Use Arrows To Set";
+                                infoDisplay.UpdateTitle("Tempo Adjustment");
+                                infoDisplay.UpdateDesc("Tap Or Use Arrows To Set");
                             }
                             else
                             {
@@ -764,8 +785,10 @@ namespace Stimulant
                                 //labelPattern.Text = "Current Channel: CC" + myMidiModulation.CCNumber;
                                 patternSelection.UpdateLabelText("Current Channel: CC" + myMidiModulation.CCNumber);
 
-                                labelMode.Text = "CC Number Setting";
-                                labelDetails.Text = "Value Adjusted By Arrows";
+                                //labelMode.Text = "CC Number Setting";
+                                //labelDetails.Text = "Value Adjusted By Arrows";
+                                infoDisplay.UpdateTitle("CC Number Setting");
+                                infoDisplay.UpdateDesc("Value Adjusted By Arrows");
                             }
                             else
                             {
@@ -817,8 +840,10 @@ namespace Stimulant
                                     sliderRate.Value = ((float)tempVal - 3); //(oddly enough, this subtraction fixes a weird drifting bug..)
                                 }
                                 ReadSlider(sliderRate.Value);
-                                labelMode.Text = "Auto Rate Setting";
-                                labelDetails.Text = "Value Adjusted By Slider";
+                                //labelMode.Text = "Auto Rate Setting";
+                                //labelDetails.Text = "Value Adjusted By Slider";
+                                infoDisplay.UpdateTitle("Auto Rate Setting");
+                                infoDisplay.UpdateDesc("Value Adjusted By Slider");
                             }
                             else
                             {
@@ -853,8 +878,11 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = " Ext Clock Mode   ";
-                                    labelDetails.Text = " Midi Clock Adjusts Rate ";
+                                    //labelMode.Text = " Ext Clock Mode   ";
+                                    //labelDetails.Text = " Midi Clock Adjusts Rate ";
+                                    infoDisplay.UpdateTitle(" Ext Clock Mode   ");
+                                    infoDisplay.UpdateDesc(" Midi Clock Adjusts Rate ");
+
                                     //timerAuto.Stop(joinThread: false);
                                     if (myMidiModulation.IsAuto)
                                     {
@@ -888,8 +916,11 @@ namespace Stimulant
                                     {
                                         myMidiModulation.BPMOn = false;
                                     }
-                                    labelMode.Text = "Free Timing Mode";
-                                    labelDetails.Text = "Rate Based On Frequency";
+                                    //labelMode.Text = "Free Timing Mode";
+                                    //labelDetails.Text = "Rate Based On Frequency";
+                                    infoDisplay.UpdateTitle("Free Timing Mode");
+                                    infoDisplay.UpdateDesc("Rate Based On Frequency");
+
                                     if (myMidiModulation.IsAuto)
                                     {
                                         //timerAuto.Start();
@@ -925,8 +956,11 @@ namespace Stimulant
                                     //buttonClock.SetImage(UIImage.FromFile("graphicClockButtonOn.png"), UIControlState.Normal);
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
-                                    labelMode.Text = " Int Clock Mode   ";
-                                    labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
+                                    //labelMode.Text = " Int Clock Mode   ";
+                                    //labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
+                                    infoDisplay.UpdateTitle(" Int Clock Mode   ");
+                                    infoDisplay.UpdateDesc("Current Clock Tempo = " + myMidiModulation.BPM.ToString());
+
 
                                     if (myMidiModulation.IsAuto)
                                     {
@@ -1038,16 +1072,22 @@ namespace Stimulant
             switch (myMidiModulation.ModeNumber)
             {
                 case 1:
-                    labelMode.Text = "  Ext Clock Mode  ";
-                    labelDetails.Text = " Midi Clock Adjusts Rate ";
+                    //labelMode.Text = "  Ext Clock Mode  ";
+                    //labelDetails.Text = " Midi Clock Adjusts Rate ";
+                    infoDisplay.UpdateTitle("  Ext Clock Mode  ");
+                    infoDisplay.UpdateDesc(" Midi Clock Adjusts Rate ");
                     break;
                 case 2:
-                    labelMode.Text = "Free Timing Mode";
-                    labelDetails.Text = "Rate Based On Frequency";
+                    //labelMode.Text = "Free Timing Mode";
+                    //labelDetails.Text = "Rate Based On Frequency";
+                    infoDisplay.UpdateTitle("Free Timing Mode");
+                    infoDisplay.UpdateDesc("Rate Based On Frequency");
                     break;
                 case 3:
-                    labelMode.Text = " Int Clock Mode ";
-                    labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
+                    //labelMode.Text = " Int Clock Mode ";
+                    //labelDetails.Text = "Current Clock Tempo = " + myMidiModulation.BPM.ToString();
+                    infoDisplay.UpdateTitle(" Int Clock Mode   ");
+                    infoDisplay.UpdateDesc("Current Clock Tempo = " + myMidiModulation.BPM.ToString());
                     break;
             }
             /*

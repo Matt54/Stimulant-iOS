@@ -368,8 +368,5 @@ namespace Stimulant
             }
             return labelText;
         }
-
-        
-
     }
 }

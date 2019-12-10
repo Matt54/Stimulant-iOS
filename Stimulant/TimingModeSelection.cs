@@ -11,6 +11,7 @@ namespace Stimulant
         public TimingModeSelection(CGRect rect)
         {
             View.Frame = rect;
+            View.BackgroundColor = UIColor.White;
             CreateButtons(new CGRect(0, 0, rect.Width, rect.Height));
             SetButtonImages();
             AddButtonsToView();

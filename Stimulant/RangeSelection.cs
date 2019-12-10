@@ -33,11 +33,7 @@ namespace Stimulant
             UpdateLabelText("Modulation Range");
             label.MinimumFontSize = 20;
             label.Frame = rect;
-            //label.BackgroundColor = UIColor.Black;
-            //label.TextColor = UIColor.White;
             label.TextAlignment = UITextAlignment.Center;
-            //valueLabel.Lines = 0;
-            //valueLabel.LineBreakMode = UILineBreakMode.WordWrap;
         }
 
         public void UpdateLabelText(string text)
