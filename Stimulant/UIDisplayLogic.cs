@@ -23,7 +23,7 @@ namespace Stimulant
         CGRect frameReverseOrig;
         CGRect frameReverseScene;
 
-        CGRect frameRunningSymbol;
+        //CGRect frameRunningSymbol;
 
         int runningSymbol_lineWidth;
 
@@ -48,12 +48,12 @@ namespace Stimulant
         //UISlider sliderHidden;
         //UISlider sliderCC;
         //RangeSliderControl rangeSlider;
-        RangeSliderControl rangeScenesSlider;
+        //RangeSliderControl rangeScenesSlider;
         
 
-        CircularProgressBar myCircularProgressBar;
+        //CircularProgressBar myCircularProgressBar;
         //HorizontalProgressBar myHorizontalProgressBar;
-        UIButton buttonOnOff;
+        //UIButton buttonOnOff;
 
         UILabel labelRate;
         UISlider sliderRate;
@@ -66,6 +66,8 @@ namespace Stimulant
         //UISegmentedControl segmentedPattern;
 
         RangeSelection rangeSelection;
+        PowerButton powerButton;
+        SceneDisplay sceneDisplay;
         PatternSelection patternSelection;
         InfoDisplay infoDisplay;
         TimingModeSelection timingModeSelection;
@@ -96,7 +98,7 @@ namespace Stimulant
         UIButton buttonScenes;
         UIButton buttonArrange;
 
-        RunningSymbol myRunningSymbol;
+        //RunningSymbol myRunningSymbol;
 
         /*
         UIButton buttonScene0;
@@ -109,15 +111,18 @@ namespace Stimulant
         UIButton buttonScene7;
         */
 
-        UIButton[] buttonArray = new UIButton[8];
+        //UIButton[] buttonArray = new UIButton[8];
         int sceneSelected;
+
+        float screenWidth;
+        float screenHeight;
+
 
         public void LoadDisplay()
         {
             CGRect screenBound = UIScreen.MainScreen.Bounds;
             CGSize screenSize;
-            float screenWidth;
-            float screenHeight;
+            
             string device;
             string background;
             string overlay;
@@ -433,8 +438,8 @@ namespace Stimulant
 
             
 
-            LoadStartButton(screenWidth, screenHeight, buttonYAdjust, sizeSubtract);
-            LoadProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustProgress);
+            //LoadStartButton(screenWidth, screenHeight, buttonYAdjust, sizeSubtract);
+            //LoadProgressBar(screenWidth, screenHeight, buttonYAdjust, sizeSubtract, controlAdjustProgress);
             LoadCCButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
             LoadSettingsButton(screenWidth, screenHeight, sizeSubtract, controlAdjustSettings);
             LoadARButton(screenWidth, screenHeight, sizeSubtract, controlAdjustAR);
@@ -451,6 +456,9 @@ namespace Stimulant
 
             rangeSelection = new RangeSelection(new CGRect(0, 0, screenWidth, screenHeight * 0.23));
 
+            sceneDisplay = new SceneDisplay(new CGRect(0, screenHeight * 0.23, screenWidth, screenHeight * 0.18), 8);
+
+            powerButton = new PowerButton(new CGRect(0, screenHeight * 0.25, screenWidth, screenHeight * 0.25));
 
             //this should be based only on screen height and width
             //float segHeight = (float)(screenHeight / 18);
@@ -472,7 +480,7 @@ namespace Stimulant
             //LoadHiddenSlider(screenWidth, screenHeight, controlAdjustHidden, sliderHeight);
             LoadBPMTextField(screenWidth, screenHeight);
 
-            LoadSceneButtons(screenWidth, screenHeight);
+            //LoadSceneButtons(screenWidth, screenHeight);
 
             AddSubviewsToMainview();
 
@@ -704,6 +712,7 @@ namespace Stimulant
             buttonArrange.TouchDown += HandleArrangeTouchDown;
         }
 
+        /*
         public void LoadStartButton(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract)
         {
             //float buttonRandomWidth = screenWidth / (4 + sizeSubtract);
@@ -749,7 +758,9 @@ namespace Stimulant
             buttonOnOff.TouchUpOutside += HandleTouchUpInside;
             buttonOnOff.TouchDown += HandleTouchDown;
         }
+        */
 
+        /*
         public void LoadProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlAdjustProgress)
         {
             float margin = (float)(screenWidth / 32);
@@ -783,6 +794,7 @@ namespace Stimulant
             //Declare progress bar object (Instantiating my CircularProgressBar class)
             myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, 0.0f, barColor);
         }
+        */
 
         /*
         public void LoadHorizontalProgressBar(float screenWidth, float screenHeight, float buttonYAdjust, float sizeSubtract, float controlHorizontalAdjustProgress)
@@ -802,10 +814,9 @@ namespace Stimulant
 
             //myHorizontalProgressBar.Hidden = true;
         }
-
         */
         
-
+        /*
         public void LoadSceneButtons(float screenWidth, float screenHeight)
         {
             float margin = (float)(screenWidth / 32);
@@ -816,7 +827,7 @@ namespace Stimulant
             float buttonSceneYLoc = (float)((screenHeight - buttonSceneHeight) / 3.5);
 
             
-
+            
             for (int ii = 0; ii < 8; ii++)
             {
                 buttonArray[ii] = UIButton.FromType(UIButtonType.Custom);
@@ -826,13 +837,14 @@ namespace Stimulant
                 buttonArray[ii].Frame = new CGRect(margin + margin * (ii+1) + buttonSceneWidth * ii, buttonSceneYLoc, buttonSceneWidth, buttonSceneHeight);
                 buttonArray[ii].TouchDown += HandleSceneTouchDown;
             }
+            
 
             widthScenes = buttonSceneWidth;
             marginScenes = margin;
             locationScenes = buttonSceneYLoc;
-            frameRunningSymbol = new CGRect(marginScenes + marginScenes, locationScenes - widthScenes, widthScenes, widthScenes);
+            //frameRunningSymbol = new CGRect(marginScenes + marginScenes, locationScenes - widthScenes, widthScenes, widthScenes);
             runningSymbol_lineWidth = (int)(screenWidth / 120);
-            myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
+            //myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
 
 
             rangeScenesSlider = new RangeSliderControl();
@@ -865,27 +877,9 @@ namespace Stimulant
                 }
                 myMidiModulation.MinScene = (int)myObj.LowerValue;
                 myMidiModulation.MaxScene = (int)myObj.UpperValue-1;
-                /*
-                var myObj = (RangeSliderControl)sender;
-                if (!myMidiModulation.IsSceneMode)
-                {
-                    myMidiModulation.Maximum = (int)myObj.UpperValue;
-                    myMidiModulation.Minimum = (int)myObj.LowerValue;
-                }
-                else
-                {
-                    for (int ii = 0; ii < 8; ii++)
-                    {
-                        if (sceneArray[ii].IsSelected)
-                        {
-                            sceneArray[ii].Maximum = (int)myObj.UpperValue;
-                            sceneArray[ii].Minimum = (int)myObj.LowerValue;
-                        }
-                    }
-                }
-                */
             };
         }
+        */
 
         public void LoadRateLabel(float screenWidth, float screenHeight, float textAdjustRate, float sliderHeight)
         {
@@ -1262,9 +1256,9 @@ namespace Stimulant
         public void AddSubviewsToMainview()
         {
             //Add Subviews to main view
-            View.AddSubview(myCircularProgressBar);
 
-            View.AddSubview(buttonOnOff);
+            //View.AddSubview(myCircularProgressBar);
+            //View.AddSubview(buttonOnOff);
 
             //View.AddSubview(segmentedPattern);
 
@@ -1272,6 +1266,12 @@ namespace Stimulant
             AddChildViewController(rangeSelection);
             rangeSelection.SliderMoved += HandleRangeSliderChange;
             rangeSelection.HiddenSliderMoved += HandleHiddenSliderChange;
+
+            
+            View.AddSubview(powerButton.View);
+            AddChildViewController(powerButton);
+            powerButton.StateChange += HandlePowerButtonStateChange;
+            //powerButton.UpdateProgress(2f);
 
             View.AddSubview(patternSelection.View);
             AddChildViewController(patternSelection);
@@ -1315,6 +1315,11 @@ namespace Stimulant
             View.AddSubview(buttonPlus10);
             View.AddSubview(buttonMinus1);
             View.AddSubview(buttonMinus10);
+
+            View.AddSubview(sceneDisplay.View);
+            AddChildViewController(sceneDisplay);
+            sceneDisplay.SceneChanged += HandleSceneChange;
+
 
             //View.AddSubview(buttonTime);
             //View.AddSubview(buttonMidi);

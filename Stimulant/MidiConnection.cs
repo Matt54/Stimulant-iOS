@@ -207,8 +207,9 @@ namespace Stimulant
                         if (!myMidiModulation.IsRunning)
                         {
                             InvokeOnMainThread(() => {
-                                PowerPushed();
-                                FlipPower();
+                                //PowerPushed();
+                                //FlipPower();
+                                myMidiModulation.IsRunning = powerButton.TogglePower();
                             });
                         }
                         myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
@@ -237,8 +238,9 @@ namespace Stimulant
                         if (myMidiModulation.IsRunning)
                         {
                             InvokeOnMainThread(() => {
-                                PowerPushed();
-                                FlipPower();
+                                //PowerPushed();
+                                //FlipPower();
+                                myMidiModulation.IsRunning = powerButton.TogglePower();
                             });
                             //myMidiModulation.Reset();
                         }

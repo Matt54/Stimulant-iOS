@@ -11,11 +11,17 @@ namespace Stimulant
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private int index;
+        public int GetIndex()
+        {
+            return index;
+        }
+        public void SetIndex(int i)
+        {
+            index = i;
         }
 
         //Current scene running the modulations parameters

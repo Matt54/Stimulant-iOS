@@ -1,6 +1,7 @@
 ﻿using System;
 using UIKit;
 using CoreMidi;
+using CoreGraphics;
 using System.ComponentModel;
 
 namespace Stimulant
@@ -15,8 +16,8 @@ namespace Stimulant
         MidiModulation myMidiModulation = new MidiModulation();
 
         //Scenes myScenes = new Scenes();
-        Scene[] sceneArray = new Scene[8];
-
+        //Scene[] sceneArray = new Scene[8];
+        
 
         // Controls how fast the time-based modulation steps
         HighResolutionTimer timerHighRes;
@@ -94,30 +95,6 @@ namespace Stimulant
                 });
             };
 
-            /*
-            timerArrangement = new HighResolutionTimer(1000.0f);
-            timerArrangement.UseHighPriorityThread = false;
-            timerArrangement.Elapsed += (s, e) =>
-            {
-                InvokeOnMainThread(() =>
-                {
-                    if (myMidiModulation.IsRunning)
-                    {
-                        if (!(myMidiModulation.ModeNumber == 2))
-                        {
-                            myMidiModulation.ArrangementCount();
-                        }
-                        else
-                        {
-                            MoveToNextScene();
-                        }
-                    }
-                });
-            };
-            */
-
-
-
 
             //timerHighRes.Stop();    // by default Stop waits for thread.Join()
             // which, if called not from Elapsed subscribers,
@@ -134,31 +111,37 @@ namespace Stimulant
             myMidiModulation.ModeNumber = 2;
             ReadSlider(sliderRate.Value);
 
+            //does this do something?
             this.textFieldBPM.ShouldReturn += (textField) => {
                 textFieldBPM.ResignFirstResponder();
                 return true;
             };
 
+            /*
             for (int ii = 0; ii < 8; ii++)
             {
-                sceneArray[ii] = new Scene();
+                sceneDisplay.GetScene(ii) = new Scene();
             }
 
             sceneArray[0].IsSelected = true;
             sceneArray[0].IsRunning = true;
+            */
 
-            for (int ii = 0; ii < 8; ii++)
+            sceneDisplay.GetScene(0).IsSelected = true;
+            sceneDisplay.GetScene(0).IsRunning = true;
+            for (int ii = 0; ii < sceneDisplay.GetNumberOfScenes(); ii++)
             {
-                myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
-                UpdateSceneGraphic();
+                myMidiModulation.setParameters(sliderRate.Value, sceneDisplay.GetScene(ii));
+                // UpdateSceneGraphic();
             }
-
+            sceneDisplay.UpdateAllSceneGraphics();
+            
             
 
-
+            /*
             sceneArray[0].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
             {
-                CombinedSceneProperty(e2.PropertyName,0);
+                CombinedSceneProperty(e2.PropertyName, 0);
             };
             sceneArray[1].PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
             {
@@ -188,6 +171,7 @@ namespace Stimulant
             {
                 CombinedSceneProperty(e2.PropertyName, 7);
             };
+            */
 
 
             myMidiModulation.PropertyChanged += (object s, PropertyChangedEventArgs e2) =>
@@ -214,7 +198,7 @@ namespace Stimulant
                             {
                                 if (myMidiModulation.IsArrangementMode)
                                 {
-                                    MoveToNextScene();
+                                    sceneDisplay.MoveToNextScene(); //MoveToNextScene();
                                     myMidiModulation.ResetPatternValues();
                                 }
                                 myMidiModulation.HasMoved = false;
@@ -230,7 +214,11 @@ namespace Stimulant
                                 //View.AddSubview(myHorizontalProgressBar);
                                 //myCircularProgressBar.RemoveFromSuperview();
                                 //buttonOnOff.RemoveFromSuperview();
-                                buttonOnOff.Frame = sceneStartSize;
+
+
+                                //buttonOnOff.Frame = sceneStartSize;
+                                powerButton.UpdateFrame(new CGRect(screenWidth * .7, screenHeight * 0.415, screenWidth * .3, screenHeight * 0.08));
+
                                 var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
 
                                 /*
@@ -249,8 +237,11 @@ namespace Stimulant
                                 
                                 View.AddSubview(buttonOnOff);
                                 */
-                                myCircularProgressBar.UpdateFrame(C_progressSceneSize,C_lineWidthSmall);
-                                myCircularProgressBar.UpdateGraph(pi_mult);
+                                //myCircularProgressBar.UpdateFrame(C_progressSceneSize,C_lineWidthSmall);
+
+
+                                //myCircularProgressBar.UpdateGraph(pi_mult);
+                                powerButton.UpdateProgress(pi_mult);
 
 
                                 buttonRandom.Hidden = true;
@@ -274,29 +265,36 @@ namespace Stimulant
                                 /*
                                 for (int ii = 0; ii < 8; ii++)
                                 {
-                                    myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
+                                    myMidiModulation.setParameters(sliderRate.Value, sceneDisplay.GetScene(ii));
                                     UpdateSceneGraphic();
                                 }
                                 */
 
-                                for (int ii = 0; ii < 8; ii++)
+                                /*
+                                for (int ii = 0; ii < sceneDisplay.GetNumberOfScenes(); ii++)
                                 {
-                                    View.AddSubview(buttonArray[ii]);
-                                    if (sceneArray[ii].IsSelected)
+                                    
+                                    //View.AddSubview(buttonArray[ii]);
+                                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                                    if(sceneDisplay.GetScene(ii).IsSelected)
                                     {
-                                        myMidiModulation.setParameters(sliderRate.Value, sceneArray[ii]);
+                                        myMidiModulation.setParameters(sliderRate.Value, sceneDisplay.GetScene(ii)); // sceneDisplay.GetScene(ii));
                                     }
                                 }
+                                */
+
+                                myMidiModulation.setParameters( sliderRate.Value, sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ) );
+                                sceneDisplay.View.Hidden = false;
                                 View.AddSubview(buttonArrange);
-                                
-                                
+
+
 
                                 //View.AddSubview(myHorizontalProgressBar);
 
                                 //sliderCC.Hidden = false;
 
                                 //sceneArray[0].IsSelected = true;
-                                UpdateSceneGraphic();
+                                sceneDisplay.UpdateAllSceneGraphics(); // UpdateSceneGraphic();
                                 //UpdateSceneGraphic();
 
                                 //labelMode.Text = " Scene Select ";
@@ -310,11 +308,14 @@ namespace Stimulant
                             {
                                 buttonArrange.RemoveFromSuperview();
                                 myMidiModulation.IsArrangementMode = false;
-                                buttonOnOff.Frame = bigStartSize;
+
+                                //buttonOnOff.Frame = bigStartSize;
+                                powerButton.UpdateFrame(new CGRect(0, screenHeight * 0.25, screenWidth, screenHeight * 0.25));
 
                                 var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
-                                myCircularProgressBar.UpdateFrame(C_progressSize, C_lineWidth);
-                                myCircularProgressBar.UpdateGraph(pi_mult);
+                                //myCircularProgressBar.UpdateFrame(C_progressSize, C_lineWidth);
+                                //myCircularProgressBar.UpdateGraph(pi_mult);
+                                powerButton.UpdateProgress(pi_mult);
 
                                 /*
                                 myCircularProgressBar.RemoveFromSuperview();
@@ -347,10 +348,15 @@ namespace Stimulant
                                 //sliderCC.Hidden = true;
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
+                                sceneDisplay.View.Hidden = true;
+
+                                /*
                                 for (int ii = 0; ii < 8; ii++)
                                 {
-                                    buttonArray[ii].RemoveFromSuperview();
+                                    sceneDisplay.View.Hidden = true;
+                                    //buttonArray[ii].RemoveFromSuperview();
                                 }
+                                */
 
                                 ResetDisplay();
                             }
@@ -361,9 +367,9 @@ namespace Stimulant
                         {
                             if (myMidiModulation.IsArrangementMode)
                             {
-                                UpdateSceneRunning();
-                                View.AddSubview(myRunningSymbol);
-                                View.AddSubview(rangeScenesSlider);
+                                //UpdateSceneRunning();
+                                //View.AddSubview(myRunningSymbol);
+                                //View.AddSubview(rangeScenesSlider);
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOn"), UIControlState.Normal);
 
                                 /*
@@ -384,8 +390,8 @@ namespace Stimulant
                             }
                             else
                             {
-                                myRunningSymbol.RemoveFromSuperview();
-                                rangeScenesSlider.RemoveFromSuperview();
+                                //myRunningSymbol.RemoveFromSuperview();
+                                //rangeScenesSlider.RemoveFromSuperview();
                                 buttonArrange.SetImage(UIImage.FromFile("graphicArrangeButtonOff"), UIControlState.Normal);
                                 /*
                                 if (timerArrangement.IsRunning)
@@ -403,7 +409,7 @@ namespace Stimulant
                         {
                             if (myMidiModulation.SceneMove)
                             {
-                                MoveToNextScene();
+                                sceneDisplay.MoveToNextScene(); //MoveToNextScene();
                                 myMidiModulation.SceneMove = false;
                             }
                             break;
@@ -1102,57 +1108,28 @@ namespace Stimulant
 
         void updateProgressBar()
         {
+            var pi_mult = myMidiModulation.CurrentCC * 2.0f / 127;
+            powerButton.UpdateProgress(pi_mult);
+            //myCircularProgressBar.UpdateGraph(pi_mult);
+
+            /*
             if (!(myMidiModulation.IsSceneMode))
             {
-                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                pi_mult = myMidiModulation.CurrentCC * 2.0f / 127;
+                
+                
 
-                /*
-
-                //Momentarily remove from superview so that the start button can be on top of progress bar
-                myCircularProgressBar.RemoveFromSuperview();
-                //Declare progress bar object (Instantiating my CircularProgressBar class)
-                myCircularProgressBar = new CircularProgressBar(C_progressSize, C_lineWidth, pi_mult, barColor);
-                buttonOnOff.RemoveFromSuperview();
-
-                //Add Views
-                View.AddSubview(myCircularProgressBar);
-                View.AddSubview(buttonOnOff);
-                */
-
-                myCircularProgressBar.UpdateGraph(pi_mult);
+                powerButton.UpdateProgress(pi_mult);
             }
             else
             {
 
-                var pi_mult = (myMidiModulation.CurrentCC * 2.0f / 127);
+                pi_mult = myMidiModulation.CurrentCC * 2.0f / 127;
+
                 myCircularProgressBar.UpdateGraph(pi_mult);
 
-
-
-                /*
-                //Momentarily remove from superview so that the start button can be on top of progress bar
-                myCircularProgressBar.RemoveFromSuperview();
-                //Declare progress bar object (Instantiating my CircularProgressBar class)
-                myCircularProgressBar = new CircularProgressBar(C_progressSceneSize, C_lineWidthSmall, pi_mult, barColor);
-                buttonOnOff.RemoveFromSuperview();
-
-                //Add Views
-                View.AddSubview(myCircularProgressBar);
-                View.AddSubview(buttonOnOff);
-                */
-
-
-                //var progressPercent = (myMidiModulation.CurrentCC * 1.0f / 127);
-                //myHorizontalProgressBar.RemoveFromSuperview();
-                //myHorizontalProgressBar = new HorizontalProgressBar(H_progressSize, H_lineWidth, progressPercent, barColor);
-                //myHorizontalProgressBar._progressPercent = progressPercent;
-                //myHorizontalProgressBar.UpdateGraph(progressPercent);
-                //myHorizontalProgressBar.UpdateProgressAndDraw();
-                //myHorizontalProgressBar.UpdateGraph(progressPercent);
-                //View.AddSubview(myHorizontalProgressBar);
-                //sliderCC.Value = myMidiModulation.CurrentCC;
-                
             }
+            */
         }
 
         private void HandlePatternChange(object sender, System.EventArgs e)
@@ -1165,21 +1142,32 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].PatternNumber = patternSelection.GetPatternNumber();
+                        //sceneDisplay.GetScene(ii).PatternNumber = patternSelection.GetPatternNumber();
+                        sceneDisplay.GetScene(ii).PatternNumber = patternSelection.GetPatternNumber();
 
                         if (myMidiModulation.IsArrangementMode) patternSelection.UpdateLabelText( myMidiModulation.GetPatternText(patternSelection.GetPatternNumber()));
-
                     }
                 }
-                
-            }
+                */
 
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).PatternNumber = patternSelection.GetPatternNumber();
+                if (myMidiModulation.IsArrangementMode) patternSelection.UpdateLabelText( myMidiModulation.GetPatternText( patternSelection.GetPatternNumber() ) );
+
+            }
         }
-        
+
+        //private void HandleSceneChange(object sender, PropertyChangedEventArgs e)
+        private void HandleSceneChange(object sender, string propertyName, int index)
+        {
+            //See scene logic file
+            CombinedSceneProperty(propertyName, index);
+        }
 
         private void HandlePlus1TouchDown(object sender, System.EventArgs e)
         {
@@ -1232,6 +1220,7 @@ namespace Stimulant
         partial void RateSliderChange(UISlider sender) { }
         partial void StartButton_TouchUpInside(UIButton sender) { }
 
+        /*
         protected void HandleTouchDown(object sender, System.EventArgs e)
         {
             PowerPushed();
@@ -1311,6 +1300,12 @@ namespace Stimulant
             }
 
         }
+        */
+
+        private void HandlePowerButtonStateChange(object sender, System.EventArgs e)
+        {
+            myMidiModulation.IsRunning = powerButton.IsOn();
+        }
 
         private void HandleScenesTouchDown(object sender, System.EventArgs e)
         {
@@ -1325,7 +1320,7 @@ namespace Stimulant
         private void HandleSceneTouchDown(object sender, System.EventArgs e)
         {
             UIButton myButton = (UIButton)sender;
-            UpdateSceneGraphic(myButton);
+            //UpdateSceneGraphic(myButton);
         }
 
         protected void HandleLocationTouchDown(object sender, System.EventArgs e)
@@ -1338,13 +1333,20 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].RestartToggle();
+                        //sceneDisplay.GetScene(ii).RestartToggle();
+                        sceneDisplay.GetScene(ii).RestartToggle();
                     }
                 }
+                */
+
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).RestartToggle();
+
             }
         }
 
@@ -1357,14 +1359,23 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].Maximum = rangeSelection.GetMaximum();
-                        sceneArray[ii].Minimum = rangeSelection.GetMinimum();
+                        //sceneDisplay.GetScene(ii).Maximum = rangeSelection.GetMaximum();
+                        //sceneDisplay.GetScene(ii).Minimum = rangeSelection.GetMinimum();
+                        sceneDisplay.GetScene(ii).Maximum = rangeSelection.GetMaximum();
+                        sceneDisplay.GetScene(ii).Minimum = rangeSelection.GetMinimum();
                     }
                 }
+                */
+
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).Maximum = rangeSelection.GetMaximum();
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).Minimum = rangeSelection.GetMinimum();
+
             }
         }
 
@@ -1383,13 +1394,19 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].StartingLocation = rangeSelection.GetStartingLocation();//(int)myObject.Value;
+                        //sceneDisplay.GetScene(ii).StartingLocation = rangeSelection.GetStartingLocation();//(int)myObject.Value;
+                        sceneDisplay.GetScene(ii).StartingLocation = rangeSelection.GetStartingLocation();
                     }
                 }
+                */
+
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).StartingLocation = rangeSelection.GetStartingLocation();
             }
         }
 
@@ -1408,13 +1425,18 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].ReverseToggle();
+                        //sceneDisplay.GetScene(ii).ReverseToggle();
+                        sceneDisplay.GetScene(ii).ReverseToggle();
                     }
                 }
+                */
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).ReverseToggle();
             }
         }
 
@@ -1426,6 +1448,8 @@ namespace Stimulant
         private void HandleBPMTouchDown(object sender, System.EventArgs e)
         {
             myMidiModulation.BPMToggle();
+            //myCircularProgressBar.UpdateGraph(2f);
+            powerButton.UpdateProgress(2f);
         }
 
         private void HandleAutoPatternTouchDown(object sender, System.EventArgs e)
@@ -1491,13 +1515,18 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].TriggerToggle();
+                        //sceneDisplay.GetScene(ii).TriggerToggle();
+                        sceneDisplay.GetScene(ii).TriggerToggle();
                     }
                 }
+                */
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).TriggerToggle();
             }
         }
 
@@ -1510,13 +1539,17 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected)
+                    //if (sceneDisplay.GetScene(ii).IsSelected)
+                    if (sceneDisplay.GetScene(ii).IsSelected)
                     {
-                        sceneArray[ii].RateSliderValue = myObject.Value;
+                        sceneDisplay.GetScene(ii).RateSliderValue = myObject.Value;
                     }
                 }
+                */
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).RateSliderValue = myObject.Value;
             }
         }
 
@@ -1864,12 +1897,15 @@ namespace Stimulant
             }
             else
             {
+                /*
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    if (sceneArray[ii].IsSelected) {
-                        sceneArray[ii].PatternNumber = (int)seg.SelectedSegment+1;
+                    if (sceneDisplay.GetScene(ii).IsSelected) {
+                        sceneDisplay.GetScene(ii).PatternNumber = (int)seg.SelectedSegment+1;
                     }
                 }
+                */
+                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).PatternNumber = (int)seg.SelectedSegment + 1;
             }
         }
 

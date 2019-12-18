@@ -31,6 +31,10 @@ namespace Stimulant
 
         CGRect _frame;
 
+        public RunningSymbol(int lineWidth)
+        {
+            _lineWidth = lineWidth;
+        }
 
         public RunningSymbol(CGRect frame, int lineWidth)
         {
@@ -65,16 +69,16 @@ namespace Stimulant
             nfloat frameWidth = x1 - x0;
             nfloat frameHeight = y1 - y0;
 
-            nfloat padding = frameWidth / 5;
+            nfloat padding = frameWidth / 8;
 
             nfloat insideWidth = frameWidth - padding * 2;
-            nfloat insideHeight = insideWidth;
+            //nfloat insideHeight = insideWidth;
 
             g.SetLineWidth(_lineWidth);
             g.SetStrokeColor(UIColor.FromRGB(0, 0, 0).CGColor);
-            g.MoveTo(x0 + padding, y0 + (frameHeight) / 2);
-            g.AddLineToPoint(x0+(frameWidth)/2,y1 - padding);
-            g.AddLineToPoint(x1 - padding, y0 + (frameHeight) / 2);
+            g.MoveTo(x0 + padding, y0 + padding);// + (frameHeight) / 2);
+            g.AddLineToPoint(x0 + (frameWidth) / 2, y1 - padding);// y1 - padding);
+            g.AddLineToPoint(x1 - padding, y0 + padding);// + (frameHeight) / 2);
             g.StrokePath();
 
 

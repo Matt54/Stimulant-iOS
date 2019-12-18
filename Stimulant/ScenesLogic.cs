@@ -14,30 +14,41 @@ namespace Stimulant
     public partial class ViewController
     {
 
+        //Determines which scene .IsRunning and assigns that to currentSceneRunning
+        //Makes the current scene stop running and makes next scene .IsRunning
+        /*
         void MoveToNextScene()
         {
             int currentSceneRunning = 0;
             //Do stuff here
             for (int ii = 0; ii < 8; ii++)
             {
-                if (sceneArray[ii].IsRunning)
+                //if (sceneArray[ii].IsRunning)
+                if (sceneDisplay.GetScene(ii).IsRunning)
                 {
                     currentSceneRunning = ii;
                 }
             }
 
-            sceneArray[currentSceneRunning].IsRunning = false;
+            //sceneArray[currentSceneRunning].IsRunning = false;
+            sceneDisplay.GetScene(currentSceneRunning).IsRunning = false;
 
             if (currentSceneRunning < myMidiModulation.MaxScene)
             {
-                sceneArray[currentSceneRunning + 1].IsRunning = true;
+                //sceneArray[currentSceneRunning + 1].IsRunning = true;
+                sceneDisplay.GetScene(currentSceneRunning + 1).IsRunning = true;
             }
             else
             {
-                sceneArray[myMidiModulation.MinScene].IsRunning = true;
+                //sceneArray[myMidiModulation.MinScene].IsRunning = true;
+                sceneDisplay.GetScene(myMidiModulation.MinScene).IsRunning = true;
             }
         }
+        */
+        
 
+        //This also selects the scene
+        /*
         void UpdateSceneGraphic(UIButton myButton)
         {
 
@@ -72,9 +83,10 @@ namespace Stimulant
                     }
                 }
             }
-            // sceneSelected could be used here outside the for loop
         }
+        */
 
+        /*
         void UpdateSceneGraphic()
         {
             for (int ii = 0; ii < 8; ii++)
@@ -85,7 +97,11 @@ namespace Stimulant
                 buttonArray[ii].SetImage(UIImage.FromFile(fileName), UIControlState.Highlighted);
             }
         }
+        */
 
+        //Determines which scene .IsRunning
+        //Uses that to update the running symbol
+        /*
         void UpdateSceneRunning()
         {
             //myRunningSymbol.RemoveFromSuperview();
@@ -93,7 +109,8 @@ namespace Stimulant
             //Do stuff here
             for (int ii = 0; ii < 8; ii++)
             {
-                if (sceneArray[ii].IsRunning)
+                //if (sceneArray[ii].IsRunning)
+                if (sceneDisplay.GetScene(ii).IsRunning)
                 {
                     currentSceneRunning = ii;
                 }
@@ -104,51 +121,57 @@ namespace Stimulant
             //myRunningSymbol = new RunningSymbol(frameRunningSymbol, runningSymbol_lineWidth);
             //View.AddSubview(myRunningSymbol);
         }
+        */
 
         
 
         private void CombinedSceneProperty(string propertyName, int index)
         {
+            /*
+            if(index > 0)
+            {
+                string hello;
+            }
+            */
             switch (propertyName)
             {
                 case "IsRunning":
                     {
                         if (myMidiModulation.IsSceneMode)
                         {
-                            if (sceneArray[index].IsRunning)
+                            if (sceneDisplay.GetScene(index).IsRunning)
                             {
                                 InvokeOnMainThread(() =>
                                 {
                                     //This needs to update myMidiModulation without effecting the display
                                     if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
                                     {
-                                        myMidiModulation.getParameters(sceneArray[index]);
+                                        myMidiModulation.getParameters(sceneDisplay.GetScene(index));
 
-                                        //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                        patternSelection.SetPattern(sceneArray[index].PatternNumber);
+                                        //segmentedPattern.SelectedSegment = sceneDisplay.GetScene(index).PatternNumber - 1;
+                                        patternSelection.SetPattern(sceneDisplay.GetScene(index).PatternNumber);
 
-                                        //ReadPattern(sceneArray[index].PatternNumber - 1);
-                                        ReadPattern(sceneArray[index].PatternNumber);
+                                        //ReadPattern(sceneDisplay.GetScene(index).PatternNumber - 1);
+                                        ReadPattern(sceneDisplay.GetScene(index).PatternNumber);
+                                        //ReadPattern(myMidiModulation.PatternNumber);
 
-                                        ReadSlider(sceneArray[index].RateSliderValue);
-                                        sliderRate.Value = sceneArray[index].RateSliderValue;
+                                        ReadSlider(sceneDisplay.GetScene(index).RateSliderValue);
+                                        sliderRate.Value = sceneDisplay.GetScene(index).RateSliderValue;
 
                                         //rangeSlider.LowerValue = myMidiModulation.Minimum;
                                         //rangeSlider.UpperValue = myMidiModulation.Maximum;
                                         rangeSelection.SetMinimum(myMidiModulation.Minimum);
                                         rangeSelection.SetMaximum(myMidiModulation.Maximum);
-
-
                                     }
                                     else
                                     {
-                                        myMidiModulation.getParameters(sceneArray[index]);
-                                        UpdateSceneRunning();
+                                        myMidiModulation.getParameters(sceneDisplay.GetScene(index));
+                                        //UpdateSceneRunning();
 
-                                        //ReadPattern(sceneArray[index].PatternNumber - 1);
-                                        myMidiModulation.PatternNumber = sceneArray[index].PatternNumber;
+                                        //ReadPattern(sceneDisplay.GetScene(index).PatternNumber - 1);
+                                        myMidiModulation.PatternNumber = sceneDisplay.GetScene(index).PatternNumber;
 
-                                        ReadSlider(sceneArray[index].RateSliderValue);
+                                        ReadSlider(sceneDisplay.GetScene(index).RateSliderValue);
                                     }
 
                                 });
@@ -158,27 +181,27 @@ namespace Stimulant
                     }
                 case "IsSelected":
                     {
-                        if (sceneArray[index].IsSelected)
+                        if (sceneDisplay.GetScene(index).IsSelected)
                         {
                             if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
                             {
-                                sceneArray[index].IsRunning = true;
+                                sceneDisplay.GetScene(index).IsRunning = true;
                             }
                             else if (myMidiModulation.IsArrangementMode) //Update display without effecting myMidiModulation
                             {
 
                                 //Pattern
 
-                                //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                                //patternSelection.SetPattern(sceneArray[index].PatternNumber);
+                                //segmentedPattern.SelectedSegment = sceneDisplay.GetScene(index).PatternNumber - 1;
+                                //patternSelection.SetPattern(sceneDisplay.GetScene(index).PatternNumber);
 
-                                switch (sceneArray[index].PatternNumber)
+                                switch (sceneDisplay.GetScene(index).PatternNumber)
                                 {
                                     case 1:
                                     case 4:
                                     case 7:
                                     case 8:
-                                        sceneArray[index].Opposite = false;
+                                        sceneDisplay.GetScene(index).Opposite = false;
                                         //buttonReverse.Hidden = true;
                                         buttonReverse.Enabled = false;
                                         buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
@@ -188,27 +211,27 @@ namespace Stimulant
                                         buttonReverse.Enabled = true;
                                         break;
                                 }
-                                if (sceneArray[index].PatternNumber > 6)
+                                if (sceneDisplay.GetScene(index).PatternNumber > 6)
                                 {
-                                    sceneArray[index].IsRestartEachNote = false;
+                                    sceneDisplay.GetScene(index).IsRestartEachNote = false;
                                     buttonLocation.Enabled = false;
                                 }
                                 else
                                 {
-                                    if (sceneArray[index].IsTriggerOnly)
+                                    if (sceneDisplay.GetScene(index).IsTriggerOnly)
                                     {
                                         buttonLocation.Enabled = true;
                                     }
                                 }
 
-                                string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
+                                string labelText = sceneDisplay.GetScene(index).UpdatePattern(sceneDisplay.GetScene(index).PatternNumber - 1);
                                 patternSelection.UpdateLabelText(labelText);
 
                                 //labelPattern.Text = labelText;
 
 
                                 //Opposite
-                                if (sceneArray[index].Opposite)
+                                if (sceneDisplay.GetScene(index).Opposite)
                                 {
                                     buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
                                 }
@@ -218,14 +241,14 @@ namespace Stimulant
                                 }
 
                                 //Min&Max
-                                //rangeSlider.LowerValue = sceneArray[index].Minimum;
-                                //rangeSlider.UpperValue = sceneArray[index].Maximum;
-                                rangeSelection.SetMinimum(sceneArray[index].Minimum);
-                                rangeSelection.SetMaximum(sceneArray[index].Maximum);
+                                //rangeSlider.LowerValue = sceneDisplay.GetScene(index).Minimum;
+                                //rangeSlider.UpperValue = sceneDisplay.GetScene(index).Maximum;
+                                rangeSelection.SetMinimum(sceneDisplay.GetScene(index).Minimum);
+                                rangeSelection.SetMaximum(sceneDisplay.GetScene(index).Maximum);
 
 
                                 //Trigger
-                                if (sceneArray[index].IsTriggerOnly)
+                                if (sceneDisplay.GetScene(index).IsTriggerOnly)
                                 {
                                     buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
                                     buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
@@ -239,7 +262,7 @@ namespace Stimulant
                                 }
 
                                 //Restart
-                                if (sceneArray[index].IsRestartEachNote)
+                                if (sceneDisplay.GetScene(index).IsRestartEachNote)
                                 {
                                     buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
 
@@ -247,11 +270,11 @@ namespace Stimulant
                                     //rangeSelection.SliderEnabled(false);//rangeSlider.Enabled = false;
                                     rangeSelection.LocationSelection(true);
 
-                                    //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-                                    rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
+                                    //labelRange.Text = "Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString();
+                                    rangeSelection.UpdateLabelText("Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString());
 
-                                    //sliderHidden.Value = sceneArray[index].StartingLocation;
-                                    rangeSelection.SetStartingLocation(sceneArray[index].StartingLocation);
+                                    //sliderHidden.Value = sceneDisplay.GetScene(index).StartingLocation;
+                                    rangeSelection.SetStartingLocation(sceneDisplay.GetScene(index).StartingLocation);
                                 }
                                 else
                                 {
@@ -267,15 +290,15 @@ namespace Stimulant
                                 }
 
                                 //Rate
-                                labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
-                                sliderRate.Value = sceneArray[index].RateSliderValue;
+                                labelRate.Text = sceneDisplay.GetScene(index).UpdateRate(myMidiModulation.ModeNumber);
+                                sliderRate.Value = sceneDisplay.GetScene(index).RateSliderValue;
                             }
                         }
                         else
                         {
                             if (!myMidiModulation.IsArrangementMode && myMidiModulation.IsSceneMode)
                             {
-                                sceneArray[index].IsRunning = false;
+                                sceneDisplay.GetScene(index).IsRunning = false;
                             }
                         }
                         break;
@@ -285,24 +308,24 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            //ReadPattern((nint)(sceneArray[index].PatternNumber - 1));
-                            ReadPattern((nint)sceneArray[index].PatternNumber);
-                            UpdateSceneGraphic();
+                            //ReadPattern((nint)(sceneDisplay.GetScene(index).PatternNumber - 1));
+                            ReadPattern((nint)sceneDisplay.GetScene(index).PatternNumber);
+                            sceneDisplay.UpdateAllSceneGraphics(); // UpdateSceneGraphic();
 
 
                         }
                         else
                         {
-                            //segmentedPattern.SelectedSegment = sceneArray[index].PatternNumber - 1;
-                            patternSelection.SetPattern(sceneArray[index].PatternNumber);
+                            //segmentedPattern.SelectedSegment = sceneDisplay.GetScene(index).PatternNumber - 1;
+                            patternSelection.SetPattern(sceneDisplay.GetScene(index).PatternNumber);
 
-                            switch (sceneArray[index].PatternNumber)
+                            switch (sceneDisplay.GetScene(index).PatternNumber)
                             {
                                 case 1:
                                 case 4:
                                 case 7:
                                 case 8:
-                                    sceneArray[index].Opposite = false;
+                                    sceneDisplay.GetScene(index).Opposite = false;
                                     //buttonReverse.Hidden = true;
                                     buttonReverse.Enabled = false;
                                     buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
@@ -314,28 +337,28 @@ namespace Stimulant
                             }
 
 
-                            if (sceneArray[index].PatternNumber > 6)
+                            if (sceneDisplay.GetScene(index).PatternNumber > 6)
                             {
-                                sceneArray[index].IsRestartEachNote = false;
+                                sceneDisplay.GetScene(index).IsRestartEachNote = false;
                                 buttonLocation.Enabled = false;
                             }
                             else
                             {
-                                if (sceneArray[index].IsTriggerOnly)
+                                if (sceneDisplay.GetScene(index).IsTriggerOnly)
                                 {
                                     buttonLocation.Enabled = true;
                                 }
                             }
 
-                            string labelText = sceneArray[index].UpdatePattern(sceneArray[index].PatternNumber - 1);
+                            string labelText = sceneDisplay.GetScene(index).UpdatePattern(sceneDisplay.GetScene(index).PatternNumber - 1);
                             //labelPattern.Text = labelText;
                             patternSelection.UpdateLabelText(labelText);
 
-                            UpdateSceneGraphic();
+                            sceneDisplay.UpdateAllSceneGraphics(); // UpdateSceneGraphic();
 
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.PatternNumber = sceneArray[index].PatternNumber;
+                                myMidiModulation.PatternNumber = sceneDisplay.GetScene(index).PatternNumber;
                             }
                         }
                         break;
@@ -344,11 +367,11 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.Opposite = sceneArray[index].Opposite;
+                            myMidiModulation.Opposite = sceneDisplay.GetScene(index).Opposite;
                         }
                         else
                         {
-                            if (sceneArray[index].Opposite)
+                            if (sceneDisplay.GetScene(index).Opposite)
                             {
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
                             }
@@ -356,28 +379,28 @@ namespace Stimulant
                             {
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
                             }
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.Opposite = sceneArray[index].Opposite;
+                                myMidiModulation.Opposite = sceneDisplay.GetScene(index).Opposite;
                             }
                         }
-                        UpdateSceneGraphic();
+                        sceneDisplay.UpdateAllSceneGraphics(); // UpdateSceneGraphic();
                         break;
                     }
                 case "RateSliderValue":
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            ReadSlider(sceneArray[index].RateSliderValue);
+                            ReadSlider(sceneDisplay.GetScene(index).RateSliderValue);
                         }
                         else
                         {
 
-                            labelRate.Text = sceneArray[index].UpdateRate(myMidiModulation.ModeNumber);
+                            labelRate.Text = sceneDisplay.GetScene(index).UpdateRate(myMidiModulation.ModeNumber);
 
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                ReadSlider(sceneArray[index].RateSliderValue);
+                                ReadSlider(sceneDisplay.GetScene(index).RateSliderValue);
                             }
                         }
                         break;
@@ -386,11 +409,11 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
+                            myMidiModulation.IsTriggerOnly = sceneDisplay.GetScene(index).IsTriggerOnly;
                         }
                         else
                         {
-                            if (sceneArray[index].IsTriggerOnly)
+                            if (sceneDisplay.GetScene(index).IsTriggerOnly)
                             {
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Normal);
                                 buttonTrigger.SetImage(UIImage.FromFile("graphicTriggerButtonOn.png"), UIControlState.Highlighted);
@@ -403,9 +426,9 @@ namespace Stimulant
                                 buttonLocation.Enabled = false;
                             }
 
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.IsTriggerOnly = sceneArray[index].IsTriggerOnly;
+                                myMidiModulation.IsTriggerOnly = sceneDisplay.GetScene(index).IsTriggerOnly;
                             }
                         }
                         break;
@@ -414,11 +437,11 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
+                            myMidiModulation.IsRestartEachNote = sceneDisplay.GetScene(index).IsRestartEachNote;
                         }
                         else
                         {
-                            if (sceneArray[index].IsRestartEachNote)
+                            if (sceneDisplay.GetScene(index).IsRestartEachNote)
                             {
                                 buttonLocation.SetImage(UIImage.FromFile("graphicLocationButtonOn.png"), UIControlState.Normal);
 
@@ -427,11 +450,11 @@ namespace Stimulant
                                 //rangeSelection.SliderEnabled(false);// rangeSlider.Enabled = false;
                                 rangeSelection.LocationSelection(true);
 
-                                //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-                                rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
+                                //labelRange.Text = "Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString();
+                                rangeSelection.UpdateLabelText("Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString());
 
-                                //sliderHidden.Value = sceneArray[index].StartingLocation;
-                                rangeSelection.SetStartingLocation(sceneArray[index].StartingLocation);
+                                //sliderHidden.Value = sceneDisplay.GetScene(index).StartingLocation;
+                                rangeSelection.SetStartingLocation(sceneDisplay.GetScene(index).StartingLocation);
                             }
                             else
                             {
@@ -447,9 +470,9 @@ namespace Stimulant
                                 rangeSelection.UpdateLabelText("Modulation Range");
                             }
 
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.IsRestartEachNote = sceneArray[index].IsRestartEachNote;
+                                myMidiModulation.IsRestartEachNote = sceneDisplay.GetScene(index).IsRestartEachNote;
                             }
                         }
                         break;
@@ -458,16 +481,16 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
+                            myMidiModulation.StartingLocation = sceneDisplay.GetScene(index).StartingLocation;
                         }
                         else
                         {
-                            //labelRange.Text = "Starting Value: " + sceneArray[index].StartingLocation.ToString();
-                            rangeSelection.UpdateLabelText("Starting Value: " + sceneArray[index].StartingLocation.ToString());
+                            //labelRange.Text = "Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString();
+                            rangeSelection.UpdateLabelText("Starting Value: " + sceneDisplay.GetScene(index).StartingLocation.ToString());
 
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.StartingLocation = sceneArray[index].StartingLocation;
+                                myMidiModulation.StartingLocation = sceneDisplay.GetScene(index).StartingLocation;
                             }
                         }
                         break;
@@ -476,13 +499,13 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.Maximum = sceneArray[index].Maximum;
+                            myMidiModulation.Maximum = sceneDisplay.GetScene(index).Maximum;
                         }
                         else
                         {
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.Maximum = sceneArray[index].Maximum;
+                                myMidiModulation.Maximum = sceneDisplay.GetScene(index).Maximum;
                             }
                         }
                         break;
@@ -491,13 +514,13 @@ namespace Stimulant
                     {
                         if (!myMidiModulation.IsArrangementMode)
                         {
-                            myMidiModulation.Minimum = sceneArray[index].Minimum;
+                            myMidiModulation.Minimum = sceneDisplay.GetScene(index).Minimum;
                         }
                         else
                         {
-                            if (sceneArray[index].IsRunning) //catches if you are selecting the current running and pushes value through
+                            if (sceneDisplay.GetScene(index).IsRunning) //catches if you are selecting the current running and pushes value through
                             {
-                                myMidiModulation.Minimum = sceneArray[index].Minimum;
+                                myMidiModulation.Minimum = sceneDisplay.GetScene(index).Minimum;
                             }
                         }
                         break;

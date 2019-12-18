@@ -9,7 +9,7 @@ namespace Stimulant
 {
     [Register("CircularProgressBar"), DesignTimeVisible(true)]
 
-    public class CircularProgressBar : UIView, System.ComponentModel.IComponent
+    public class CircularProgressBar : UIView, IComponent
     {
 
         public CircularProgressBar(IntPtr handle) : base(handle) { }
@@ -60,7 +60,8 @@ namespace Stimulant
             using (CGContext g = UIGraphics.GetCurrentContext())
             {
                 _g = g;
-                _radius = (int)((this.Bounds.Width) / 2) - _lineWidth;
+                //_radius = (int)((this.Bounds.Width) / 2) - _lineWidth;
+                _radius = (int)(this.Bounds.Height / 2) - _lineWidth / 2;
                 DrawGraph(_g, this.Bounds.GetMidX(), this.Bounds.GetMidY(), _piMult);
             }
         }
@@ -78,12 +79,12 @@ namespace Stimulant
             // Draw circle
             CGPath path = new CGPath();
             UIColor.FromRGB(155, 155, 155).SetStroke();
-            path.AddArc(_x0, _y0, _radius, 0.78f * (float)Math.PI, (2.22f) * (float)Math.PI, false);
+            path.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (2.21f) * (float)Math.PI, false);
             _g.AddPath(path);
             _g.DrawPath(CGPathDrawingMode.Stroke);
             CGPath path2 = new CGPath();
             _barColor.SetStroke();
-            path2.AddArc(_x0, _y0, _radius, 0.78f * (float)Math.PI, (0.78f * (float)Math.PI + (float)(0.72*_piMult) * (float)Math.PI), false);
+            path2.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (0.79f * (float)Math.PI + (float)(0.71*_piMult) * (float)Math.PI), false);
             //path2.AddArc(x0, y0, _radius, -0.5f * (float)Math.PI, 0.5f * (float)Math.PI + _piMult * (float)Math.PI * 0.99, true);
             _g.AddPath(path2);
             _g.DrawPath(CGPathDrawingMode.Stroke);
@@ -96,12 +97,12 @@ namespace Stimulant
             // Draw circle
             CGPath path = new CGPath();
             UIColor.FromRGB(155, 155, 155).SetStroke();
-            path.AddArc(_x0, _y0, _radius, 0.78f * (float)Math.PI, (2.22f) * (float)Math.PI, false);
+            path.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (2.21f) * (float)Math.PI, false);
             _g.AddPath(path);
             _g.DrawPath(CGPathDrawingMode.Stroke);
             CGPath path2 = new CGPath();
             _barColor.SetStroke();
-            path2.AddArc(_x0, _y0, _radius, 0.78f * (float)Math.PI, (0.78f * (float)Math.PI + (float)(0.72 * _piMult) * (float)Math.PI), false);
+            path2.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (0.79f * (float)Math.PI + (float)(0.71 * _piMult) * (float)Math.PI), false);
             _g.AddPath(path2);
             _g.DrawPath(CGPathDrawingMode.Stroke);
             SetNeedsDisplay();
