@@ -68,12 +68,14 @@ namespace Stimulant
         RangeSelection rangeSelection;
         PowerButton powerButton;
         SceneDisplay sceneDisplay;
+        RateSelection rateSelection;
         PatternSelection patternSelection;
         InfoDisplay infoDisplay;
         TimingModeSelection timingModeSelection;
+        PatternGraphVC patternGraphVC;
 
+        //UIButton buttonReverse;
 
-        UIButton buttonReverse;
         UIButton buttonCC;
         UIButton buttonBPM;
         UIButton buttonAutoPattern;
@@ -463,12 +465,17 @@ namespace Stimulant
             //this should be based only on screen height and width
             //float segHeight = (float)(screenHeight / 18);
             //float segYLoc = (float)((screenHeight - segHeight) / 1.35) * controlAdjustPattern;
-            patternSelection = new PatternSelection(new CGRect(0, (float)(screenHeight * 0.63), screenWidth, screenHeight * 0.14));
+
+            rateSelection = new RateSelection(new CGRect(0, (float)(screenHeight * 0.49), screenWidth, screenHeight * 0.14), highRes);
+
+            patternSelection = new PatternSelection(new CGRect(0, (float)(screenHeight * 0.63), screenWidth, screenHeight * 0.14), 8);
 
             infoDisplay = new InfoDisplay(new CGRect(0, (float)(screenHeight * 0.77), screenWidth, screenHeight * 0.1));
 
             timingModeSelection = new TimingModeSelection(new CGRect(0, (float)(screenHeight * 0.87), screenWidth, (float)(screenHeight * 0.1) ));
 
+            patternGraphVC = new PatternGraphVC(new CGRect(screenWidth * .1f, screenHeight * .5f , screenWidth * .8f, screenHeight * .4f));
+            //patternGraphVC = new DrawPattern(new CGRect(0, 0, screenWidth, screenHeight));
 
             LoadRateSlider(screenWidth, screenHeight, controlAdjustRate, sliderHeight);
             //LoadPatternLabel(screenWidth, screenHeight, textAdjustPattern, segHeight);
@@ -687,6 +694,7 @@ namespace Stimulant
             frameReverseOrig = new CGRect(screenWidth - buttonRandomWidth, buttonRandomYLoc, buttonRandomWidth, buttonRandomHeight);
             frameReverseScene = new CGRect(2 * buttonRandomWidth, buttonRandomYLoc * 1.795 * controlAdjustScenes, buttonRandomWidth, buttonRandomHeight);
 
+            /*
             buttonReverse = UIButton.FromType(UIButtonType.Custom);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
             buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
@@ -694,6 +702,7 @@ namespace Stimulant
             buttonReverse.Frame = frameReverseOrig;
             buttonReverse.Enabled = false;
             buttonReverse.TouchDown += HandleReverseTouchDown;
+            */
 
 
 
@@ -1273,9 +1282,14 @@ namespace Stimulant
             powerButton.StateChange += HandlePowerButtonStateChange;
             //powerButton.UpdateProgress(2f);
 
+            View.AddSubview(rateSelection.View);
+            AddChildViewController(rateSelection);
+            rateSelection.SliderChange += HandleRateChange;
+
             View.AddSubview(patternSelection.View);
             AddChildViewController(patternSelection);
             patternSelection.ButtonPressed += HandlePatternChange;
+            patternSelection.ButtonHeld += HandlePatternModify;
 
             View.AddSubview(infoDisplay.View);
             AddChildViewController(infoDisplay);
@@ -1288,14 +1302,16 @@ namespace Stimulant
 
             //View.AddSubview(labelMode);
             //View.AddSubview(labelDetails);
-            View.AddSubview(sliderRate);
-            View.AddSubview(labelRate);
+
+            //View.AddSubview(sliderRate);
+            //View.AddSubview(labelRate);
+
             View.AddSubview(buttonAutoRate);
             //View.AddSubview(labelRange);
             //View.AddSubview(rangeSlider);
             //View.AddSubview(sliderHidden);
             //View.AddSubview(sliderCC);
-            View.AddSubview(buttonReverse);
+            //View.AddSubview(buttonReverse);
             View.AddSubview(buttonScenes);
             //View.AddSubview(myRunningSymbol);
             //View.AddSubview(buttonArrange);
@@ -1319,6 +1335,16 @@ namespace Stimulant
             View.AddSubview(sceneDisplay.View);
             AddChildViewController(sceneDisplay);
             sceneDisplay.SceneChanged += HandleSceneChange;
+
+            View.AddSubview(patternGraphVC.View);
+            AddChildViewController(patternGraphVC);
+            patternGraphVC.PatternModifyButtonPress += HandleExitPatternModify;
+
+
+            //patternSelection.SetButtonView(0, drawPattern.CurveLayer);
+
+
+            //SetButtonView(int numPattern, UIView curveView)
 
 
             //View.AddSubview(buttonTime);

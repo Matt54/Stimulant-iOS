@@ -61,12 +61,12 @@ namespace Stimulant
                                     case 8:
                                         sceneDisplay.GetScene(index).Opposite = false;
                                         //buttonReverse.Hidden = true;
-                                        buttonReverse.Enabled = false;
-                                        buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                        //buttonReverse.Enabled = false;
+                                        //buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
                                         break;
                                     default:
-                                        buttonReverse.Hidden = false;
-                                        buttonReverse.Enabled = true;
+                                        //buttonReverse.Hidden = false;
+                                        //buttonReverse.Enabled = true;
                                         break;
                                 }
                                 if (sceneDisplay.GetScene(index).PatternNumber > 6)
@@ -80,8 +80,10 @@ namespace Stimulant
                                 patternSelection.UpdateLabelText(labelText);
 
                                 //Opposite
+                                /*
                                 if (sceneDisplay.GetScene(index).Opposite) buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
                                 else buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                */
 
                                 rangeSelection.SetMinimum(sceneDisplay.GetScene(index).Minimum);
                                 rangeSelection.SetMaximum(sceneDisplay.GetScene(index).Maximum);
@@ -143,12 +145,12 @@ namespace Stimulant
                                 case 7:
                                 case 8:
                                     sceneDisplay.GetScene(index).Opposite = false;
-                                    buttonReverse.Enabled = false;
-                                    buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
+                                    //buttonReverse.Enabled = false;
+                                    //buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
                                     break;
                                 default:
-                                    buttonReverse.Hidden = false;
-                                    buttonReverse.Enabled = true;
+                                    //buttonReverse.Hidden = false;
+                                    //buttonReverse.Enabled = true;
                                     break;
                             }
 
@@ -169,6 +171,7 @@ namespace Stimulant
                         }
                         break;
                     }
+                    /*
                 case "Opposite":
                     {
                         if (!myMidiModulation.IsArrangementMode) myMidiModulation.Opposite = sceneDisplay.GetScene(index).Opposite;
@@ -183,6 +186,7 @@ namespace Stimulant
                         sceneDisplay.UpdateAllSceneGraphics();
                         break;
                     }
+                    */
                 case "RateSliderValue":
                     {
                         if (!myMidiModulation.IsArrangementMode) ReadSlider(sceneDisplay.GetScene(index).RateSliderValue);

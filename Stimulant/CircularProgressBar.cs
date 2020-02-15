@@ -69,12 +69,12 @@ namespace Stimulant
 
         public void DrawGraph(CGContext g, nfloat x0, nfloat y0, nfloat piMult)
         {
-            _g = g;
+            //_g = g;
             _x0 = x0;
             _y0 = y0;
 
             _g.SetLineWidth(_lineWidth);
-            _piMult = piMult;
+            //_piMult = piMult;
 
             // Draw circle
             CGPath path = new CGPath();
@@ -82,31 +82,38 @@ namespace Stimulant
             path.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (2.21f) * (float)Math.PI, false);
             _g.AddPath(path);
             _g.DrawPath(CGPathDrawingMode.Stroke);
+            //SetNeedsDisplay();
+
             CGPath path2 = new CGPath();
             _barColor.SetStroke();
             path2.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (0.79f * (float)Math.PI + (float)(0.71*_piMult) * (float)Math.PI), false);
             //path2.AddArc(x0, y0, _radius, -0.5f * (float)Math.PI, 0.5f * (float)Math.PI + _piMult * (float)Math.PI * 0.99, true);
             _g.AddPath(path2);
             _g.DrawPath(CGPathDrawingMode.Stroke);
+            //SetNeedsDisplay();
+
         }
 
         public void UpdateGraph(nfloat piMult)
         {
             _piMult = piMult;
 
+            /*
             // Draw circle
             CGPath path = new CGPath();
             UIColor.FromRGB(155, 155, 155).SetStroke();
             path.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (2.21f) * (float)Math.PI, false);
             _g.AddPath(path);
             _g.DrawPath(CGPathDrawingMode.Stroke);
+
             CGPath path2 = new CGPath();
             _barColor.SetStroke();
             path2.AddArc(_x0, _y0, _radius, 0.79f * (float)Math.PI, (0.79f * (float)Math.PI + (float)(0.71 * _piMult) * (float)Math.PI), false);
             _g.AddPath(path2);
             _g.DrawPath(CGPathDrawingMode.Stroke);
+            */
+
             SetNeedsDisplay();
         }
-
     }
 }

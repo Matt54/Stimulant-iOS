@@ -8,6 +8,7 @@ using CoreGraphics;
 using MonoTouch.Dialog;
 using System.ComponentModel;
 using Foundation;
+using System.Diagnostics;
 
 namespace Stimulant
 {
@@ -28,6 +29,8 @@ namespace Stimulant
             {
                 var endpoint = MidiEndpoint.GetDestination(i);
                 outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { type, channel, value }) });
+                Debug.WriteLine("Midi Value: " + value + " Sent @ " + DateTime.Now.Millisecond.ToString() + "\r\n");
+
 
                 //outputPort.Send(endpoint, new MidiPacket[] { new MidiPacket(0, new byte[] { 0xB0, (byte)(myMidiModulation.CCNumber), ccByte }) });
 
@@ -199,7 +202,7 @@ namespace Stimulant
                     byte midi_continue = 0xfb;      // continue byte
                     byte midi_note_on = 0x90;         // note on
                     byte midi_note_off = 0x80;         // note off
-                                                       //------------------------------------------------
+                    //------------------------------------------------
 
 
                     if ((StatusByte == midi_start) || (StatusByte == midi_continue))
@@ -209,16 +212,26 @@ namespace Stimulant
                             InvokeOnMainThread(() => {
                                 //PowerPushed();
                                 //FlipPower();
-                                myMidiModulation.IsRunning = powerButton.TogglePower();
+                                //powerButton.SetOn();
+                                myMidiModulation.IsRunning = powerButton.TogglePower(); // true;//powerButton.TogglePower();
+                                Debug.WriteLine("MIDI START @ " + DateTime.Now.Millisecond.ToString());
+                                if (myMidiModulation.IsRunning) myMidiModulation.CatchClock();
+                                
                             });
                         }
-                        myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
+                        //myMidiModulation.FireModulation = true; //I'm not sure if we should be firing one off at the start here
                     }
 
                     if (StatusByte == midi_clock)
                     {
                         if (myMidiModulation.ModeNumber == 1)
                         {
+                            Debug.WriteLine("MIDI CLOCK @ " + DateTime.Now.Millisecond.ToString());
+                            if (myMidiModulation.IsRunning) myMidiModulation.CatchClock();
+
+                            
+
+                            /*
                             myMidiModulation.ClockCounter();
                             if (myMidiModulation.StepComma > 1)
                             {
@@ -229,6 +242,7 @@ namespace Stimulant
                                 myMidiModulation.StepComma++;
                             }
                             myMidiModulation.StepSizeSetter();
+                            */
                         }
 
                     }
@@ -257,7 +271,8 @@ namespace Stimulant
                             // Restart first if in restart mode
                             if (myMidiModulation.IsRestartEachNote)
                             {
-                                myMidiModulation.CurrentCC = myMidiModulation.StartingLocation;
+                                //myMidiModulation.CurrentCC = myMidiModulation.StartingLocation;
+                                myMidiModulation.CurrentXVal = myMidiModulation.StartingLocation;
 
                                 if (myMidiModulation.PatternNumber == 4)
                                 {

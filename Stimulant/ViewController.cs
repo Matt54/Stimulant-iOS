@@ -3,6 +3,7 @@ using UIKit;
 using CoreMidi;
 using CoreGraphics;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Stimulant
 {
@@ -16,7 +17,7 @@ namespace Stimulant
         MidiModulation myMidiModulation = new MidiModulation();
 
         // Controls how fast the time-based modulation steps
-        HighResolutionTimer timerHighRes;
+        //HighResolutionTimer timerModTrigger;
 
         // Controls how often the random settings get applied when in automatic mode
         HighResolutionTimer timerAuto;
@@ -31,29 +32,7 @@ namespace Stimulant
             MakeHardware();
             MakeDevices();
 
-            timerHighRes = new HighResolutionTimer(100.0f);
-            // UseHighPriorityThread = true, sets the execution thread 
-            // to ThreadPriority.Highest.  It doesn't provide any precision gain
-            // in most of the cases and may do things worse for other threads. 
-            // It is suggested to do some studies before leaving it true
-            timerHighRes.UseHighPriorityThread = false;
-            timerHighRes.Elapsed += (s, e) =>
-            {
-                InvokeOnMainThread(() => {
-                    if (myMidiModulation.IsRunning)
-                    {
-                        if (!(myMidiModulation.ModeNumber == 2))
-                        {
-                            myMidiModulation.ClockCounter();
-                        }
-                        else
-                        {
-                            myMidiModulation.FireModulation = true;
-                        }
-                    }
-                });
-            };
-            timerHighRes.Start();
+            myMidiModulation.ModTimerElapsed += HandleModTrigger;
 
             timerAuto = new HighResolutionTimer(6300.0f);
             timerAuto.UseHighPriorityThread = false;
@@ -92,8 +71,34 @@ namespace Stimulant
             {
                 switch (e2.PropertyName)
                 {
+                    case "FireModulation":
+                        InvokeOnMainThread(() => {
+                            if (myMidiModulation.FireModulation)
+                            {
+                                if (!myMidiModulation.IsTriggerOnly || (myMidiModulation.IsTriggerOnly && myMidiModulation.IsNoteOn))
+                                {
+                                    SendMIDI(0xB0, (byte)myMidiModulation.CCNumber, (byte)myMidiModulation.CurrentCC);
+
+                                    //Debug.WriteLine(myMidiModulation.CurrentCC);
+
+                                    myMidiModulation.ClockCount = 0;
+
+                                    updateProgressBar();
+
+                                    myMidiModulation.FireModulation = false;
+
+                                }
+                            }
+                        });
+                        break;
                     case "IsRunning":
                         {
+                            if (myMidiModulation.ModeNumber != 1)
+                            {
+                                if (myMidiModulation.IsRunning) myMidiModulation.StartTimer();
+                                else myMidiModulation.StopTimer();
+                            }
+
                             break;
                         }
 
@@ -123,12 +128,15 @@ namespace Stimulant
 
 
                                 buttonRandom.Hidden = true;
+
+                                /*
                                 buttonReverse.Frame = frameReverseScene;
 
                                 if (myMidiModulation.Opposite) buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOn.png"), UIControlState.Normal);
                                 else buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Normal);
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonOff.png"), UIControlState.Highlighted);
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseSceneButtonDisabled.png"), UIControlState.Disabled);
+                                */
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOn"), UIControlState.Normal);
 
@@ -152,13 +160,15 @@ namespace Stimulant
                                 powerButton.UpdateProgress(pi_mult);
 
                                 buttonRandom.Hidden = false;
-                                buttonReverse.Frame = frameReverseOrig;
 
+                                //buttonReverse.Frame = frameReverseOrig;
 
+                                /*
                                 if (myMidiModulation.Opposite) buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOn.png"), UIControlState.Normal);
                                 else buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Normal);
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonOff.png"), UIControlState.Highlighted);
                                 buttonReverse.SetImage(UIImage.FromFile("graphicReverseButtonDisabled.png"), UIControlState.Disabled);
+                                */
 
                                 buttonScenes.SetImage(UIImage.FromFile("graphicScenesButtonOff"), UIControlState.Normal);
                                 sceneDisplay.View.Hidden = true;
@@ -185,6 +195,7 @@ namespace Stimulant
                             break;
                         }
 
+                        /*
                     case "Opposite":
                         {
                             if (myMidiModulation.Opposite)
@@ -206,6 +217,7 @@ namespace Stimulant
                             }
                             break;
                         }
+                        */
 
                     case "PatternString":
                         {
@@ -546,26 +558,25 @@ namespace Stimulant
 
                                 //MODE 1 = MIDI MODE
                                 case 1:
-                                    timerHighRes.Stop(joinThread: false);
+                                    //timerModTrigger.Stop(joinThread: false);
 
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
-                                    if (myMidiModulation.BPMOn)
-                                    {
-                                        myMidiModulation.BPMOn = false;
-                                    }
+                                    if (myMidiModulation.BPMOn) myMidiModulation.BPMOn = false;
 
                                     infoDisplay.UpdateTitle(" Ext Clock Mode   ");
                                     infoDisplay.UpdateDesc(" Midi Clock Adjusts Rate ");
 
                                     if (myMidiModulation.IsAuto) myMidiModulation.IsAuto = false;
 
+                                    rateSelection.SetSliderSnap(true);
+
                                     break;
 
                                 //MODE 2 = FREE TIMING MODE
                                 case 2:
 
-                                    timerHighRes.Start();
+                                    //timerModTrigger.Start();
 
                                     ReadSlider(sliderRate.Value);
                                     buttonBPM.Enabled = false;
@@ -575,6 +586,8 @@ namespace Stimulant
                                     infoDisplay.UpdateTitle("Free Timing Mode");
                                     infoDisplay.UpdateDesc("Rate Based On Frequency");
 
+                                    rateSelection.SetSliderSnap(false);
+
                                     if (myMidiModulation.IsAuto) myMidiModulation.IsAuto = false;
                                     break;
 
@@ -582,7 +595,7 @@ namespace Stimulant
                                 case 3:
                                     myMidiModulation.CutoffFactor = 1;
                                     myMidiModulation.ClockCutoff = 1;
-                                    timerHighRes.Start();
+                                    //timerModTrigger.Start();
 
                                     buttonBPM.Enabled = true;
                                     ReadSlider(sliderRate.Value);
@@ -590,6 +603,7 @@ namespace Stimulant
                                     infoDisplay.UpdateTitle(" Int Clock Mode   ");
                                     infoDisplay.UpdateDesc("Current Clock Tempo = " + myMidiModulation.BPM.ToString());
 
+                                    rateSelection.SetSliderSnap(true);
 
                                     if (myMidiModulation.IsAuto) myMidiModulation.IsAuto = false;
 
@@ -607,6 +621,7 @@ namespace Stimulant
                             if (!myMidiModulation.IsArrangementMode)
                             {
 
+                                /*
                                 switch (myMidiModulation.PatternNumber)
                                 {
                                     case 1:
@@ -627,6 +642,7 @@ namespace Stimulant
                                         buttonReverse.Enabled = true;
                                         break;
                                 }
+                                */
 
 
                                 if (myMidiModulation.PatternNumber > 6)
@@ -641,29 +657,18 @@ namespace Stimulant
                             break;
                         }
 
-                    case "FireModulation":
-                        InvokeOnMainThread(() => {
-                            if (myMidiModulation.FireModulation)
-                            {
-                                if (!myMidiModulation.IsTriggerOnly || (myMidiModulation.IsTriggerOnly && myMidiModulation.IsNoteOn))
-                                {
-                                    myMidiModulation.UpdateValue();
-                                    SendMIDI(0xB0, (byte)myMidiModulation.CCNumber, (byte)myMidiModulation.CurrentCC);
-                                    myMidiModulation.ClockCount = 0;
-
-                                    updateProgressBar();
-
-                                    myMidiModulation.FireModulation = false;
-                                }
-                            }
-                        });
-                        break;
+                    
                 }
             };
 
             myMidiModulation.ModeNumber = 2;
             myMidiModulation.PatternNumber = 1;
 
+            SavePattern();
+            rateSelection.UpdateLabel(myMidiModulation.GetIntervalFrequencyString());
+
+            //Make sure the starting rate is accurate
+            RecalculateRates();
         }
 
         private void ResetDisplay()
@@ -693,16 +698,9 @@ namespace Stimulant
             powerButton.UpdateProgress(pi_mult);
         }
 
-        private void HandlePatternChange(object sender, System.EventArgs e)
-        {
-            if (!myMidiModulation.IsSceneMode) myMidiModulation.SetPatternNumber(patternSelection.GetPatternNumber());
-            else
-            {
+        
 
-                sceneDisplay.GetScene( sceneDisplay.GetSceneSelected() ).PatternNumber = patternSelection.GetPatternNumber();
-                if (myMidiModulation.IsArrangementMode) patternSelection.UpdateLabelText( myMidiModulation.GetPatternText( patternSelection.GetPatternNumber() ) );
-            }
-        }
+
 
         //private void HandleSceneChange(object sender, PropertyChangedEventArgs e)
         private void HandleSceneChange(object sender, string propertyName, int index)
@@ -741,6 +739,7 @@ namespace Stimulant
         private void HandlePowerButtonStateChange(object sender, System.EventArgs e)
         {
             myMidiModulation.IsRunning = powerButton.IsOn();
+            if (!myMidiModulation.IsRunning) myMidiModulation.HoldOnStart = true;
         }
 
         private void HandleScenesTouchDown(object sender, System.EventArgs e)
@@ -784,11 +783,13 @@ namespace Stimulant
             else sceneDisplay.GetScene(sceneDisplay.GetSceneSelected()).StartingLocation = rangeSelection.GetStartingLocation();
         }
 
+        /*
         protected void HandleReverseTouchDown(object sender, System.EventArgs e)
         {
             if (!myMidiModulation.IsSceneMode) myMidiModulation.ReversePattern();
             else sceneDisplay.GetScene(sceneDisplay.GetSceneSelected()).ReverseToggle();
         }
+        */
 
         protected void HandleCCTouchDown(object sender, System.EventArgs e)
         {
@@ -821,10 +822,7 @@ namespace Stimulant
             myMidiModulation.ARToggle();
         }
 
-        protected void HandleModeChange(object sender, System.EventArgs e)
-        {
-            myMidiModulation.ModeNumber = timingModeSelection.GetModeNumber();
-        }
+        
 
         protected void HandleMidiTouchDown(object sender, System.EventArgs e)
         {
@@ -868,6 +866,116 @@ namespace Stimulant
             else sceneDisplay.GetScene(sceneDisplay.GetSceneSelected()).RateSliderValue = myObject.Value;
         }
 
+        private void HandlePatternChange(object sender, System.EventArgs e)
+        {
+            if (!myMidiModulation.IsSceneMode) myMidiModulation.SetPatternNumber(patternSelection.GetPatternNumber());
+            else
+            {
+                sceneDisplay.GetScene(sceneDisplay.GetSceneSelected()).PatternNumber = patternSelection.GetPatternNumber();
+                if (myMidiModulation.IsArrangementMode) patternSelection.UpdateLabelText(myMidiModulation.GetPatternText(patternSelection.GetPatternNumber()));
+            }
+        }
+
+        private void HandlePatternModify(object sender, System.EventArgs e)
+        {
+            myMidiModulation.SetPatternNumber(patternSelection.GetPatternNumber());
+            patternGraphVC.SetCurveLayer(patternSelection.GetSelectedCurveLayer());
+            patternGraphVC.SetPatternSlot(patternSelection.GetPatternNumber());
+            View.AddSubview(patternGraphVC.View); 
+            patternSelection.IsBeingModified = true;
+        }
+
+        protected void HandleExitPatternModify(object sender, System.EventArgs e)
+        {
+            SavePattern();
+            /*
+            patternSelection.CopyCurveLayer(patternGraphVC.GetCurveLayer());
+            patternSelection.IsBeingModified = false;
+            patternGraphVC.View.RemoveFromSuperview();
+            Debug.WriteLine(patternSelection.GetMidiValFromPattern(60, 0));
+            */
+        }
+
+        private void SavePattern()
+        {
+            patternSelection.CopyCurveLayer(patternGraphVC.GetCurveLayer());
+            patternSelection.IsBeingModified = false;
+            patternGraphVC.View.RemoveFromSuperview();
+        }
+
+        protected void HandleModeChange(object sender, System.EventArgs e)
+        {
+            myMidiModulation.ModeNumber = timingModeSelection.GetModeNumber();
+            RecalculateRates();
+        }
+
+        //TODO write the new rate functionality
+        //our new rate function
+        private void HandleRateChange(object sender, System.EventArgs e)
+        {
+            RecalculateRates();
+        }
+
+        private void RecalculateRates()
+        {
+            if ( (myMidiModulation.ModeNumber != 1) & (myMidiModulation.IsRunning) ) myMidiModulation.StartTimer();
+            //else myMidiModulation.StopTimer();
+
+            float sliderValue = rateSelection.GetValue();
+
+            //MIDI OR INTERNAL CLOCK
+            if (rateSelection.IsSliderSnap)
+            {
+                myMidiModulation.SetXStepSnapped(sliderValue); // Determines StepSize from a sliderValue
+                rateSelection.UpdateLabel(myMidiModulation.GetIntervalBeatFractionString(sliderValue));
+            }
+
+            //LOOSE FREQUENCY
+            else
+            {
+                myMidiModulation.SetXStep(sliderValue); // Determines StepSize from a sliderValue
+                myMidiModulation.SetTimerInterval(myMidiModulation.ValueToTimeInterval(sliderValue)); // Magic function to get time interval from sliderValue
+                rateSelection.UpdateLabel(myMidiModulation.GetIntervalFrequencyString());
+            }
+        }
+
+        // event is fired by timer from MidiModulation
+        private void HandleModTrigger(object sender, System.EventArgs e)
+        {
+
+            if(myMidiModulation.HoldOnStart)
+            {
+                myMidiModulation.HoldOnStart = false;
+            }
+            else
+            { 
+                //Steps to the next X value
+                myMidiModulation.StepX();
+            }
+
+            //Get the corresponding Y value from the graph using the X value
+            InvokeOnMainThread(() =>
+            {
+                myMidiModulation.CurrentCC = patternSelection.GetMidiValFromPattern(myMidiModulation.CurrentXVal, myMidiModulation.PatternNumber - 1);
+            });
+
+            //Send the value
+            myMidiModulation.FireModulation = true;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        //TODO get rid of this function and replace it with something that is reading the patterns
+        //this function is used to determine the rate
         void ReadSlider(float sliderValue)
         {
             if (myMidiModulation.ModeNumber == 2)
@@ -883,11 +991,13 @@ namespace Stimulant
                 else
                 {
                     myMidiModulation.TimeSet(sliderValue); // Determines StepSize from a sliderValue and PatternNumber
-                    timerHighRes.Interval = ValueToTimeInterval(sliderValue); // Magic function to get time interval from sliderValue
+                    /*
+                    timerModTrigger.Interval = ValueToTimeInterval(sliderValue); // Magic function to get time interval from sliderValue
                     if (!myMidiModulation.IsArrangementMode)
                     {
-                        labelRate.Text = myMidiModulation.TimeIntervalToFrequency(timerHighRes.Interval); // Convert time interval to frequency for label display
+                        labelRate.Text = myMidiModulation.TimeIntervalToFrequency(timerModTrigger.Interval); // Convert time interval to frequency for label display
                     }
+                    */
                 }
             }
             else
@@ -1001,7 +1111,8 @@ namespace Stimulant
                 else if (myMidiModulation.ModeNumber == 1)
                 {
                     //MIDI
-                    myMidiModulation.StepSizeSetter();
+                    //myMidiModulation.StepSizeSetter();
+
                     //EXT Clock Sync
                     if (!myMidiModulation.IsArrangementMode)
                     {
@@ -1011,12 +1122,14 @@ namespace Stimulant
                 else
                 {
                     //myMidiModulation.TimeSet(sliderValue); // Determines StepSize that will prevent too high of a screen refresh
-                    timerHighRes.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
+                    /*
+                    timerModTrigger.Interval = BeatsPerMinuteIntoMilliSeconds((float)myMidiModulation.BPM, myMidiModulation.RateCatch);
                     //INT Clock Sync
                     if (!myMidiModulation.IsArrangementMode)
                     {
                         labelRate.Text = "Int. Clock Sync: " + displayText;
                     }
+                    */
                 }
 
             }
@@ -1089,7 +1202,7 @@ namespace Stimulant
                     intervalMultiplier = 1.333;//2 * (2 / 3);
                     break;
                 case 11:
-                    intervalMultiplier = 1;
+                    intervalMultiplier = 1; // Whole
                     break;
                 case 12:
                     intervalMultiplier = 0.667;// 1/6;
@@ -1214,5 +1327,6 @@ namespace Stimulant
         {
             myMidiModulation.SetPatternNumber((int)patternIndex);
         }
+
     }
 }

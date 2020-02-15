@@ -3,6 +3,7 @@ using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
 using UIKit;
+using System.Diagnostics;
 
 namespace Stimulant
 {
@@ -17,6 +18,8 @@ namespace Stimulant
 
             CreateInnerRect(rect);
             CreateSceneArray();
+
+            stopwatch = new Stopwatch();
 
             float effectiveHeight = (float)rect.Height - borderWidth * 2;
             lineWidth = 3;
@@ -73,6 +76,7 @@ namespace Stimulant
 
                 buttonArray[ii].Frame = new CGRect(margin + margin * (ii + 1) + buttonWidth * ii, yLocation, buttonWidth, buttonWidth);
                 buttonArray[ii].TouchDown += HandleButtonPress;
+                buttonArray[ii].TouchUpInside += HandleButtonRelease;
             }
         }
 
@@ -138,14 +142,55 @@ namespace Stimulant
         public event EventHandler ButtonPressed;
         void HandleButtonPress(object sender, System.EventArgs e)
         {
+            stopwatch.Restart();
+            /*
             int buttonPressed = 0;
             for (int i = 0; i < buttonArray.Length; i++) if (sender == buttonArray[i]) buttonPressed = i;
 
             ButtonPressed?.Invoke(this, e); //not currently using this
 
             SceneSelection(buttonPressed);
-            //MoveToNextScene();
             UpdateAllSceneGraphics();
+            */
+        }
+
+        void ToggleDisabled(int index)
+        {
+            if( sceneArray[index].IsDisabled() )
+            {
+                UpdateSceneGraphic(index);
+                sceneArray[index].SetDisabled(false);
+            }
+            else
+            {
+                //TODO: we need to change the look of the button when it is disabled
+                //buttonArray[index].Enabled = !buttonArray[index].Enabled;
+                sceneArray[index].SetDisabled(true);
+            }
+            
+        }
+
+        void HandleButtonRelease(object sender, System.EventArgs e)
+        {
+            timeHeld = stopwatch.ElapsedMilliseconds;
+
+            //Debug.Print(timeHeld.ToString());
+
+            int buttonPressed = 0;
+            for (int i = 0; i < buttonArray.Length; i++) if (sender == buttonArray[i]) buttonPressed = i;
+
+            if (timeHeld > 200)
+            {
+                //buttonArray[buttonPressed].Enabled = !buttonArray[buttonPressed].Enabled;
+                ToggleDisabled(buttonPressed);
+            }
+            else
+            {
+                //ButtonPressed?.Invoke(this, e); //not currently using this
+
+                SceneSelection(buttonPressed);
+                UpdateAllSceneGraphics();
+            }
         }
 
         void HandleStepperChange(object sender, System.EventArgs e)
@@ -175,8 +220,9 @@ namespace Stimulant
         {
             sceneArray[currentRunning].IsRunning = false;
 
-            currentRunning = currentRunning < (numScenes - 1) ? currentRunning + 1 : currentRunning = 0;
-            
+            do currentRunning = currentRunning < (numScenes - 1) ? currentRunning + 1 : currentRunning = 0;
+            while ( sceneArray[currentRunning].IsDisabled() );
+
             sceneArray[currentRunning].IsRunning = true;
 
             UpdateRunningSymbolView();
@@ -264,6 +310,9 @@ namespace Stimulant
         {
             return sceneArray.Length;
         }
+
+        private Stopwatch stopwatch;
+        private double timeHeld;
 
         private int min;
         //private int max = 8;

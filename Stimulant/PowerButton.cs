@@ -11,10 +11,9 @@ namespace Stimulant
         public PowerButton(CGRect rect)
         {
             View.Frame = rect;
-            C_lineWidth = (int)(rect.Width / 33);
 
-            //View.BackgroundColor = UIColor.Yellow;
-            CreateButton(new CGRect(0, 0, rect.Width, rect.Height)); //-2 * C_lineWidth
+            C_lineWidth = (int)(rect.Width / 33);
+            CreateButton(new CGRect(0, 0, rect.Width, rect.Height));
             CreateCircularProgressBar(new CGRect(0, 0, rect.Width, rect.Height));
 
             View.AddSubview(myCircularProgressBar);
@@ -23,8 +22,6 @@ namespace Stimulant
 
         private void CreateCircularProgressBar(CGRect rect)
         {
-            //float pBarWidth = buttonWidth;
-            //CGRect pBarRect = new CGRect( (rect.Width - pBarWidth) / 2 , 0, rect.Width, rect.Height);
             CGRect pBarRect = new CGRect(0, 0, rect.Width, rect.Height);
             myCircularProgressBar = new CircularProgressBar(pBarRect, (int)C_lineWidth, 0f, UIColor.FromRGB(0, 0, 0));
         }
@@ -32,30 +29,20 @@ namespace Stimulant
         public void UpdateProgress(float piMult)
         {
             myCircularProgressBar.UpdateGraph(piMult);
-            //g = myCircularProgressBar.GetContext();
-            //myCircularProgressBar.UpdateGraph(piMult , g);
         }
 
         private void CreateButton(CGRect rect)
         {
             buttonOnOff = UIButton.FromType(UIButtonType.Custom);
             buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Normal);
-            //buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOn.png"), UIControlState.Highlighted);
-            //buttonOnOff.SetImage(UIImage.FromFile("graphicPowerButtonOff.png"), UIControlState.Disabled);
 
             buttonHeight = (float)rect.Height;
-            buttonWidth = (float)(buttonHeight * 1);
+            buttonWidth = buttonHeight;
 
-            //float buttonWidth = (float)rect.Width / 2;
-            //float buttonHeight = (float)(buttonWidth / 1.061);
             buttonOnOff.Frame = new CGRect((rect.Width - buttonWidth) / 2, rect.Top, buttonWidth, buttonHeight);
-            //buttonOnOff.Frame = new CGRect((rect.Width - buttonWidth) / 2, rect.Top, rect.Width, rect.Width);
             buttonFrame = buttonOnOff.Frame;
 
-            buttonOnOff.TouchDown += (object sender, EventArgs e) =>
-            {
-                HandleTouchDown();
-            };
+            buttonOnOff.TouchDown += (object sender, EventArgs e) => { HandleTouchDown(); };
 
             buttonOnOff.TouchUpInside += (object sender, EventArgs e) =>
             {
@@ -75,7 +62,7 @@ namespace Stimulant
         private void UpdateButtonFrame(CGRect rect)
         {
             buttonHeight = (float)rect.Height;
-            buttonWidth = (float)(buttonHeight * 1);
+            buttonWidth = buttonHeight;
             buttonOnOff.Frame = new CGRect((rect.Width - buttonWidth) / 2, rect.Top, buttonWidth, buttonHeight);
             buttonFrame = buttonOnOff.Frame;
         }
@@ -84,7 +71,6 @@ namespace Stimulant
         {
             myCircularProgressBar.Frame = new CGRect(0, 0, rect.Width, rect.Height);
         }
-
 
         private void HandleTouchDown()
         {
@@ -138,7 +124,7 @@ namespace Stimulant
 
         public event EventHandler StateChange;
 
-bool isOn;
+        bool isOn;
 
         CGRect buttonFrame;
         float buttonHeight;

@@ -14,6 +14,16 @@ namespace Stimulant
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        private bool isDisabled;
+        public bool IsDisabled()
+        {
+            return isDisabled;
+        }
+        public void SetDisabled(bool disabled)
+        {
+            isDisabled = disabled;
+        }
+
         private int index;
         public int GetIndex()
         {
@@ -55,12 +65,14 @@ namespace Stimulant
             set { _PatternNumber = value; OnPropertyChanged("PatternNumber"); }
         }
 
+        
         private bool _Opposite;
         public bool Opposite
         {
             get { return _Opposite; }
             set { _Opposite = value; OnPropertyChanged("Opposite"); }
         }
+        
 
         private int _Minimum;
         public int Minimum
@@ -111,6 +123,7 @@ namespace Stimulant
             StartingLocation = 63;
         }
 
+        /*
         public void ReverseToggle()
         {
             if (Opposite)
@@ -122,6 +135,7 @@ namespace Stimulant
                 Opposite = true;
             }
         }
+        */
 
         public void TriggerToggle()
         {

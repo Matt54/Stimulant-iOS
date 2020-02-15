@@ -152,6 +152,12 @@
         <Compile Include="InfoDisplay.cs" />
         <Compile Include="SceneDisplay.cs" />
         <Compile Include="PowerButton.cs" />
+        <Compile Include="RateSelection.cs" />
+        <Compile Include="Patterns.cs" />
+        <Compile Include="DrawPattern.cs" />
+        <Compile Include="CurveLayer.cs" />
+        <Compile Include="PatternGraphVC.cs" />
+        <Compile Include="GlobalVar.cs" />
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\slider-default7-track.png" />
